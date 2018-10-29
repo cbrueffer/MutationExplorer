@@ -1,0 +1,70 @@
+suppressPackageStartupMessages(library(survminer))
+suppressPackageStartupMessages(library(ggsci))
+
+surv.plot <- function(input, fit, data, title="") {
+
+    # configure legend location
+    if (!isTRUE(input$showLegend)) {
+        legend = "none"
+    } else if (input$legendLoc == "custom") {
+        legend = c(as.integer(input$legend.coord.x), as.integer(input$legend.coord.y))
+    } else {
+        legend = input$legendLoc
+    }
+
+    plot <- ggsurvplot(
+        fit,                     # survfit object with calculated statistics.
+        data = data,
+        title = title,
+
+        # risk table
+        risk.table = input$show.risk.table,
+        risk.table.y.text.col = TRUE, # colour risk table text annotations.
+        risk.table.y.text = FALSE,    # show bars instead of names in text annotations
+        risk.table.height = 0.17,
+        tables.theme = theme_cleantable() +
+            theme(
+                plot.title = element_text(size=13, face="plain", color="black", hjust=0, margin=margin(b=-0.5, unit="pt"))
+            ),
+        tables.y.text = FALSE,
+        fontsize = 4,            # risk table font size
+
+        # p-value
+        pval = input$show.pval,             # show p-value of log-rank test.
+        pval.size = 4,
+        pval.coord = c(0.13, 0.3),
+        #pval.method = TRUE,
+        #pval.method.size = 4,
+        #pval.method.coord = c(0.13, 0.38),
+
+        # censor details
+        censor = input$show.censors,
+        censor.shape="|",
+        censor.size = 4,
+
+        # confidence intervals
+        conf.int = input$show.conf.int,
+        #conf.int.style = "step",
+
+        # point estimates of survival curves.
+        xlab = "Time after Diagnosis (years)",
+        ylab = "Overall Survival (proportion)",
+        ggtheme = theme_classic() +
+            theme(
+                axis.title = element_text(size=13, face="plain", color="black"),
+                axis.text = element_text(size=13, face="plain", colour="black"),
+                axis.ticks.length=unit(.15, "cm"),
+                legend.text=element_text(size=11, face="plain"),
+                plot.title = element_text(size="16", face="bold", colour="black", hjust=0.5, margin=margin(b=10, unit="pt"))
+            ),
+        palette = input$color.palette,
+        break.time.by = 1,
+
+        # in legend of risk table
+        legend = legend
+        #legend.title = ""
+        #legend.labs = labs
+    )
+
+    return(plot)
+}
