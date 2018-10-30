@@ -1,4 +1,7 @@
 suppressPackageStartupMessages(library(survminer))
+source("R/utilities.R")
+source("R/ggsurvplot_core.R")
+source("R/arrange_ggsurvplots.R")
 
 surv.plot <- function(input, fit, data, gene=NULL, legend.labs=NULL, title="") {
 
