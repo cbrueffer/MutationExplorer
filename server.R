@@ -81,7 +81,7 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 
         if (!is.null(pathway.genes)) {
             # if any of the defined genes are mutated, the pathway is mutated in a sample
-            mut.tbl <- mut.tbl %>% select(SAMPLE, gene.symbol) %>% filter(gene.symbol %in% pathway.genes)
+            mut.tbl <- mut.tbl %>% dplyr::select(SAMPLE, gene.symbol) %>% filter(gene.symbol %in% pathway.genes)
             mut.status = apply(sample.tbl, 1, function(sample) { pathway.genes %in% mut.tbl$gene.symbol[mut.tbl$SAMPLE %in% sample[["rba"]]] })
             if (is.vector(mut.status)) {  # one gene only, logical vector
                 sample.tbl$mut.pathway.status = as.factor(ifelse(mut.status, "mut", "wt"))
