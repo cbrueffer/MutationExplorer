@@ -53,7 +53,9 @@ shinyUI(fluidPage(
                                      selectInput("plotType", "Plot Type", plot.type.options),
                                      conditionalPanel(
                                          condition = "input.plotType == 'mut.gene.plot'",
-                                         selectizeInput("gene.input", "Gene", choices = c(), multiple=TRUE, options = list(maxItems = 9))  # updated from the server side
+                                         selectizeInput("gene.input", "Gene", choices = c(), multiple=TRUE,  # choices updated from the server side
+                                                        options = list(maxItems = 9,
+                                                                       plugins = list('remove_button')))  # enable deselection of items
                                      ),
                                      # pathway plot specific settings
                                      conditionalPanel(
