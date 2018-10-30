@@ -1,7 +1,16 @@
 suppressPackageStartupMessages(library(survminer))
-suppressPackageStartupMessages(library(ggsci))
 
-surv.plot <- function(input, fit, data, title="") {
+surv.plot <- function(input, fit, data, gene=NULL, legend.labs=NULL, title="") {
+
+    if (is.null(legend.labs)) {
+        # fix labels in indidual gene plots
+        if (any(grepl("mut.var", names(fit$strata)))) {
+            gene = ifelse(is.null(gene), "gene", gene)
+            legend.labs = paste0(gene, gsub(".*(=.+)", "\\1", names(fit$strata)))
+        } else {
+            legend.labs = names(fit$strata)
+        }
+    }
 
     # configure legend location
     if (!isTRUE(input$showLegend)) {
@@ -61,9 +70,9 @@ surv.plot <- function(input, fit, data, title="") {
         break.time.by = 1,
 
         # in legend of risk table
-        legend = legend
+        legend = legend,
         #legend.title = ""
-        #legend.labs = labs
+        legend.labs = legend.labs
     )
 
     return(plot)
