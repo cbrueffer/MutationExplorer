@@ -99,9 +99,9 @@ shinyUI(fluidPage(
                                      radioGroupButtons("radio.nhg",
                                                        label = "NHG", choices = ui.options$NHG, selected = ui.options$NHG[["Any"]],
                                                        status = "primary", individual = TRUE),
-                                     radioGroupButtons("radio.pam50",
-                                                       label = "PAM50 Subtype", choices = ui.options$PAM50, selected = ui.options$PAM50[["Any"]],
-                                                       status = "primary", individual = TRUE)
+                                     pickerInput(inputId = "radio.pam50",
+                                                 label = "PAM50 Subtype",
+                                                 choices = ui.options$PAM50, choicesOpt = list(content = pam50.html.labels))
                             ),
                             tabPanel("Plot Settings",
                                      numericInput("height",

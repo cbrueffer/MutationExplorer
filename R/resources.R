@@ -34,25 +34,25 @@ for (i in 1:nrow(treatment.tbl)) {
 #
 # Biomarker definitions
 #
-biomarker.tbl <- as.tibble(rbind(c("ER", "ER_1perc", "POS", "Positive", 1),
-                                 c("ER", "ER_1perc", "NEG", "Negative", 2),
-                                 c("PgR", "PgR_1perc", "POS", "Positive", 1),
-                                 c("PgR", "PgR_1perc", "NEG", "Negative", 2),
-                                 c("HER2", "HER2", "POS", "Amplified", 1),
-                                 c("HER2", "HER2", "NEG", "Normal", 2),
-                                 c("Ki67", "Ki67", "POS", "High", 1),
-                                 c("Ki67", "Ki67", "NEG", "Low", 2),
-                                 c("NHG", "NHG", "G1", "G1", 1),
-                                 c("NHG", "NHG", "G2", "G2", 2),
-                                 c("NHG", "NHG", "G3", "G3", 3),
-                                 c("PAM50", "PAM50", "LumA", "LumA", 1),
-                                 c("PAM50", "PAM50", "LumB", "LumB", 2),
-                                 c("PAM50", "PAM50", "HER2", "HER2", 3),
-                                 c("PAM50", "PAM50", "Basal", "Basal-like", 4),
-                                 c("PAM50", "PAM50", "Normal", "Normal-like", 5),
-                                 c("PAM50", "PAM50", "Unclassified", "Unclassified", 6)
+biomarker.tbl <- as.tibble(rbind(c("ER", "ER_1perc", "POS", "Positive", "", 1),
+                                 c("ER", "ER_1perc", "NEG", "Negative", "", 2),
+                                 c("PgR", "PgR_1perc", "POS", "Positive", "", 1),
+                                 c("PgR", "PgR_1perc", "NEG", "Negative", "", 2),
+                                 c("HER2", "HER2", "POS", "Amplified", "red", 1),
+                                 c("HER2", "HER2", "NEG", "Normal", "green", 2),
+                                 c("Ki67", "Ki67", "POS", "High", "red", 1),
+                                 c("Ki67", "Ki67", "NEG", "Low", "green", 2),
+                                 c("NHG", "NHG", "G1", "G1", "green", 1),
+                                 c("NHG", "NHG", "G2", "G2", "yellow", 2),
+                                 c("NHG", "NHG", "G3", "G3", "red", 3),
+                                 c("PAM50", "PAM50", "LumA", "Luminal A", "darkblue", 1),
+                                 c("PAM50", "PAM50", "LumB", "Luminal B", "lightskyblue", 2),
+                                 c("PAM50", "PAM50", "HER2", "HER2-enriched", "deeppink", 3),
+                                 c("PAM50", "PAM50", "Basal", "Basal-like", "red", 4),
+                                 c("PAM50", "PAM50", "Normal", "Normal-like", "green", 5),
+                                 c("PAM50", "PAM50", "Unclassified", "Unclassified", "gray", 6)
 ))
-colnames(biomarker.tbl) <- c("marker", "var", "level", "label", "selection.value")
+colnames(biomarker.tbl) <- c("marker", "var", "level", "label", "color", "selection.value")
 
 
 # get all Reactome Homo sapiens pathways
@@ -116,9 +116,24 @@ get.selection.to.biomarker.levels = function(biomarker.tbl) {
 selection.to.label.list <- get.selection.to.biomarker.levels(biomarker.tbl)
 
 
-plot.type.options = c("Plot Mutated Genes" = "mut.gene.plot",
-                      "Plot Mutated Pathways" = "mut.pathway.plot",
-                      "Plot Burden" = "mut.burden.plot")
+# Generates PAM50 HTML labels
+get.pam50.html.labels <- function(biomarker.tbl) {
+    biomarker.tbl.pam50 <- biomarker.tbl %>% filter(marker == "PAM50")
+    result.list = list()
+    result.list[["Any"]] = "<div style='background: white; color: black; font-size: 110%; padding-left: 5px;'>Any</div>"
+    for (i in 1:nrow(biomarker.tbl.pam50)) {
+        subtype = biomarker.tbl.pam50[i, ]$level
+        label = biomarker.tbl.pam50[i, ]$label
+        color = biomarker.tbl.pam50[i, ]$color
+        result.list[[subtype]] = paste0("<div style='background: ", color, "; color: white; font-size: 110%; padding-left: 5px;'>", label, "</div>")
+    }
+    return(result.list)
+}
+pam50.html.labels = get.pam50.html.labels(biomarker.tbl)
+
+plot.type.options = c("Mutated Genes" = "mut.gene.plot",
+                      "Mutated Pathways" = "mut.pathway.plot",
+                      "Tumor Mutational Burden" = "mut.burden.plot")
 
 pathway.type.options = c("Reactome" = "pathway.reactome",
                          "Custom" = "pathway.custom")
