@@ -113,9 +113,9 @@ shinyUI(fluidPage(
                                      selectInput("color.palette", "Color Palette",
                                                  choices = color.palette.options, selected = color.palette.options[["JCO"]],
                                                  multiple = FALSE),
-                                     checkboxInput("showLegend",
-                                                   label = "Show legend",
-                                                   value = TRUE),
+                                     awesomeCheckbox("showLegend",
+                                                     label = "Show legend",
+                                                     value = TRUE),
                                      conditionalPanel(
                                          condition = "input.showLegend == true",
                                          selectInput("legendLoc", "Legend Location",
@@ -130,18 +130,18 @@ shinyUI(fluidPage(
                                              )
                                          )
                                      ),
-                                     checkboxInput("show.risk.table",
-                                                   label = "Show risk table",
-                                                   value = TRUE),
-                                     checkboxInput("show.pval",
-                                                   label = "Show logrank p-value",
-                                                   value = TRUE),
-                                     checkboxInput("show.censors",
-                                                   label = "Show censors",
-                                                   value = FALSE),
-                                     checkboxInput("show.conf.int",
-                                                   label = "Show confidence intervals",
-                                                   value = FALSE)
+                                     awesomeCheckbox("show.risk.table",
+                                                     label = "Show risk table",
+                                                     value = TRUE),
+                                     awesomeCheckbox("show.pval",
+                                                     label = "Show logrank p-value",
+                                                     value = TRUE),
+                                     awesomeCheckbox("show.censors",
+                                                     label = "Show censors",
+                                                     value = FALSE),
+                                     awesomeCheckbox("show.conf.int",
+                                                     label = "Show confidence intervals",
+                                                     value = FALSE)
                             )
                 ),
                 column(12,
