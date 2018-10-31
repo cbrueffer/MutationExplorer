@@ -33,7 +33,7 @@ appLoadCSS <- "
 wellpanel.settings.style = "margins: 0px;"
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
+shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
     useShinyjs(),
     inlineCSS(appLoadCSS),
 
@@ -176,16 +176,15 @@ shinyUI(fluidPage(
                                          withSpinner(plotOutput("survplot"))
                                 ),
                                 tabPanel("Sample Table",
-                                         withSpinner(DT::dataTableOutput("sample.table"))
+                                         DT::dataTableOutput("sample.table")
                                 ),
                                 tabPanel("Mutation Table",
-                                         withSpinner(DT::dataTableOutput("mut.table"))
+                                         DT::dataTableOutput("mut.table")
                                 ),
                                 tabPanel("Citation and About",
                                          htmlOutput("appCiteAbout"))
                     )
                 )
-
             )
         ))
 ))

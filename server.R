@@ -202,12 +202,30 @@ shinyServer(function(input, output, session) {
     }
 
     output$sample.table = DT::renderDataTable({
-        DT::datatable(sample.tbl(), options = list(orderClasses = TRUE))
+        DT::datatable(sample.tbl(),
+                      caption = "Samples",
+                      extensions = c('FixedColumns'),
+                      selection = "none",
+                      options = list(
+                          orderClasses = TRUE,
+                          searching = FALSE,
+                          scrollX = TRUE,
+                          fixedColumns = TRUE
+                      ))
     })
 
     output$mut.table = DT::renderDataTable({
         filtered.muts <- filter.mut.tbl(input, sample.tbl(), mutations)
-        DT::datatable(filtered.muts, options = list(orderClasses = TRUE))
+        DT::datatable(filtered.muts,
+                      caption = "Mutations",
+                      extensions = c('FixedColumns'),
+                      selection = "none",
+                      options = list(
+                          orderClasses = TRUE,
+                          searching = FALSE,
+                          scrollX = TRUE,
+                          fixedColumns = TRUE
+                      ))
     })
 
     output$downloadPlot <- downloadHandler(
