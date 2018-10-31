@@ -210,41 +210,13 @@ shinyServer(function(input, output, session) {
         DT::datatable(filtered.muts, options = list(orderClasses = TRUE))
     })
 
-    output$png <- downloadHandler(
-        filename = function() { paste("mutation_explorer_survival_plot", 'png', sep='.') },
+    output$downloadPlot <- downloadHandler(
+        filename = function() { paste("mutation_explorer_survival_plot", "pdf", sep='.') },
         content = function(file) {
             ggsave(
                 filename = file,
                 plot = print(surv.survival()),
-                device = "png",
-                width = input$width / 72,
-                height = input$height / 72,
-                units = "in"
-            )
-        }
-    )
-
-    output$pdf <- downloadHandler(
-        filename = function() { paste("mutation_explorer_survival_plot", 'pdf', sep='.') },
-        content = function(file) {
-            ggsave(
-                filename = file,
-                plot = print(plot.survival()),
                 device = "pdf",
-                width = input$width / 72,
-                height = input$height / 72,
-                units = "in"
-            )
-        }
-    )
-
-    output$tiff <- downloadHandler(
-        filename = function() { paste("mutation_explorer_survival_plot", 'tiff', sep='.') },
-        content = function(file) {
-            ggsave(
-                filename = file,
-                plot = print(plot.survival()),
-                device = "tiff",
                 width = input$width / 72,
                 height = input$height / 72,
                 units = "in"
