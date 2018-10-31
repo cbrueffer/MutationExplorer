@@ -188,7 +188,12 @@ shinyServer(function(input, output, session) {
                 title.gene = paste(gene, "Mutation Status")
 
                 mut.var = paste0("mut.status.", gene)
-                fit = survfit(Surv(OS_years, OS_event) ~ get(mut.var), data = sample.data)
+
+                # Call survfit with do.call to avoid a problem with ggsurvplot later on.
+                # See: https://github.com/kassambara/survminer/issues/125
+                fit <- do.call(survfit,
+                               list(formula = Surv(OS_years, OS_event) ~ get(mut.var), data = sample.data))
+
                 plot.list[[gene]] = surv.plot(input, fit, data=sample.data, gene=gene, title=title.gene)
             }
             plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.main)
