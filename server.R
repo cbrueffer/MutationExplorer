@@ -26,23 +26,23 @@ filter.sample.tbl <- function(input, master) {
         filters[["Treatment"]] = "get(input$treatment.input) == 1"
     }
     # Filter down by biomarker selection
-    if (input$radio.er.status != ui.options$ER[["Any"]]) {
-        filters[["ER"]] = "ER_1perc == selection.to.label.list$ER[[as.character(input$radio.er.status)]]"
+    if (input$er.status != ui.options$ER[["Any"]]) {
+        filters[["ER"]] = "ER_1perc == selection.to.label.list$ER[[as.character(input$er.status)]]"
     }
-    if (input$radio.pgr.status != ui.options$PgR[["Any"]]) {
-        filters[["PgR"]] = "PgR_1perc == selection.to.label.list$PgR[[as.character(input$radio.pgr.status)]]"
+    if (input$pgr.status != ui.options$PgR[["Any"]]) {
+        filters[["PgR"]] = "PgR_1perc == selection.to.label.list$PgR[[as.character(input$pgr.status)]]"
     }
-    if (input$radio.her2.status != ui.options$HER2[["Any"]]) {
-        filters[["HER2"]] = "HER2 == selection.to.label.list$HER2[[as.character(input$radio.her2.status)]]"
+    if (input$her2.status != ui.options$HER2[["Any"]]) {
+        filters[["HER2"]] = "HER2 == selection.to.label.list$HER2[[as.character(input$her2.status)]]"
     }
-    if (input$radio.ki67.status != ui.options$Ki67[["Any"]]) {
-        filters[["Ki67"]] = "Ki67 == selection.to.label.list$Ki67[[as.character(input$radio.ki67.status)]]"
+    if (input$ki67.status != ui.options$Ki67[["Any"]]) {
+        filters[["Ki67"]] = "Ki67 == selection.to.label.list$Ki67[[as.character(input$ki67.status)]]"
     }
-    if (input$radio.nhg != ui.options$NHG[["Any"]]) {
-        filters[["NHG"]] = "NHG == selection.to.label.list$NHG[[as.character(input$radio.nhg)]]"
+    if (input$nhg != ui.options$NHG[["Any"]]) {
+        filters[["NHG"]] = "NHG == selection.to.label.list$NHG[[as.character(input$nhg)]]"
     }
-    if (input$radio.pam50 != ui.options$PAM50[["Any"]]) {
-        filters[["PAM50"]] = "PAM50 == selection.to.label.list$PAM50[[as.character(input$radio.pam50)]]"
+    if (input$pam50 != ui.options$PAM50[["Any"]]) {
+        filters[["PAM50"]] = "PAM50 == selection.to.label.list$PAM50[[as.character(input$pam50)]]"
     }
 
     # apply filters
