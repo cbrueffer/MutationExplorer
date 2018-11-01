@@ -58,7 +58,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    selectInput("plotType", "Plot Type", plot.type.options),
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.gene.plot'",
-                                                       selectizeInput("gene.input", "Gene", choices = c(), multiple=TRUE,  # choices updated from the server side
+                                                       selectizeInput("gene.input", "Genes", choices = c(), multiple=TRUE,  # choices updated from the server side
                                                                       options = list(maxItems = 9,
                                                                                      plugins = list('remove_button')))  # enable deselection of items
                                                    ),
@@ -84,7 +84,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    # burden plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.burden.plot'",
-                                                       numericInput("tmb.cutoff", "", 75)  # updated from the server side
+                                                       sliderInput("tmb.cutoff", "Burden Cutoff", min = 1, max = 10, value = 5, step = 1)
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
@@ -140,13 +140,16 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                                    value = TRUE),
                                                    conditionalPanel(
                                                        condition = "input.showLegend == true",
+                                                       textInput("legendTitle", "Legend Title", value = "strata"),
                                                        selectInput("legendLoc", "Legend Location",
                                                                    choices = plot.legend.loc.options),
                                                        conditionalPanel(
                                                            condition = "input.legendLoc == 'custom'",
                                                            splitLayout(
-                                                               numericInput("legend.coord.x", "X Coord (0-1)", 0.25),
-                                                               numericInput("legend.coord.y", "Y Coord (0-1)", 0.25)
+                                                               sliderInput("legend.coord.x", "X Coordinate", min = 0, max = 1,
+                                                                           value = 0.25, step = 0.01),
+                                                               sliderInput("legend.coord.y", "Y Coordinate", min = 0, max = 1,
+                                                                           value = 0.25, step = 0.01)
                                                            )
                                                        )
                                                    )

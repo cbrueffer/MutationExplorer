@@ -21,7 +21,7 @@ surv.plot <- function(input, fit, data, gene=NULL, legend.labs=NULL, title="") {
     if (!isTRUE(input$showLegend)) {
         legend = "none"
     } else if (input$legendLoc == "custom") {
-        legend = c(as.integer(input$legend.coord.x), as.integer(input$legend.coord.y))
+        legend = c(as.numeric(input$legend.coord.x), as.numeric(input$legend.coord.y))
     } else {
         legend = input$legendLoc
     }
@@ -76,7 +76,7 @@ surv.plot <- function(input, fit, data, gene=NULL, legend.labs=NULL, title="") {
 
         # in legend of risk table
         legend = legend,
-        #legend.title = ""
+        legend.title = input$legendTitle,
         legend.labs = legend.labs
     )
 

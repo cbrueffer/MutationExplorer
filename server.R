@@ -144,10 +144,8 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "custom.pathway.input",
                       choices = mutated.genes
     )
-    updateNumericInput(session, "tmb.cutoff",
-                       label = paste0("Burden Cutoff (", min(master$mutation_count), " - ", max(master$mutation_count), ")"),
-                       75, min(master$mutation_count), max(master$mutation_count)
-    )
+    updateSliderInput(session, "tmb.cutoff", min = min(master$mutation_count),
+                      max = max(master$mutation_count), value = 75)
 
     # Hide the loading message when the rest of the server function has executed
     hideElement(id = "loading-content", anim = TRUE, animType = "fade")
