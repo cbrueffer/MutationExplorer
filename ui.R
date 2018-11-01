@@ -30,7 +30,7 @@ appLoadCSS <- "
 }
 "
 
-wellpanel.settings.style = "margins: 0px;"
+wellpanel.settings.style = "background: white; margin-top: 15px; margin-bottom: 0px; padding-top: 3px; padding-bottom: 3px;"
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
@@ -51,83 +51,90 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
             sidebarLayout(
                 sidebarPanel(
                     tabsetPanel(type = "pills",
-                                tabPanel("Data Selection",
-                                         selectInput("plotType", "Plot Type", plot.type.options),
-                                         conditionalPanel(
-                                             condition = "input.plotType == 'mut.gene.plot'",
-                                             selectizeInput("gene.input", "Gene", choices = c(), multiple=TRUE,  # choices updated from the server side
-                                                            options = list(maxItems = 9,
-                                                                           plugins = list('remove_button')))  # enable deselection of items
-                                         ),
-                                         # pathway plot specific settings
-                                         conditionalPanel(
-                                             condition = "input.plotType == 'mut.pathway.plot'",
+                                tabPanel("Plot and Data Selection",
+                                         wellPanel(style = wellpanel.settings.style,
+                                                   h4("Plot Selection", style = "padding-top: 5px;"),
 
-                                             # choice between existing and custom pathway
-                                             selectInput("pathwayType", "Pathway Definition Source", pathway.type.options),
-                                             conditionalPanel(
-                                                 condition = "input.pathwayType == 'pathway.reactome'",
-                                                 selectInput("pathway.input", "Reactome",
-                                                             choices = pathway.ui.options,
-                                                             multiple=FALSE)
-                                             ),
-                                             conditionalPanel(
-                                                 condition = "input.pathwayType == 'pathway.custom'",
-                                                 selectInput("custom.pathway.input", "Custom Definition",
-                                                             choices = c(),  # updated from the server side
-                                                             multiple=TRUE)
-                                             )
-                                         ),
-                                         # burden plot specific settings
-                                         conditionalPanel(
-                                             condition = "input.plotType == 'mut.burden.plot'",
-                                             numericInput("tmb.cutoff", "", 75)  # updated from the server side
-                                         ),
-                                         selectInput("treatment.input", "Treatment Group",
-                                                     choices = treatment.options),
+                                                   selectInput("plotType", "Plot Type", plot.type.options),
+                                                   conditionalPanel(
+                                                       condition = "input.plotType == 'mut.gene.plot'",
+                                                       selectizeInput("gene.input", "Gene", choices = c(), multiple=TRUE,  # choices updated from the server side
+                                                                      options = list(maxItems = 9,
+                                                                                     plugins = list('remove_button')))  # enable deselection of items
+                                                   ),
+                                                   # pathway plot specific settings
+                                                   conditionalPanel(
+                                                       condition = "input.plotType == 'mut.pathway.plot'",
 
-                                         radioGroupButtons("er.status",
-                                                           label = "ER Status", choices = ui.options$ER, selected = ui.options$ER[["Any"]],
-                                                           status = "primary", individual = TRUE),
-                                         radioGroupButtons("pgr.status",
-                                                           label = "PgR Status", choices = ui.options$PgR, selected = ui.options$PgR[["Any"]],
-                                                           status = "primary", individual = TRUE),
-                                         radioGroupButtons("her2.status",
-                                                           label = "HER2 Status", choices = ui.options$HER2, selected = ui.options$HER2[["Any"]],
-                                                           status = "primary", individual = TRUE),
-                                         radioGroupButtons("ki67.status",
-                                                           label = "Ki67 Status", choices = ui.options$Ki67, selected = ui.options$Ki67[["Any"]],
-                                                           status = "primary", individual = TRUE),
-                                         radioGroupButtons("nhg",
-                                                           label = "NHG", choices = ui.options$NHG, selected = ui.options$NHG[["Any"]],
-                                                           status = "primary", individual = TRUE),
-                                         pickerInput(inputId = "pam50",
-                                                     label = "PAM50 Subtype",
-                                                     choices = ui.options$PAM50, choicesOpt = list(content = pam50.html.labels))
+                                                       # choice between existing and custom pathway
+                                                       selectInput("pathwayType", "Pathway Definition Source", pathway.type.options),
+                                                       conditionalPanel(
+                                                           condition = "input.pathwayType == 'pathway.reactome'",
+                                                           selectInput("pathway.input", "Reactome",
+                                                                       choices = pathway.ui.options,
+                                                                       multiple=FALSE)
+                                                       ),
+                                                       conditionalPanel(
+                                                           condition = "input.pathwayType == 'pathway.custom'",
+                                                           selectInput("custom.pathway.input", "Custom Definition",
+                                                                       choices = c(),  # updated from the server side
+                                                                       multiple=TRUE)
+                                                       )
+                                                   ),
+                                                   # burden plot specific settings
+                                                   conditionalPanel(
+                                                       condition = "input.plotType == 'mut.burden.plot'",
+                                                       numericInput("tmb.cutoff", "", 75)  # updated from the server side
+                                                   )
+                                         ),
+                                         wellPanel(style = wellpanel.settings.style,
+                                                   h4("Sample Selection"),
+
+                                                   selectInput("treatment.input", "Treatment Group",
+                                                               choices = treatment.options),
+
+                                                   radioGroupButtons("er.status",
+                                                                     label = "ER Status", choices = ui.options$ER, selected = ui.options$ER[["Any"]],
+                                                                     status = "primary", individual = TRUE),
+                                                   radioGroupButtons("pgr.status",
+                                                                     label = "PgR Status", choices = ui.options$PgR, selected = ui.options$PgR[["Any"]],
+                                                                     status = "primary", individual = TRUE),
+                                                   radioGroupButtons("her2.status",
+                                                                     label = "HER2 Status", choices = ui.options$HER2, selected = ui.options$HER2[["Any"]],
+                                                                     status = "primary", individual = TRUE),
+                                                   radioGroupButtons("ki67.status",
+                                                                     label = "Ki67 Status", choices = ui.options$Ki67, selected = ui.options$Ki67[["Any"]],
+                                                                     status = "primary", individual = TRUE),
+                                                   radioGroupButtons("nhg",
+                                                                     label = "NHG", choices = ui.options$NHG, selected = ui.options$NHG[["Any"]],
+                                                                     status = "primary", individual = TRUE),
+                                                   pickerInput(inputId = "pam50",
+                                                               label = "PAM50 Subtype",
+                                                               choices = ui.options$PAM50, choicesOpt = list(content = pam50.html.labels))
+                                         )
                                 ),
                                 tabPanel("Plot Settings",
-                                         fluidRow(
-                                             wellPanel(style = wellpanel.settings.style,
-                                                       h4("Plot Dimensions", style='padding: 0px;'),
-                                                       splitLayout(
-                                                           numericInput("height",
-                                                                        label = "Height",
-                                                                        value = 500,
-                                                                        width = "85%"
-                                                                        ),
-                                                           numericInput("width",
-                                                                        label = "Width",
-                                                                        value = 500,
-                                                                        width = "85%"
-                                                                        )
-                                                       )
-                                             )
-                                         ),
-                                         selectInput("color.palette", "Color Palette",
-                                                     choices = color.palette.options, selected = color.palette.options[["JCO"]],
-                                                     multiple = FALSE),
                                          wellPanel(style = wellpanel.settings.style,
-                                                   h4("Legend Settings", style='padding: 0px;'),
+                                                   h4("Plot Dimensions"),
+                                                   splitLayout(
+                                                       numericInput("height",
+                                                                    label = "Height",
+                                                                    value = 500
+                                                       ),
+                                                       numericInput("width",
+                                                                    label = "Width",
+                                                                    value = 500
+                                                       )
+                                                   )
+                                         ),
+                                         wellPanel(style = wellpanel.settings.style,
+                                                   h4("Color Settings"),
+                                                   selectInput("color.palette", "Color Palette",
+                                                               choices = color.palette.options, selected = color.palette.options[["JCO"]],
+                                                               multiple = FALSE)
+                                         ),
+                                         wellPanel(style = wellpanel.settings.style,
+                                                   h4("Legend Settings"),
                                                    awesomeCheckbox("showLegend",
                                                                    label = "Show legend",
                                                                    value = TRUE),
@@ -145,7 +152,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
-                                                   h4("Plot Features", style='padding: 0px;'),
+                                                   h4("Plot Features"),
                                                    awesomeCheckbox("show.risk.table",
                                                                    label = "Show risk table",
                                                                    value = TRUE),
