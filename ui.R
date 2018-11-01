@@ -172,9 +172,11 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                 )
                     ),
                     wellPanel(style = wellpanel.settings.style,
-                           h3("Download"),
+                           h3("Downloads"),
                            splitLayout(
-                               downloadButton("downloadPlot", label = "Plot as PDF")
+                               downloadButton("downloadPlot", label = "Plot PDF"),
+                               downloadButton("downloadSamples", label = "Sample TSV"),
+                               downloadButton("downloadMutations", label = "Mutation TSV")
                            )
                     )
                 ),

@@ -110,8 +110,8 @@ filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
 
 shinyServer(function(input, output, session) {
 
-    master <- get(load("sample_master_table_scanb.Rdata"))
-    mutations <- get(load("mutations_scanb.Rdata"))
+    master <- as.data.frame(get(load("data/sample_master_table_scanb.Rdata")))
+    mutations <- as.data.frame(get(load("mutations_scanb.Rdata")))
     mutated.genes <- sort(unique(mutations$gene.symbol))
     n.mut = nrow(mutations)
     n.samples = nrow(master)
@@ -156,7 +156,8 @@ shinyServer(function(input, output, session) {
         height = function(x) input$height,
         width = function(x) input$width,
         {
-            print(plot.survival())
+            plot.surv <<- plot.survival()
+            return(plot.surv)
         })
 
     plot.survival <- function() {
@@ -229,15 +230,28 @@ shinyServer(function(input, output, session) {
     output$downloadPlot <- downloadHandler(
         filename = function() { paste("mutation_explorer_survival_plot", "pdf", sep='.') },
         content = function(file) {
-            ggsave(
-                filename = file,
-                plot = print(surv.survival()),
-                device = "pdf",
-                width = input$width / 72,
-                height = input$height / 72,
-                units = "in"
-            )
-        }
+            pdf(file, useDingbats = FALSE, width = input$width / 72, height = input$height / 72)
+            print(plot.surv, newpage = FALSE)
+            dev.off()
+        },
+        contentType = "application/pdf"
+    )
+
+    output$downloadSamples <- downloadHandler(
+        filename = function() { paste("samples", "tsv", sep='.') },
+        content = function(file) {
+            write.table(sample.tbl(), file, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+        },
+        contentType = "text/csv"
+    )
+
+    output$downloadMutations <- downloadHandler(
+        filename = function() { paste("mutations", "tsv", sep='.') },
+        content = function(file) {
+            filtered.muts <- filter.mut.tbl(input, sample.tbl(), mutations)
+            write.table(filtered.muts, file, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+        },
+        contentType = "text/csv"
     )
 
     output$appCiteAbout <- renderUI ({
