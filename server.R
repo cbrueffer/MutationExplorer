@@ -111,7 +111,7 @@ filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
 shinyServer(function(input, output, session) {
 
     master <- as.data.frame(get(load("data/sample_master_table_scanb.Rdata")))
-    mutations <- as.data.frame(get(load("mutations_scanb.Rdata")))
+    mutations <- as.data.frame(get(load("data/mutations_scanb.Rdata")))
     mutated.genes <- sort(unique(mutations$gene.symbol))
     n.mut = nrow(mutations)
     n.samples = nrow(master)
@@ -230,6 +230,7 @@ shinyServer(function(input, output, session) {
     output$downloadPlot <- downloadHandler(
         filename = function() { paste("mutation_explorer_survival_plot", "pdf", sep='.') },
         content = function(file) {
+            # if no plot, length(plot.surv) == 0
             pdf(file, useDingbats = FALSE, width = input$width / 72, height = input$height / 72)
             print(plot.surv, newpage = FALSE)
             dev.off()
@@ -238,20 +239,24 @@ shinyServer(function(input, output, session) {
     )
 
     output$downloadSamples <- downloadHandler(
-        filename = function() { paste("samples", "tsv", sep='.') },
+        filename = function() { paste("samples", "zip", sep='.') },
         content = function(file) {
-            write.table(sample.tbl(), file, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+            tmpfile = gsub("(.+)\\..+", "\\1\\.tsv", file)
+            write.table(sample.tbl(), tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+            zip(zipfile = file, files = tmpfile, flags = "-r9Xj")  # r9X is default; -j to trim input file names
         },
-        contentType = "text/csv"
+        contentType = "application/zip"
     )
 
     output$downloadMutations <- downloadHandler(
-        filename = function() { paste("mutations", "tsv", sep='.') },
+        filename = function() { paste("mutations", "zip", sep='.') },
         content = function(file) {
             filtered.muts <- filter.mut.tbl(input, sample.tbl(), mutations)
-            write.table(filtered.muts, file, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+            tmpfile = gsub("(.+)\\..+", "\\1\\.tsv", file)
+            write.table(filtered.muts, tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+            zip(zipfile = file, files = tmpfile, flags = "-r9Xj")  # r9X is default; -j to trim input file names
         },
-        contentType = "text/csv"
+        contentType = "application/zip"
     )
 
     output$appCiteAbout <- renderUI ({
