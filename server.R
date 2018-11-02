@@ -166,15 +166,15 @@ shinyServer(function(input, output, session) {
 
         if (input$plotType == "mut.burden.plot") {
             fit = survfit(Surv(OS_years, OS_event) ~ tumor_mutational_burden, data = sample.data)
-            title = paste0("Overall Survival by Mutation Burden (Cutoff ", input$tmb.cutoff, ") in ", treatment.label, "treated patients")
+            title = paste0("Mutation Burden (Cutoff ", input$tmb.cutoff, ") in ", treatment.label, " treated patients")
             plot = surv.plot(input, fit, data=sample.data, title=title)
         } else if (input$plotType == "mut.pathway.plot") {
             fit = survfit(Surv(OS_years, OS_event) ~ mut.pathway.status, data = sample.data)
-            title = paste("Overall Survival by Pathway in", treatment.label, "treated patients")
+            title = paste("Pathway in", treatment.label, "treated patients")
             plot = surv.plot(input, fit, data=sample.data, title=title)
         } else {  # mut.gene.plot
             plot.list = list()
-            title.main = paste("Overall Survival in", treatment.label, "treated patients")
+            title.main = paste(treatment.label, "treated patients")
 
             # brute-force determine the row/col counts
             n.cols = n.rows = 1
