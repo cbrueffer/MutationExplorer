@@ -73,15 +73,15 @@ add.mutation.burden <- function(input, sample.tbl) {
 
 # Determine pathway mutation status for each sample.
 add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
+    mut.tbl = filter.mut.tbl(input, sample.tbl, mut.tbl)
+
     if (input$pathwayType == "pathway.reactome") {
-        pathway.id <- input$pathway.input
-        sample.tbl$mut.pathway.status = as.factor(ifelse(sample.tbl$rba %in% mut.tbl$SAMPLE[grepl(pathway.id, mut.tbl$Pathways.Reactome)], "mut", "wt"))
-    } else if (input$pathwayType == "pathway.custom") {
+        sample.tbl <- sample.tbl %>%
+            mutate(mut.pathway.status = as.factor(ifelse(sample.tbl$rba %in% mut.tbl$SAMPLE, "mut", "wt")))
+    } else {  # pathway.custom
         pathway.genes <- input$custom.pathway.input
 
         if (!is.null(pathway.genes)) {
-            # if any of the defined genes are mutated, the pathway is mutated in a sample
-            mut.tbl <- mut.tbl %>% dplyr::select(SAMPLE, gene.symbol) %>% filter(gene.symbol %in% pathway.genes)
             mut.status = apply(sample.tbl, 1, function(sample) { pathway.genes %in% mut.tbl$gene.symbol[mut.tbl$SAMPLE %in% sample[["rba"]]] })
             if (is.vector(mut.status)) {  # one gene only, logical vector
                 sample.tbl$mut.pathway.status = as.factor(ifelse(mut.status, "mut", "wt"))
@@ -98,6 +98,26 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
     mut.tbl <- mut.tbl %>%
         filter(SAMPLE %in% sample.tbl$rba)
+
+    if (input$plotType == "mut.gene.plot") {
+        mut.tbl <- mut.tbl %>%
+            filter(gene.symbol %in% input$gene.input)
+    } else if (input$plotType == "mut.pathway.plot") {
+        if (input$pathwayType == "pathway.reactome") {
+            mut.tbl <- mut.tbl %>%
+                filter(grepl(input$pathway.input, Pathways.Reactome))
+        } else {  # pathway.custom
+            pathway.genes <- input$custom.pathway.input
+
+            if (!is.null(pathway.genes)) {
+                # keep all genes in the selected custom pathway
+                mut.tbl = mut.tbl %>% filter(gene.symbol %in% pathway.genes)
+            } else {
+                mut.tbl = mut.tbl %>% filter(FALSE)  # no genes defined -> empty table
+            }
+        }
+    }  # No filtering for burden; we want all mutations in that case.
+
     return(mut.tbl)
 }
 
