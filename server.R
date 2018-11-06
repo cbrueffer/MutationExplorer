@@ -202,6 +202,10 @@ shinyServer(function(input, output, session) {
                 if (n.cols == n.rows) n.cols = n.cols + 1
                 else n.rows = n.rows + 1
             }
+            # scale plot dimensions to new settings
+            # XXX currently resets user-specified dimensions
+            updateNumericInput(session, "height", value = round(500 + ((n.rows + log(n.rows)) * 100)))
+            updateNumericInput(session, "width", value = round(500 + ((n.cols + log(n.cols)) * 100)))
 
             for (gene in input$gene.input) {
                 title.gene = paste(gene, "Mutation Status")

@@ -119,11 +119,11 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    splitLayout(
                                                        numericInput("height",
                                                                     label = "Height",
-                                                                    value = 500
+                                                                    value = 600
                                                        ),
                                                        numericInput("width",
                                                                     label = "Width",
-                                                                    value = 500
+                                                                    value = 600
                                                        )
                                                    )
                                          ),
