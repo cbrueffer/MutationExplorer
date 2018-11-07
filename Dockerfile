@@ -8,8 +8,9 @@ LABEL maintainer="Christian Brueffer <christian.brueffer@med.lu.se>"
 #
 ###############################################
 
-EXPOSE 3838/tcp
 EXPOSE 80/tcp
+# shiny-server not exposed; accessible through the nginx proxy
+#EXPOSE 3838/tcp
 
 
 ###############################################
@@ -18,12 +19,13 @@ EXPOSE 80/tcp
 #
 ###############################################
 
-RUN apt-get update && apt-get install -y nginx
-COPY mutationexplorer.conf /etc/nginx/conf.d/mutationexplorer.conf
-
 RUN R -e "install.packages(c('dplyr', 'DT', 'magrittr', 'shinycssloaders', 'shinyhelper', 'shinyjs', 'shinyWidgets', 'survminer', 'BiocManager'))"
 RUN R -e "BiocManager::install('reactome.db', version = '3.8', ask = FALSE, update = TRUE)"
 
+# install and configure the nginx shiny proxy
+RUN apt-get update && \
+    apt-get install -y nginx
+COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
 
 ###############################################
 #
@@ -34,8 +36,9 @@ RUN R -e "BiocManager::install('reactome.db', version = '3.8', ask = FALSE, upda
 ENV APP_LOCATION /srv/shiny-server/ShinyMutationExplorer
 
 COPY *.R ${APP_LOCATION}/
+COPY htpasswd-sme.txt ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
 COPY data ${APP_LOCATION}/data
 COPY helpfiles ${APP_LOCATION}/helpfiles
 
-CMD ["/usr/bin/shiny-server.sh"]
+CMD /etc/init.d/nginx start && /usr/bin/shiny-server.sh
