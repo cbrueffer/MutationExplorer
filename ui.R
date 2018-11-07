@@ -8,6 +8,7 @@
 #
 
 suppressPackageStartupMessages(library(shiny))
+suppressPackageStartupMessages(library(shinyhelper))
 suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(shinyWidgets))
 suppressPackageStartupMessages(library(shinycssloaders))
@@ -55,40 +56,47 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                          wellPanel(style = wellpanel.settings.style,
                                                    h4("Plot Selection", style = "padding-top: 5px;"),
 
-                                                   selectInput("plotType", "Plot Type", plot.type.options),
+                                                   selectInput("plotType", "Plot Type", plot.type.options) %>%
+                                                       helper(content = "plottype"),
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.gene.plot'",
                                                        selectizeInput("gene.input", "Genes", choices = c(), multiple=TRUE,  # choices updated from the server side
                                                                       options = list(maxItems = 9,
-                                                                                     plugins = list('remove_button')))  # enable deselection of items
+                                                                                     plugins = list('remove_button'))) %>%  # enable deselection of items
+                                                           helper(content = "gene_selection")
                                                    ),
                                                    # pathway plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.pathway.plot'",
 
                                                        # choice between existing and custom pathway
-                                                       selectInput("pathwayType", "Pathway Definition Source", pathway.type.options),
+                                                       selectInput("pathwayType", "Pathway Definition Source", pathway.type.options) %>%
+                                                           helper(content = "pathway_definition_source"),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.reactome'",
                                                            selectInput("pathway.input", "Reactome",
                                                                        choices = pathway.ui.options,
-                                                                       multiple=FALSE)
+                                                                       multiple=FALSE) %>%
+                                                               helper(content = "pathway_reactome")
                                                        ),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.custom'",
                                                            selectInput("custom.pathway.input", "Custom Definition",
                                                                        choices = c(),  # updated from the server side
-                                                                       multiple=TRUE)
+                                                                       multiple=TRUE) %>%
+                                                               helper(content = "pathway_custom")
                                                        )
                                                    ),
                                                    # burden plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.burden.plot'",
-                                                       sliderInput("tmb.cutoff", "Burden Cutoff", min = 1, max = 10, value = 5, step = 1)
+                                                       sliderInput("tmb.cutoff", "Burden Cutoff", min = 1, max = 10, value = 5, step = 1) %>%
+                                                           helper(content = "tmb_cutoff")
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
-                                                   h4("Sample Selection"),
+                                                   h4("Sample Selection") %>%
+                                                       helper(content = "sample_selection"),
 
                                                    selectInput("treatment.input", "Treatment Group",
                                                                choices = treatment.options),
@@ -115,7 +123,8 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                 ),
                                 tabPanel("Plot Settings",
                                          wellPanel(style = wellpanel.settings.style,
-                                                   h4("Plot Dimensions"),
+                                                   h4("Plot Dimensions") %>%
+                                                       helper(content = "plot_dimensions"),
                                                    splitLayout(
                                                        numericInput("height",
                                                                     label = "Height",
@@ -128,13 +137,15 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
-                                                   h4("Color Settings"),
+                                                   h4("Color Settings") %>%
+                                                       helper(content = "color_settings"),
                                                    selectInput("color.palette", "Color Palette",
                                                                choices = color.palette.options, selected = color.palette.options[["JCO"]],
                                                                multiple = FALSE)
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
-                                                   h4("Legend Settings"),
+                                                   h4("Legend Settings") %>%
+                                                       helper(content = "legend_settings"),
                                                    awesomeCheckbox("showLegend",
                                                                    label = "Show legend",
                                                                    value = TRUE),
@@ -155,7 +166,8 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
-                                                   h4("Plot Features"),
+                                                   h4("Plot Features") %>%
+                                                       helper(content = "plot_features"),
                                                    awesomeCheckbox("show.risk.table",
                                                                    label = "Show risk table",
                                                                    value = TRUE),
@@ -172,7 +184,8 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                 )
                     ),
                     wellPanel(style = wellpanel.settings.style,
-                           h3("Downloads"),
+                           h3("Downloads") %>%
+                               helper(content = "downloads"),
                            splitLayout(
                                downloadButton("downloadPlot", label = "Plot PDF"),
                                downloadButton("downloadSamples", label = "Sample TSV"),

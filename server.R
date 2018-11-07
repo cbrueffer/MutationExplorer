@@ -136,6 +136,9 @@ shinyServer(function(input, output, session) {
     n.mut = nrow(mutations)
     n.samples = nrow(master)
 
+    # set default directory for help files
+    observe_helpers(session, "helpfiles")
+
     # Filter the sample table down whenever an input control changes
     sample.tbl <- reactive({
         filtered.table <- filter.sample.tbl(input, master)
