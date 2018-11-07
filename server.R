@@ -288,11 +288,13 @@ shinyServer(function(input, output, session) {
 
     output$appCiteAbout <- renderUI ({
         HTML("<h2>The Sweden Cancerome Analysis Network&mdash;Breast (SCAN-B)</h2>
-<p>The Sweden Cancerome Analysis Network&mdash;Breast (SCAN-B) is a population-based, multicenter breast cancer study that started enrolling patients in 2010.  The study is described in <a href='https://doi.org/10.1186/s13073-015-0131-9'>Saal <i>et al</i>, Genome Medicine (2015)</a>.
+<p>The Sweden Cancerome Analysis Network&mdash;Breast (SCAN-B) initiative (ClinicalTrials.gov identifier <a href='https://clinicaltrials.gov/ct2/show/NCT02306096'>NCT02306096</a>)
+is a population-based, multicenter breast cancer study that started enrolling patients in 2010.  The study is described
+in <a href='https://doi.org/10.1186/s13073-015-0131-9'>Saal <i>et al</i>, Genome Medicine (2015)</a>.
 <h2>SCAN-B Mutation Explorer</h2>
 <p>This software was developed as part of a PhD research project in the laboratory of Lao H. Saal, Translational Oncogenomics Unit, Department of Oncology and Pathology, Lund University, Sweden.</p>
 <h3>Citation</h3>
-<p>If you use data or plots from this website in your publications, please cite the following paper:</p>
+<p>If you use any data or plots from this website in your publications, please cite the following paper:</p>
 <p>Brueffer <i>et al</i>. Paper Name. Journal Name.</p>
 <small>The source code for this software can be found on GitHub: <a href='https://github.com/cbrueffer/ShinyMutationExplorer'>https://github.com/cbrueffer/ShinyMutationExplorer</a></small>
 ")
