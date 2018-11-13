@@ -295,7 +295,7 @@ in <a href='https://doi.org/10.1186/s13073-015-0131-9'>Saal <i>et al</i>, Genome
 <p>This software was developed as part of a PhD research project in the laboratory of Lao H. Saal, Translational Oncogenomics Unit, Department of Oncology and Pathology, Lund University, Sweden.</p>
 <h3>Citation</h3>
 <p>If you use any data or plots from this website in your publications, please cite the following paper:</p>
-<p>Brueffer <i>et al</i>. Paper Name. Journal Name.</p>
+<p>Brueffer <i>et al</i>. Journal Name.</p>
 <small>The source code for this software can be found on GitHub: <a href='https://github.com/cbrueffer/ShinyMutationExplorer'>https://github.com/cbrueffer/ShinyMutationExplorer</a></small>
 ")
     })
