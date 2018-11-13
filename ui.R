@@ -76,15 +76,13 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                            condition = "input.pathwayType == 'pathway.reactome'",
                                                            selectInput("pathway.input", "Reactome",
                                                                        choices = pathway.ui.options,
-                                                                       multiple=FALSE) %>%
-                                                               helper(content = "pathway_reactome")
+                                                                       multiple=FALSE)
                                                        ),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.custom'",
                                                            selectInput("custom.pathway.input", "Custom Definition",
                                                                        choices = c(),  # updated from the server side
-                                                                       multiple=TRUE) %>%
-                                                               helper(content = "pathway_custom")
+                                                                       multiple=TRUE)
                                                        )
                                                    ),
                                                    # burden plot specific settings
@@ -128,11 +126,11 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    splitLayout(
                                                        numericInput("height",
                                                                     label = "Height",
-                                                                    value = 600
+                                                                    value = 700
                                                        ),
                                                        numericInput("width",
                                                                     label = "Width",
-                                                                    value = 600
+                                                                    value = 700
                                                        )
                                                    )
                                          ),
@@ -147,7 +145,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    h4("Legend Settings") %>%
                                                        helper(content = "legend_settings"),
                                                    awesomeCheckbox("showLegend",
-                                                                   label = "Show legend",
+                                                                   label = "Show Legend",
                                                                    value = TRUE),
                                                    conditionalPanel(
                                                        condition = "input.showLegend == true",
