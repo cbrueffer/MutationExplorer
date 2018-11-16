@@ -19,7 +19,7 @@ EXPOSE 80/tcp
 #
 ###############################################
 
-RUN R -e "install.packages(c('dplyr', 'DT', 'magrittr', 'shinycssloaders', 'shinyhelper', 'shinyjs', 'shinyWidgets', 'survminer', 'BiocManager'))"
+RUN R -e "install.packages(c('dplyr', 'DT', 'knitr', 'magrittr', 'shinycssloaders', 'shinyhelper', 'shinyjs', 'shinyWidgets', 'survminer', 'BiocManager'))"
 RUN R -e "BiocManager::install('reactome.db', version = '3.8', ask = FALSE, update = TRUE)"
 
 # install and configure the nginx shiny proxy

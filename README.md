@@ -12,5 +12,4 @@ This software was developed as part of a PhD research project in the
 
 - don't allow plot download when no plot available (e.g. no gene selected)
 - only redrawing when more genes are being selected, see https://code.i-harness.com/en/q/1db7c1c for an example
-- Add page with dataset stats (n samples, n mutations, median survival, ...)
 - Add color palette selection from https://github.com/gabrifc/raincloud-shiny/blob/master/source/paletteColours.R

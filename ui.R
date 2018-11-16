@@ -204,8 +204,12 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                 tabPanel("Mutation Table",
                                          DT::dataTableOutput("mut.table")
                                 ),
+                                tabPanel("Dataset Statistics",
+                                         htmlOutput("datasetStats")
+                                ),
                                 tabPanel("Citation and About",
-                                         htmlOutput("appCiteAbout"))
+                                         htmlOutput("appCiteAbout")
+                                )
                     )
                 )
             )

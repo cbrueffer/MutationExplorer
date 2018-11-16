@@ -10,6 +10,7 @@
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(survival))
+suppressPackageStartupMessages(library(knitr))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(DT))
@@ -119,6 +120,19 @@ filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
     }  # No filtering for burden; we want all mutations in that case.
 
     return(mut.tbl)
+}
+
+# Returns a table with various sample/mutation descriptive statistics.
+get.dataset.stats <- function(sample.tbl, mut.tbl) {
+    stats = data.frame(Value=character(), Stat=numeric()) %>%
+        add_row(Value="Total Samples", Stat=nrow(sample.tbl)) %>%
+        add_row(Value="Total Mutations", Stat=nrow(mut.tbl)) %>%
+        add_row(Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$mutation_count)) %>%
+        add_row(Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$mutation_count)) %>%
+        add_row(Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$mutation_coding_count)) %>%
+        add_row(Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$mutation_coding_count)) %>%
+        add_row(Value="Median Overall Survival (in Months)", Stat=median(sample.tbl$OS_months))
+    return(stats)
 }
 
 
@@ -289,18 +303,17 @@ shinyServer(function(input, output, session) {
         contentType = "application/zip"
     )
 
+    output$datasetStats <- renderUI ({
+        div(
+            h2("Statistics for Total Sample Set"),
+            renderTable(get.dataset.stats(master, mutations), colnames = FALSE),
+            h2("Statistics for Selected Sample Set"),
+            renderTable(get.dataset.stats(sample.tbl(), mut.tbl()), colnames = FALSE)
+        )
+    })
+
     output$appCiteAbout <- renderUI ({
-        HTML("<h2>The Sweden Cancerome Analysis Network&mdash;Breast (SCAN-B)</h2>
-<p>The Sweden Cancerome Analysis Network&mdash;Breast (SCAN-B) initiative (ClinicalTrials.gov identifier <a href='https://clinicaltrials.gov/ct2/show/NCT02306096'>NCT02306096</a>)
-is a population-based, multicenter breast cancer study that started enrolling patients in 2010.  The study is described
-in <a href='https://doi.org/10.1186/s13073-015-0131-9'>Saal <i>et al</i>, Genome Medicine (2015)</a>.
-<h2>SCAN-B Mutation Explorer</h2>
-<p>This software was developed as part of a PhD research project in the laboratory of Lao H. Saal, Translational Oncogenomics Unit, Department of Oncology and Pathology, Lund University, Sweden.</p>
-<h3>Citation</h3>
-<p>If you use any data or plots from this website in your publications, please cite the following paper:</p>
-<p>Brueffer <i>et al</i>. Journal Name.</p>
-<small>The source code for this software can be found on GitHub: <a href='https://github.com/cbrueffer/ShinyMutationExplorer'>https://github.com/cbrueffer/ShinyMutationExplorer</a></small>
-")
+        HTML(markdown::markdownToHTML(knit("about.rmd", quiet = TRUE)))
     })
 
 })
