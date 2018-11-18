@@ -148,6 +148,11 @@ shinyServer(function(input, output, session) {
         return(filtered.table)
     })
 
+    mut.tbl <- reactive({
+        filtered.muts <- filter.mut.tbl(input, sample.tbl(), mutations)
+        return(filtered.muts)
+    })
+
     ######################################################
     #
     # Update UI elements
@@ -241,8 +246,7 @@ shinyServer(function(input, output, session) {
     })
 
     output$mut.table = DT::renderDataTable({
-        filtered.muts <- filter.mut.tbl(input, sample.tbl(), mutations)
-        DT::datatable(filtered.muts,
+        DT::datatable(mut.tbl(),
                       caption = "Mutations",
                       extensions = c('FixedColumns'),
                       selection = "none",
@@ -278,9 +282,8 @@ shinyServer(function(input, output, session) {
     output$downloadMutations <- downloadHandler(
         filename = function() { paste("mutations", "zip", sep='.') },
         content = function(file) {
-            filtered.muts <- filter.mut.tbl(input, sample.tbl(), mutations)
             tmpfile = gsub("(.+)\\..+", "\\1\\.tsv", file)
-            write.table(filtered.muts, tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+            write.table(mut.tbl(), tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
             zip(zipfile = file, files = tmpfile, flags = "-r9Xj")  # r9X is default; -j to trim input file names
         },
         contentType = "application/zip"
