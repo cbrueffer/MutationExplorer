@@ -19,7 +19,7 @@ EXPOSE 80/tcp
 #
 ###############################################
 
-RUN R -e "install.packages(c('dplyr', 'DT', 'knitr', 'magrittr', 'shinycssloaders', 'shinyhelper', 'shinyjs', 'shinyWidgets', 'survminer', 'BiocManager'))"
+RUN R -e "install.packages(c('dplyr', 'DT', 'magrittr', 'shinycssloaders', 'shinyhelper', 'shinyjs', 'shinyWidgets', 'survminer', 'BiocManager'))"
 RUN R -e "BiocManager::install('reactome.db', version = '3.8', ask = FALSE, update = TRUE)"
 
 # install and configure the nginx shiny proxy
@@ -37,6 +37,7 @@ ENV APP_LOCATION /srv/shiny-server/ShinyMutationExplorer
 
 COPY *.R ${APP_LOCATION}/
 COPY htpasswd-sme.txt ${APP_LOCATION}/
+COPY about.md ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
 COPY data ${APP_LOCATION}/data
 COPY helpfiles ${APP_LOCATION}/helpfiles

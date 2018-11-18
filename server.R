@@ -10,7 +10,6 @@
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(survival))
-suppressPackageStartupMessages(library(knitr))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(DT))
@@ -313,7 +312,7 @@ shinyServer(function(input, output, session) {
     })
 
     output$appCiteAbout <- renderUI ({
-        HTML(markdown::markdownToHTML(knit("about.rmd", quiet = TRUE)))
+        includeMarkdown("about.md")
     })
 
 })
