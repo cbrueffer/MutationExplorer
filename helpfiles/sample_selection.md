@@ -4,7 +4,7 @@ Filter the overall sample list that survival analysis is conducted for by receiv
 
 ### Treatment Group
 
-Select a subgroup of patient samples treated with a specific combination three treatment regimens: endocrine therapy (Endo, e.g. tamoxifen),  chemo therapy (Chemo), and anti HER2 therapy (HER2, e.g. trastuzumab). Available treatment combinations:
+Select a subgroup of patient samples treated with a specific combination three treatment regimens: endocrine therapy (Endo, e.g. tamoxifen), chemo therapy (Chemo), and anti HER2 therapy (HER2, e.g. trastuzumab). Available treatment combinations:
 
 - Any
 - Endocrine + any
@@ -33,3 +33,4 @@ Select a subgroup of patient samples treated with a specific combination three t
 | Ki67              | Ki67 progression marker (staining cutoffs varying)                              |
 | NHG               | Nottingham histological grade                                                   |
 | PAM50             | Intrinsic breast cancer subtype based on the PAM50 gene list                    |
+

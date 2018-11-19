@@ -18,3 +18,4 @@ Select the plot color palette.  Available palettes:
 - Futurama
 - Rick and Morty
 - The Simpsons
+

@@ -6,3 +6,4 @@ Toggle Kaplan-Meier plot features.  Available settings:
 - Show logrank p-value
 - Show censors
 - Show confidence intervals
+

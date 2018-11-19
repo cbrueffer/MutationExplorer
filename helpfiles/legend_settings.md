@@ -19,3 +19,4 @@ Where to place the legend on the plot.  Available options:
 - Custom
 
 If custom is selected, X and Y coordinates can be selected from a range of 0 to 1. The coordinate X=0,Y=0 represents the left lower plot corner.
+
