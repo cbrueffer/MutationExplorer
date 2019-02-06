@@ -10,6 +10,7 @@
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(survival))
+suppressPackageStartupMessages(library(survminer))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(DT))
@@ -215,7 +216,6 @@ shinyServer(function(input, output, session) {
             plot = surv.plot(input, fit, data=sample.data, title=title)
         } else {  # mut.gene.plot
             plot.list = list()
-            title.main = paste(treatment.label, "treated patients")
 
             # brute-force determine the row/col counts
             n.cols = n.rows = 1
@@ -240,7 +240,9 @@ shinyServer(function(input, output, session) {
 
                 plot.list[[gene]] = surv.plot(input, fit, data=sample.data, gene=gene, title=title.gene)
             }
-            plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.main)
+            title.main = paste(treatment.label, "treated patients")
+            title.grob = text_grob(title.main, size = 23, face = "bold")
+            plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
         }
         return(plot)
     }
