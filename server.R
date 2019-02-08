@@ -13,6 +13,7 @@ suppressPackageStartupMessages(library(survival))
 suppressPackageStartupMessages(library(survminer))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(yaml))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(reactome.db))
 source("R/resources.R")
@@ -60,7 +61,7 @@ add.gene.mut.status <- function(input, sample.tbl, mut.tbl) {
     for (gene in input$gene.input) {
         mut.var = paste0("mut.status.", gene)
         sample.tbl <- sample.tbl %>%
-            mutate(!!mut.var := as.factor(ifelse(rba %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], "mut", "wt")))
+            mutate(!!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], "mut", "wt")))
     }
     return(sample.tbl)
 }
@@ -68,7 +69,7 @@ add.gene.mut.status <- function(input, sample.tbl, mut.tbl) {
 # Add mutational burden given a cutoff.
 add.mutation.burden <- function(input, sample.tbl) {
     sample.tbl <- sample.tbl %>%
-        mutate(tumor_mutational_burden = as.factor(ifelse(mutation_count > input$tmb.cutoff, "High", "Low")))
+        mutate(tumor_mutational_burden = as.factor(ifelse(Mutation_Count > input$tmb.cutoff, "High", "Low")))
     return(sample.tbl)
 }
 
@@ -78,12 +79,12 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 
     if (input$pathwayType == "pathway.reactome") {
         sample.tbl <- sample.tbl %>%
-            mutate(mut.pathway.status = as.factor(ifelse(sample.tbl$rba %in% mut.tbl$SAMPLE, "mut", "wt")))
+            mutate(mut.pathway.status = as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl$SAMPLE, "mut", "wt")))
     } else {  # pathway.custom
         pathway.genes <- input$custom.pathway.input
 
         if (!is.null(pathway.genes)) {
-            mut.status = apply(sample.tbl, 1, function(sample) { pathway.genes %in% mut.tbl$gene.symbol[mut.tbl$SAMPLE %in% sample[["rba"]]] })
+            mut.status = apply(sample.tbl, 1, function(sample) { pathway.genes %in% mut.tbl$gene.symbol[mut.tbl$SAMPLE %in% sample[["SAMPLE"]]] })
             if (is.vector(mut.status)) {  # one gene only, logical vector
                 sample.tbl$mut.pathway.status = as.factor(ifelse(mut.status, "mut", "wt"))
             } else {
@@ -98,7 +99,7 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 
 filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
     mut.tbl <- mut.tbl %>%
-        filter(SAMPLE %in% sample.tbl$rba)
+        filter(SAMPLE %in% sample.tbl$SAMPLE)
 
     if (input$plotType == "mut.gene.plot") {
         mut.tbl <- mut.tbl %>%
@@ -144,8 +145,10 @@ get.dataset.stats <- function(sample.tbl, mut.tbl) {
 
 shinyServer(function(input, output, session) {
 
-    master <- as.data.frame(get(load("data/sample_master_table_scanb.Rdata")))
-    mutations <- as.data.frame(get(load("data/mutations_scanb.Rdata")))
+    config = read_yaml("config.yaml")
+
+    master <- as.data.frame(get(load(config$sample_file)))
+    mutations <- as.data.frame(get(load(config$mutation_file)))
     mutated.genes <- sort(unique(mutations$gene.symbol))
     n.mut = nrow(mutations)
     n.samples = nrow(master)
@@ -186,8 +189,8 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "custom.pathway.input",
                       choices = mutated.genes
     )
-    updateSliderInput(session, "tmb.cutoff", min = min(master$mutation_count),
-                      max = max(master$mutation_count), value = 75)
+    updateSliderInput(session, "tmb.cutoff", min = min(master$Mutation_Count),
+                      max = max(master$Mutation_Count), value = 75)
 
     # Hide the loading message when the rest of the server function has executed
     hideElement(id = "loading-content", anim = TRUE, animType = "fade")

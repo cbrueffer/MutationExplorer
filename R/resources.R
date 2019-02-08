@@ -7,20 +7,20 @@ suppressPackageStartupMessages(library(dplyr))
 # Treatment definitions
 #
 treatment.tbl <- as.tibble(rbind(c("any", "Any", "any"),
-                                 c("adjv_endo", "Endocrine + any", "endo + any"),
-                                 c("adjv_cyto", "Chemo + any", "chemo + any"),
-                                 c("adjv_her2", "HER2 + any", "HER2 + any"),
-                                 c("adjv_endo_only", "Endocrine only", "endo only"),
-                                 c("adjv_cyto_only", "Chemo only", "chemo only"),
-                                 c("adjv_her2_only", "HER2 only", "HER2 only"),
-                                 c("adjv_endo_and_cyto", "Endo + Chemo + any", "endo + chemo + any"),
-                                 c("adjv_endo_and_her2", "Endo + HER2 + any", "endo + HER2 + any"),
-                                 c("adjv_cyto_and_her2", "Cyto + HER2 + any", "chemo + HER2 + any"),
-                                 c("adjv_endo_and_cyto_only", "Endo + Chemo only", "endo + chemo only"),
-                                 c("adjv_endo_and_her2_only", "Endo + HER2 only", "endo + HER2 only"),
-                                 c("adjv_cyto_and_her2_only", "Cyto + HER2 only", "chemo + HER2 only"),
-                                 c("adjv_endo_and_cyto_and_her2", "Endo + Chemo + HER2", "endo + chemo + HER2"),
-                                 c("adjv_no_systemic", "No Systemic Treatment", "not systemically")
+                                 c("Adjuvant_Endo", "Endocrine + any", "endo + any"),
+                                 c("Adjuvant_Cyto", "Chemo + any", "chemo + any"),
+                                 c("Adjuvant_HER2", "HER2 + any", "HER2 + any"),
+                                 c("Adjuvant_Endo_only", "Endocrine only", "endo only"),
+                                 c("Adjuvant_Cyto_only", "Chemo only", "chemo only"),
+                                 c("Adjuvant_HER2_only", "HER2 only", "HER2 only"),
+                                 c("Adjuvant_Endo_and_Cyto", "Endo + Chemo + any", "endo + chemo + any"),
+                                 c("Adjuvant_Endo_and_HER2", "Endo + HER2 + any", "endo + HER2 + any"),
+                                 c("Adjuvant_Cyto_and_HER2", "Cyto + HER2 + any", "chemo + HER2 + any"),
+                                 c("Adjuvant_Endo_and_Cyto_only", "Endo + Chemo only", "endo + chemo only"),
+                                 c("Adjuvant_Endo_and_HER2_only", "Endo + HER2 only", "endo + HER2 only"),
+                                 c("Adjuvant_Cyto_and_HER2_only", "Cyto + HER2 only", "chemo + HER2 only"),
+                                 c("Adjuvant_Endo_and_Cyto_and_HER2_only", "Endo + Chemo + HER2", "endo + chemo + HER2"),
+                                 c("Adjuvant_No_Systemic", "No Systemic Treatment", "not systemically")
 ))
 colnames(treatment.tbl) <- c("var", "label", "plot.label")
 
