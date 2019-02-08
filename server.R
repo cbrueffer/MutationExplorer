@@ -20,7 +20,7 @@ source("R/resources.R")
 source("R/plot_survival_ggplot.R")
 
 
-filter.sample.tbl <- function(input, master) {
+filter.sample.tbl <- function(input, sample.tbl) {
     filters = list()
 
     # Filter by treatment
@@ -50,10 +50,10 @@ filter.sample.tbl <- function(input, master) {
     # apply filters
     if (length(filters) > 0) {
         filter_str = paste(filters, collapse = " & ")
-        master <- master %>% filter_(filter_str)
+        sample.tbl <- sample.tbl %>% filter_(filter_str)
     }
 
-    return(master)
+    return(sample.tbl)
 }
 
 # Determine mutation status of samples for selected genes
@@ -147,18 +147,18 @@ shinyServer(function(input, output, session) {
 
     config = read_yaml("config.yaml")
 
-    master <- as.data.frame(get(load(config$sample_file)))
+    samples <- as.data.frame(get(load(config$sample_file)))
     mutations <- as.data.frame(get(load(config$mutation_file)))
     mutated.genes <- sort(unique(mutations$gene.symbol))
     n.mut = nrow(mutations)
-    n.samples = nrow(master)
+    n.samples = nrow(samples)
 
     # set default directory for help files
     observe_helpers(session, "helpfiles")
 
     # Filter the sample table down whenever an input control changes
     sample.tbl <- reactive({
-        filtered.table <- filter.sample.tbl(input, master)
+        filtered.table <- filter.sample.tbl(input, samples)
         filtered.table <- add.gene.mut.status(input, filtered.table, mutations)
         filtered.table <- add.mutation.burden(input, filtered.table)
         filtered.table <- add.pathway.mut.status(input, filtered.table, mutations)
@@ -176,7 +176,7 @@ shinyServer(function(input, output, session) {
     #
     ######################################################
     output$header_panel <- renderUI({
-        n.samples = nrow(master)
+        n.samples = nrow(samples)
         titlePanel(
             h1("SCAN-B Mutation Explorer",
                h3(paste(prettyNum(n.mut, big.mark=","), "mutations in", prettyNum(n.samples, big.mark=","), "Primary Breast Cancer Samples")))
@@ -189,8 +189,8 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "custom.pathway.input",
                       choices = mutated.genes
     )
-    updateSliderInput(session, "tmb.cutoff", min = min(master$Mutation_Count),
-                      max = max(master$Mutation_Count), value = 75)
+    updateSliderInput(session, "tmb.cutoff", min = min(samples$Mutation_Count),
+                      max = max(samples$Mutation_Count), value = 75)
 
     # Hide the loading message when the rest of the server function has executed
     hideElement(id = "loading-content", anim = TRUE, animType = "fade")
@@ -310,7 +310,7 @@ shinyServer(function(input, output, session) {
     output$datasetStats <- renderUI ({
         div(
             h2("Statistics for Total Sample Set"),
-            renderTable(get.dataset.stats(master, mutations), colnames = FALSE),
+            renderTable(get.dataset.stats(samples, mutations), colnames = FALSE),
             h2("Statistics for Selected Sample Set"),
             renderTable(get.dataset.stats(sample.tbl(), mut.tbl()), colnames = FALSE)
         )
