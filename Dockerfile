@@ -36,6 +36,7 @@ COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
 ENV APP_LOCATION /srv/shiny-server/ShinyMutationExplorer
 
 COPY *.R ${APP_LOCATION}/
+COPY config.yaml ${APP_LOCATION}/
 COPY htpasswd-sme.txt ${APP_LOCATION}/
 COPY about.md ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
