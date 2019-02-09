@@ -25,12 +25,13 @@ Select a subgroup of patient samples treated with a specific combination three t
 
 ### Biomarkers
 
-| Biomarker         | Description                                                                     |
-|:----------------- |:------------------------------------------------------------------------------- |
-| ER                | Estrogen receptor; Positive for >0% IHC staining cells, otherwise Negative)     |
-| PgR               | Progesterone receptor; Positive for >0% IHC staining cells, otherwise Negative) |
-| HER2              | Epidermal growth factor receptor 2 (HER2/ERBB2)                                 |
-| Ki67              | Ki67 progression marker (staining cutoffs varying)                              |
-| NHG               | Nottingham histological grade                                                   |
-| PAM50             | Intrinsic breast cancer subtype based on the PAM50 gene list                    |
+| Biomarker            | Description                                                                            |
+|:-------------------- |:-------------------------------------------------------------------------------------- |
+| Histological Subtype | Histological Subtype: Ductal, Lobular, or Other (mixed ductal/lobular, medullary, etc) |
+| ER                   | Estrogen receptor: Positive for >0% IHC staining cells, otherwise Negative)            |
+| PgR                  | Progesterone receptor: Positive for >0% IHC staining cells, otherwise Negative)        |
+| HER2                 | Epidermal growth factor receptor 2 (HER2/ERBB2)                                        |
+| Ki67                 | Ki67 progression marker (staining cutoffs varying)                                     |
+| NHG                  | Nottingham histological grade                                                          |
+| PAM50                | Intrinsic breast cancer subtype based on the PAM50 gene list                           |
 

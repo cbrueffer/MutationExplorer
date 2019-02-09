@@ -28,6 +28,9 @@ filter.sample.tbl <- function(input, sample.tbl) {
         filters[["Treatment"]] = "get(input$treatment.input) == 1"
     }
     # Filter down by biomarker selection
+    if (input$hist.subtype != ui.options$HistSubtype[["Any"]]) {
+        filters[["HistSubtype"]] = "Histological_Subtype == selection.to.label.list$HistSubtype[[as.character(input$hist.subtype)]]"
+    }
     if (input$er.status != ui.options$ER[["Any"]]) {
         filters[["ER"]] = "ER_1perc == selection.to.label.list$ER[[as.character(input$er.status)]]"
     }

@@ -50,7 +50,10 @@ biomarker.tbl <- as.tibble(rbind(c("ER", "ER_1perc", "POS", "Positive", "", 1),
                                  c("PAM50", "PAM50", "HER2", "HER2-enriched", "deeppink", 3),
                                  c("PAM50", "PAM50", "Basal", "Basal-like", "red", 4),
                                  c("PAM50", "PAM50", "Normal", "Normal-like", "green", 5),
-                                 c("PAM50", "PAM50", "Unclassified", "Unclassified", "gray", 6)
+                                 c("PAM50", "PAM50", "Unclassified", "Unclassified", "gray", 6),
+                                 c("HistSubtype", "Histological_Subtype", "Ductal", "Ductal", "", 1),
+                                 c("HistSubtype", "Histological_Subtype", "Lobular", "Lobular", "", 2),
+                                 c("HistSubtype", "Histological_Subtype", "Other", "Other", "", 3)
 ))
 colnames(biomarker.tbl) <- c("marker", "var", "level", "label", "color", "selection.value")
 
