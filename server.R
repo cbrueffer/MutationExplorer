@@ -101,27 +101,26 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 }
 
 filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
-    mut.tbl <- mut.tbl %>%
-        filter(SAMPLE %in% sample.tbl$SAMPLE)
+    mut.tbl <- filter(mut.tbl, SAMPLE %in% sample.tbl$SAMPLE)
 
     if (input$plotType == "mut.gene.plot") {
-        mut.tbl <- mut.tbl %>%
-            filter(gene.symbol %in% input$gene.input)
+        mut.tbl <- filter(mut.tbl, gene.symbol %in% input$gene.input)
     } else if (input$plotType == "mut.pathway.plot") {
         if (input$pathwayType == "pathway.reactome") {
-            mut.tbl <- mut.tbl %>%
-                filter(grepl(input$pathway.input, Pathways.Reactome))
+            mut.tbl <- filter(mut.tbl, grepl(input$pathway.input, Pathways.Reactome))
         } else {  # pathway.custom
             pathway.genes <- input$custom.pathway.input
 
             if (!is.null(pathway.genes)) {
                 # keep all genes in the selected custom pathway
-                mut.tbl = mut.tbl %>% filter(gene.symbol %in% pathway.genes)
+                mut.tbl = filter(mut.tbl, gene.symbol %in% pathway.genes)
             } else {
-                mut.tbl = mut.tbl %>% filter(FALSE)  # no genes defined -> empty table
+                mut.tbl = filter(mut.tbl, FALSE)  # no genes defined -> empty table
             }
         }
-    }  # No filtering for burden; we want all mutations in that case.
+    } else if (input$plotType == "mut.burden.plot") {
+        mut.tbl <- filter(mut.tbl, ANN.effect != "synonymous_variant")
+    }
 
     return(mut.tbl)
 }

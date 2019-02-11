@@ -12,5 +12,5 @@ Select for which type of data to show Kaplan-Meier survival curves. The options 
 
 - Tumor Mutation Burden
 
-  All samples stratified into *High* or *Low* tumor mutation burden defined by a cutoff.
+  All samples stratified into *High* or *Low* tumor mutation burden defined by a cutoff.  Only non-synonymous mutations are considered.
 
