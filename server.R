@@ -127,10 +127,10 @@ get.dataset.stats <- function(sample.tbl, mut.tbl) {
     stats = data.frame(Value=character(), Stat=numeric()) %>%
         add_row(Value="Total Samples", Stat=nrow(sample.tbl)) %>%
         add_row(Value="Total Mutations", Stat=nrow(mut.tbl)) %>%
-        add_row(Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$mutation_count)) %>%
-        add_row(Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$mutation_count)) %>%
-        add_row(Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$mutation_coding_count)) %>%
-        add_row(Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$mutation_coding_count)) %>%
+        add_row(Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$Mutation_Count)) %>%
+        add_row(Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$Mutation_Count)) %>%
+        add_row(Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$Mutation_Nonsynon_Count)) %>%
+        add_row(Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$Mutation_Nonsynon_Count)) %>%
         add_row(Value="Median Overall Survival (in Months)", Stat=median(sample.tbl$OS_months))
     return(stats)
 }
