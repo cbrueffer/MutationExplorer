@@ -53,7 +53,7 @@ filter.sample.tbl <- function(input, sample.tbl) {
     # apply filters
     if (length(filters) > 0) {
         filter_str = paste(filters, collapse = " & ")
-        sample.tbl <- sample.tbl %>% filter_(filter_str)
+        sample.tbl <- filter_(sample.tbl, filter_str)
     }
 
     return(sample.tbl)
@@ -63,16 +63,14 @@ filter.sample.tbl <- function(input, sample.tbl) {
 add.gene.mut.status <- function(input, sample.tbl, mut.tbl) {
     for (gene in input$gene.input) {
         mut.var = paste0("mut.status.", gene)
-        sample.tbl <- sample.tbl %>%
-            mutate(!!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], "mut", "wt")))
+        sample.tbl <- mutate(sample.tbl, !!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], "mut", "wt")))
     }
     return(sample.tbl)
 }
 
 # Add mutational burden given a cutoff.
 add.mutation.burden <- function(input, sample.tbl) {
-    sample.tbl <- sample.tbl %>%
-        mutate(tumor_mutational_burden = as.factor(ifelse(Mutation_Count > input$tmb.cutoff, "High", "Low")))
+    sample.tbl <- mutate(sample.tbl, tumor_mutational_burden = as.factor(ifelse(Mutation_Count > input$tmb.cutoff, "High", "Low")))
     return(sample.tbl)
 }
 
@@ -81,8 +79,7 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
     mut.tbl = filter.mut.tbl(input, sample.tbl, mut.tbl)
 
     if (input$pathwayType == "pathway.reactome") {
-        sample.tbl <- sample.tbl %>%
-            mutate(mut.pathway.status = as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl$SAMPLE, "mut", "wt")))
+        sample.tbl <- mutate(sample.tbl, mut.pathway.status = as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl$SAMPLE, "mut", "wt")))
     } else {  # pathway.custom
         pathway.genes <- input$custom.pathway.input
 
