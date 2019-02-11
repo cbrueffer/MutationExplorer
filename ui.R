@@ -54,6 +54,14 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                     tabsetPanel(type = "pills",
                                 tabPanel("Plot and Data Selection",
                                          wellPanel(style = wellpanel.settings.style,
+                                                   h4("Mutation Selection") %>%
+                                                       helper(content = "mutation_selection"),
+
+                                                   radioGroupButtons("mutationSelection",
+                                                                     label = "", choices = mutation.selection.options, selected = "mutations.all",
+                                                                     status = "primary", individual = TRUE)
+                                         ),
+                                         wellPanel(style = wellpanel.settings.style,
                                                    h4("Plot Selection"),
 
                                                    selectInput("plotType", "Plot Type", plot.type.options) %>%

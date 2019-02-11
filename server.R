@@ -68,9 +68,21 @@ add.gene.mut.status <- function(input, sample.tbl, mut.tbl) {
     return(sample.tbl)
 }
 
+# Set mutation count depending on mutation set selection.
+set.mutation.counts <- function(input, sample.tbl) {
+    if (input$mutationSelection == "mutations.cosmic") {
+        sample.tbl$current_mutation_count = sample.tbl$COSMIC_Mutation_Count
+        sample.tbl$current_mutation_nonsynon_count = sample.tbl$COSMIC_Mutation_Nonsynon_Count
+    } else {
+        sample.tbl$current_mutation_count = sample.tbl$Mutation_Count
+        sample.tbl$current_mutation_nonsynon_count = sample.tbl$Mutation_Nonsynon_Count
+    }
+    return(sample.tbl)
+}
+
 # Add mutational burden given a cutoff.
 add.mutation.burden <- function(input, sample.tbl) {
-    sample.tbl <- mutate(sample.tbl, tumor_mutational_burden = as.factor(ifelse(Mutation_Count > input$tmb.cutoff, "High", "Low")))
+    sample.tbl <- mutate(sample.tbl, tumor_mutational_burden = as.factor(ifelse(current_mutation_count > input$tmb.cutoff, "High", "Low")))
     return(sample.tbl)
 }
 
@@ -84,7 +96,9 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
         pathway.genes <- input$custom.pathway.input
 
         if (!is.null(pathway.genes)) {
-            mut.status = apply(sample.tbl, 1, function(sample) { pathway.genes %in% mut.tbl$gene.symbol[mut.tbl$SAMPLE %in% sample[["SAMPLE"]]] })
+            mut.status = apply(sample.tbl, 1, function(sample) {
+                pathway.genes %in% mut.tbl$gene.symbol[mut.tbl$SAMPLE %in% sample[["SAMPLE"]]]
+                })
             if (is.vector(mut.status)) {  # one gene only, logical vector
                 sample.tbl$mut.pathway.status = as.factor(ifelse(mut.status, "mut", "wt"))
             } else {
@@ -99,6 +113,10 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 
 filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
     mut.tbl <- filter(mut.tbl, SAMPLE %in% sample.tbl$SAMPLE)
+
+    if (input$mutationSelection == "mutations.cosmic") {
+        mut.tbl <- filter(mut.tbl, COSMIC_ID != ".")
+    }
 
     if (input$plotType == "mut.gene.plot") {
         mut.tbl <- filter(mut.tbl, gene.symbol %in% input$gene.input)
@@ -127,10 +145,11 @@ get.dataset.stats <- function(sample.tbl, mut.tbl) {
     stats = data.frame(Value=character(), Stat=numeric()) %>%
         add_row(Value="Total Samples", Stat=nrow(sample.tbl)) %>%
         add_row(Value="Total Mutations", Stat=nrow(mut.tbl)) %>%
-        add_row(Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$Mutation_Count)) %>%
-        add_row(Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$Mutation_Count)) %>%
-        add_row(Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$Mutation_Nonsynon_Count)) %>%
-        add_row(Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$Mutation_Nonsynon_Count)) %>%
+        add_row(Value="Total COSMIC Mutations", Stat=nrow(filter(mut.tbl, COSMIC_ID != "."))) %>%
+        add_row(Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$current_mutation_count)) %>%
+        add_row(Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$current_mutation_count)) %>%
+        add_row(Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$current_mutation_nonsynon_count)) %>%
+        add_row(Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$current_mutation_nonsynon_count)) %>%
         add_row(Value="Median Overall Survival (in Months)", Stat=median(sample.tbl$OS_months))
     return(stats)
 }
@@ -146,8 +165,8 @@ shinyServer(function(input, output, session) {
 
     config = read_yaml("config.yaml")
 
-    samples <- as.data.frame(get(load(config$sample_file)))
-    mutations <- as.data.frame(get(load(config$mutation_file)))
+    samples <- get(load(config$sample_file))
+    mutations <- get(load(config$mutation_file))
     mutated.genes <- sort(unique(mutations$gene.symbol))
     n.mut = nrow(mutations)
     n.samples = nrow(samples)
@@ -155,10 +174,12 @@ shinyServer(function(input, output, session) {
     # set default directory for help files
     observe_helpers(session, "helpfiles")
 
-    # Filter the sample table down whenever an input control changes
+    # Filter the sample table down whenever an input control changes.
+    # Use the full mutation table, since using mut.tbl() below would result in a loop.
     sample.tbl <- reactive({
         filtered.table <- filter.sample.tbl(input, samples)
         filtered.table <- add.gene.mut.status(input, filtered.table, mutations)
+        filtered.table <- set.mutation.counts(input, filtered.table)
         filtered.table <- add.mutation.burden(input, filtered.table)
         filtered.table <- add.pathway.mut.status(input, filtered.table, mutations)
         return(filtered.table)
@@ -190,8 +211,12 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "custom.pathway.input",
                       choices = mutated.genes
     )
-    updateSliderInput(session, "tmb.cutoff", min = min(samples$Mutation_Count),
-                      max = max(samples$Mutation_Count), value = 75)
+    observeEvent(input$mutationSelection, {
+        updateSliderInput(session, "tmb.cutoff",
+                          min = min(sample.tbl()[["current_mutation_count"]]),
+                          max = max(sample.tbl()[["current_mutation_count"]]),
+                          value = median(sample.tbl()[["current_mutation_count"]]))
+    })
 
     # Hide the loading message when the rest of the server function has executed
     hideElement(id = "loading-content", anim = TRUE, animType = "fade")
@@ -311,7 +336,7 @@ shinyServer(function(input, output, session) {
     output$datasetStats <- renderUI ({
         div(
             h2("Statistics for Total Sample Set"),
-            renderTable(get.dataset.stats(samples, mutations), colnames = FALSE),
+            renderTable(get.dataset.stats(set.mutation.counts(input, samples), mutations), colnames = FALSE),
             h2("Statistics for Selected Sample Set"),
             renderTable(get.dataset.stats(sample.tbl(), mut.tbl()), colnames = FALSE)
         )

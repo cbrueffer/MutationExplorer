@@ -134,6 +134,9 @@ get.pam50.html.labels <- function(biomarker.tbl) {
 }
 pam50.html.labels = get.pam50.html.labels(biomarker.tbl)
 
+mutation.selection.options = c("All" = "mutations.all",
+                               "COSMIC only" = "mutations.cosmic")
+
 plot.type.options = c("Mutated Genes" = "mut.gene.plot",
                       "Mutated Pathways" = "mut.pathway.plot",
                       "Tumor Mutational Burden" = "mut.burden.plot")
