@@ -335,9 +335,9 @@ shinyServer(function(input, output, session) {
 
     output$datasetStats <- renderUI ({
         div(
-            h2("Statistics for Total Sample Set"),
+            h2("Statistics for Total Sample/Mutation Set"),
             renderTable(get.dataset.stats(set.mutation.counts(input, samples), mutations), colnames = FALSE),
-            h2("Statistics for Selected Sample Set"),
+            h2("Statistics for Selected Sample/Mutation Set"),
             renderTable(get.dataset.stats(sample.tbl(), mut.tbl()), colnames = FALSE)
         )
     })
