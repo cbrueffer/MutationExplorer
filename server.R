@@ -20,6 +20,7 @@ source("R/resources.R")
 source("R/plot_survival_ggplot.R")
 
 
+# Return a list of samples adhering to the specified filters.
 filter.sample.tbl <- function(input, sample.tbl) {
     filters = list()
 
@@ -56,7 +57,9 @@ filter.sample.tbl <- function(input, sample.tbl) {
         sample.tbl <- filter_(sample.tbl, filter_str)
     }
 
-    return(sample.tbl)
+    samples <- as.character(sample.tbl$SAMPLE)
+
+    return(samples)
 }
 
 # Determine mutation status of samples for selected genes
@@ -88,8 +91,6 @@ add.mutation.burden <- function(input, sample.tbl) {
 
 # Determine pathway mutation status for each sample.
 add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
-    mut.tbl = filter.mut.tbl(input, sample.tbl, mut.tbl)
-
     if (input$pathwayType == "pathway.reactome") {
         sample.tbl <- mutate(sample.tbl, mut.pathway.status = as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl$SAMPLE, "mut", "wt")))
     } else {  # pathway.custom
@@ -111,8 +112,8 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
     return(sample.tbl)
 }
 
-filter.mut.tbl <- function(input, sample.tbl, mut.tbl) {
-    mut.tbl <- filter(mut.tbl, SAMPLE %in% sample.tbl$SAMPLE)
+filter.mut.tbl <- function(input, sample.list, mut.tbl) {
+    mut.tbl <- filter(mut.tbl, SAMPLE %in% sample.list)
 
     if (input$mutationSelection == "mutations.cosmic") {
         mut.tbl <- filter(mut.tbl, COSMIC_ID != ".")
@@ -174,19 +175,23 @@ shinyServer(function(input, output, session) {
     # set default directory for help files
     observe_helpers(session, "helpfiles")
 
-    # Filter the sample table down whenever an input control changes.
-    # Use the full mutation table, since using mut.tbl() below would result in a loop.
+    sample.list <- reactive({
+        samples <- filter.sample.tbl(input, samples)
+        return(samples)
+    })
+
+    # Add additional information  to the current sample set as specified in the input controls.
     sample.tbl <- reactive({
-        filtered.table <- filter.sample.tbl(input, samples)
-        filtered.table <- add.gene.mut.status(input, filtered.table, mutations)
-        filtered.table <- set.mutation.counts(input, filtered.table)
-        filtered.table <- add.mutation.burden(input, filtered.table)
-        filtered.table <- add.pathway.mut.status(input, filtered.table, mutations)
-        return(filtered.table)
+        filtered.samples <- filter(samples, SAMPLE %in% sample.list())
+        filtered.samples <- add.gene.mut.status(input, filtered.samples, mut.tbl())
+        filtered.samples <- set.mutation.counts(input, filtered.samples)
+        filtered.samples <- add.mutation.burden(input, filtered.samples)
+        filtered.samples <- add.pathway.mut.status(input, filtered.samples, mut.tbl())
+        return(filtered.samples)
     })
 
     mut.tbl <- reactive({
-        filtered.muts <- filter.mut.tbl(input, sample.tbl(), mutations)
+        filtered.muts <- filter.mut.tbl(input, sample.list(), mutations)
         return(filtered.muts)
     })
 
