@@ -295,7 +295,8 @@ shinyServer(function(input, output, session) {
     })
 
     output$mut.table = DT::renderDataTable({
-        DT::datatable(mut.tbl(),
+        display.mut.tbl = select(mut.tbl(), -c(Pathways.Reactome))
+        DT::datatable(display.mut.tbl,
                       caption = "Mutations",
                       extensions = c('FixedColumns'),
                       selection = "none",
