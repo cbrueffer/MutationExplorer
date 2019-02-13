@@ -11,7 +11,7 @@ This software was developed as part of a PhD research project in the [laboratory
 
 If you use any data or plots from this website in your publications, please cite the following paper:
 
-[Brueffer *et al*. The Transcriptional Landscape of the Breast Cancer Transcriptome. bioRxiv (2019)](https://)
+[Brueffer *et al*. The Mutational Landscape of the Breast Cancer Transcriptome. bioRxiv (2019)](https://)
 
 ## Code
 

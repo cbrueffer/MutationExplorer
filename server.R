@@ -242,11 +242,11 @@ shinyServer(function(input, output, session) {
 
         if (input$plotType == "mut.burden.plot") {
             fit = survfit(Surv(OS_years, OS_event) ~ tumor_mutational_burden, data = sample.data)
-            title = paste0("Mutation Burden (Cutoff ", input$tmb.cutoff, ") in ", treatment.label, " treated patients")
+            title = paste0("Mutation Burden (Cutoff ", input$tmb.cutoff, ") in ", treatment.label, " Treated Patients")
             plot = surv.plot(input, fit, data=sample.data, title=title)
         } else if (input$plotType == "mut.pathway.plot") {
             fit = survfit(Surv(OS_years, OS_event) ~ mut.pathway.status, data = sample.data)
-            title = paste("Pathway in", treatment.label, "treated patients")
+            title = paste("Pathway in", treatment.label, "Treated Patients")
             plot = surv.plot(input, fit, data=sample.data, title=title)
         } else {  # mut.gene.plot
             plot.list = list()
@@ -274,7 +274,7 @@ shinyServer(function(input, output, session) {
 
                 plot.list[[gene]] = surv.plot(input, fit, data=sample.data, gene=gene, title=title.gene)
             }
-            title.main = paste(treatment.label, "treated patients")
+            title.main = paste(treatment.label, "Treated Patients")
             title.grob = text_grob(title.main, size = 23, face = "bold")
             plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
         }
