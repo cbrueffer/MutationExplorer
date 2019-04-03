@@ -125,9 +125,9 @@ get.pam50.html.labels <- function(biomarker.tbl) {
     result.list = list()
     result.list[["Any"]] = "<div style='background: white; color: black; font-size: 110%; padding-left: 5px;'>Any</div>"
     for (i in 1:nrow(biomarker.tbl.pam50)) {
-        subtype = biomarker.tbl.pam50[i, ]$level
-        label = biomarker.tbl.pam50[i, ]$label
-        color = biomarker.tbl.pam50[i, ]$color
+        subtype = biomarker.tbl.pam50$level[i]
+        label = biomarker.tbl.pam50$label[i]
+        color = biomarker.tbl.pam50$color[i]
         result.list[[subtype]] = paste0("<div style='background: ", color, "; color: white; font-size: 110%; padding-left: 5px;'>", label, "</div>")
     }
     return(result.list)
