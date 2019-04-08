@@ -1,6 +1,6 @@
-# ShinyMutationExplorer
+# MutationExplorer
 
-ShinyMutationExplorer is a lightweight web application for exploring somatic mutations in cancer datasets.  It is based on R and the Shiny framework.
+MutationExplorer is a lightweight web application for exploring somatic mutations in cancer datasets.  It is based on R and the Shiny framework.
 
 The application is currently most usable for breast cancer samples, since the relevant biomarkers for patient selection (clinical status ER, PgR, ...) are hardcoded.
 
