@@ -6,7 +6,7 @@ suppressPackageStartupMessages(library(dplyr))
 #
 # Treatment definitions
 #
-treatment.tbl <- as.tibble(rbind(c("any", "Any", "Any"),
+treatment.tbl <- as_tibble(rbind(c("any", "Any", "Any"),
                                  c("Adjuvant_Endo", "Endocrine + any", "Endo + any"),
                                  c("Adjuvant_Cyto", "Chemo + any", "Chemo + any"),
                                  c("Adjuvant_HER2", "HER2 + any", "HER2 + any"),
@@ -34,7 +34,7 @@ for (i in 1:nrow(treatment.tbl)) {
 #
 # Biomarker definitions
 #
-biomarker.tbl <- as.tibble(rbind(c("ER", "ER_1perc", "POS", "Positive", "", 1),
+biomarker.tbl <- as_tibble(rbind(c("ER", "ER_1perc", "POS", "Positive", "", 1),
                                  c("ER", "ER_1perc", "NEG", "Negative", "", 2),
                                  c("PgR", "PgR_1perc", "POS", "Positive", "", 1),
                                  c("PgR", "PgR_1perc", "NEG", "Negative", "", 2),
