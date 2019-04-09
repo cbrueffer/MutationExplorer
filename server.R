@@ -274,7 +274,7 @@ shinyServer(function(input, output, session) {
 
                 plot.list[[gene]] = surv.plot(input, fit, data=sample.data, gene=gene, title=title.gene)
             }
-            title.main = paste(treatment.label, "Treated Patients")
+            title.main = paste("Treatment Group: ", treatment.label)
             title.grob = text_grob(title.main, size = 23, face = "bold")
             plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
         }

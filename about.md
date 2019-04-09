@@ -15,5 +15,5 @@ If you use any data or plots from this website in your publications, please cite
 
 ## Code
 
-The source code for this software can be found on GitHub: https://github.com/cbrueffer/ShinyMutationExplorer
+The source code for this software can be found on GitHub: https://github.com/cbrueffer/MutationExplorer
 
