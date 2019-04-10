@@ -1,1 +1,2 @@
 db_file: "data/scanb.sqlite"
+app_title: "SCAN-B Mutation Explorer"

@@ -207,7 +207,7 @@ shinyServer(function(input, output, session) {
     ######################################################
     output$header_panel <- renderUI({
         titlePanel(
-            h1("SCAN-B Mutation Explorer",
+            h1(config$app_title,
                h3(paste(prettyNum(n.mut, big.mark=","),
                         "mutations in",
                         prettyNum(n.samples, big.mark=","),
