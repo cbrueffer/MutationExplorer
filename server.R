@@ -136,7 +136,7 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl) {
             }
         }
     } else if (input$plotType == "mut.burden.plot") {
-        mut.tbl <- filter(mut.tbl, ANN.effect != "synonymous_variant")
+        mut.tbl <- filter(mut.tbl, ANN.effect.class != "Synonymous")
     }
 
     return(mut.tbl)
@@ -167,8 +167,12 @@ shinyServer(function(input, output, session) {
 
     config = read_yaml("config.yaml")
 
-    samples <- get(load(config$sample_file))
-    mutations <- get(load(config$mutation_file))
+    con <- DBI::dbConnect(RSQLite::SQLite(), config$db_file)
+    samples <- tbl(con, "samples") %>%
+        collect()
+    mutations <- tbl(con, "mutations") %>%
+        collect()
+
     mutated.genes <- sort(unique(mutations$gene.symbol))
     n.mut = nrow(mutations)
     n.samples = nrow(samples)

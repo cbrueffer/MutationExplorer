@@ -1,2 +1,1 @@
-sample_file: "data/scanb_samples.Rdata"
-mutation_file: "data/scanb_mutations.Rdata"
+db_file: "data/scanb.sqlite"
