@@ -167,3 +167,13 @@ color.palette.options = c("NPG" = "npg",
                           "Futurama" = "futurama",
                           "Rick and Morty" = "rickandmorty",
                           "The Simpsons" = "simpsons")
+
+mut_effects <- c("Frameshift",
+                 "Nonsense",
+                 "In-frame indel",
+                 "Missense",
+                 "Splicing",
+                 "Synonymous",
+                 "UTR",
+                 "Other"
+)

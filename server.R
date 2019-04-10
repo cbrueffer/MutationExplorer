@@ -116,10 +116,19 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 filter.mut.tbl <- function(input, sample.list, mut.tbl) {
     mut.tbl <- filter(mut.tbl, SAMPLE %in% sample.list)
 
+    #
+    # Filter mutations based on input selections.
+    #
     if (input$mutationSelection == "mutations.cosmic") {
         mut.tbl <- filter(mut.tbl, COSMIC_ID != ".")
     }
+    if (!is.null(input$mutationEffect)) {
+        mut.tbl <- filter(mut.tbl, ANN.effect.class %in% input$mutationEffect)
+    }
 
+    #
+    # Filter mutations based on plot type.
+    #
     if (input$plotType == "mut.gene.plot") {
         mut.tbl <- filter(mut.tbl, gene.symbol %in% input$gene.input)
     } else if (input$plotType == "mut.pathway.plot") {
