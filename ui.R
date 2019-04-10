@@ -62,8 +62,9 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                                      status = "primary", individual = TRUE),
                                                    pickerInput(inputId = "mutationEffect",
                                                                label = "Mutation Effect",
-                                                               choices = mut_effects,
-                                                               selected = mut_effects,
+                                                               choices = mut.effect.tbl$effect,
+                                                               choicesOpt = list(content = mut.effect.html.labels),
+                                                               selected = mut.effect.tbl$effect,
                                                                options = list(
                                                                    `actions-box` = TRUE
                                                                ),

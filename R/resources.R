@@ -57,6 +57,20 @@ biomarker.tbl <- as.tibble(rbind(c("ER", "ER_1perc", "POS", "Positive", "", 1),
 ))
 colnames(biomarker.tbl) <- c("marker", "var", "level", "label", "color", "selection.value")
 
+#
+# Mutation effects
+#
+mut.effect.tbl <- as.tibble(rbind(c("Frameshift", "red"),
+                                  c("Nonsense", "orange"),
+                                  c("In-frame indel", "darkgreen"),
+                                  c("Missense", "#bbebff"),
+                                  c("Splicing", "#0092FF"),
+                                  c("Synonymous", "#4900FF"),
+                                  c("UTR", "#FF00DB"),
+                                  c("Other", "gray")
+))
+colnames(mut.effect.tbl) <- c("effect", "color")
+
 
 # get all Reactome Homo sapiens pathways
 pathway.list = as.list(reactomePATHNAME2ID)[grepl("^Homo sapiens:", names(as.list(reactomePATHNAME2ID)))]
@@ -134,6 +148,18 @@ get.pam50.html.labels <- function(biomarker.tbl) {
 }
 pam50.html.labels = get.pam50.html.labels(biomarker.tbl)
 
+# Generates mutation effect HTML labels
+get.mut.effect.html.labels <- function(effect.tbl) {
+    result.list = list()
+    for (i in 1:nrow(effect.tbl)) {
+        effect = effect.tbl$effect[i]
+        color = effect.tbl$color[i]
+        result.list[[effect]] = sprintf('<span style="color: %s">%s</span>', color, effect)
+    }
+    return(result.list)
+}
+mut.effect.html.labels = get.mut.effect.html.labels(mut.effect.tbl)
+
 mutation.selection.options = c("All" = "mutations.all",
                                "COSMIC only" = "mutations.cosmic")
 
@@ -167,13 +193,3 @@ color.palette.options = c("NPG" = "npg",
                           "Futurama" = "futurama",
                           "Rick and Morty" = "rickandmorty",
                           "The Simpsons" = "simpsons")
-
-mut_effects <- c("Frameshift",
-                 "Nonsense",
-                 "In-frame indel",
-                 "Missense",
-                 "Splicing",
-                 "Synonymous",
-                 "UTR",
-                 "Other"
-)
