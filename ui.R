@@ -111,7 +111,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    ),
                                                    # burden plot specific settings
                                                    conditionalPanel(
-                                                       condition = "input.plotType == 'mut.waterfall'",
+                                                       condition = "input.plotType == 'mut.waterfall.plot'",
                                                        numericInput("waterfall.cutoff", "Number of most mutated genes", min = 1, max = 50, value = 20) %>%
                                                            helper(content = "waterfall_cutoff")
                                                    )
@@ -147,64 +147,84 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                          )
                                 ),
                                 tabPanel("Plot Settings",
-                                         wellPanel(style = wellpanel.settings.style,
-                                                   h4("Plot Dimensions") %>%
-                                                       helper(content = "plot_dimensions"),
-                                                   splitLayout(
-                                                       numericInput("height",
-                                                                    label = "Height",
-                                                                    value = 700
-                                                       ),
-                                                       numericInput("width",
-                                                                    label = "Width",
-                                                                    value = 700
-                                                       )
-                                                   )
-                                         ),
-                                         wellPanel(style = wellpanel.settings.style,
-                                                   h4("Color Settings") %>%
-                                                       helper(content = "color_settings"),
-                                                   selectInput("color.palette", "Color Palette",
-                                                               choices = color.palette.options, selected = color.palette.options[["JCO"]],
-                                                               multiple = FALSE)
-                                         ),
-                                         wellPanel(style = wellpanel.settings.style,
-                                                   h4("Legend Settings") %>%
-                                                       helper(content = "legend_settings"),
-                                                   awesomeCheckbox("showLegend",
-                                                                   label = "Show Legend",
-                                                                   value = TRUE),
-                                                   conditionalPanel(
-                                                       condition = "input.showLegend == true",
-                                                       textInput("legendTitle", "Legend Title", value = "strata"),
-                                                       selectInput("legendLoc", "Legend Location",
-                                                                   choices = plot.legend.loc.options),
-                                                       conditionalPanel(
-                                                           condition = "input.legendLoc == 'custom'",
-                                                           splitLayout(
-                                                               sliderInput("legend.coord.x", "X Coordinate", min = 0, max = 1,
-                                                                           value = 0.25, step = 0.01),
-                                                               sliderInput("legend.coord.y", "Y Coordinate", min = 0, max = 1,
-                                                                           value = 0.25, step = 0.01)
+                                         conditionalPanel(
+                                             condition = "input.plotType != 'mut.waterfall.plot'",
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       h4("Plot Dimensions") %>%
+                                                           helper(content = "plot_dimensions"),
+                                                       splitLayout(
+                                                           numericInput("height",
+                                                                        label = "Height",
+                                                                        value = 700
+                                                           ),
+                                                           numericInput("width",
+                                                                        label = "Width",
+                                                                        value = 700
                                                            )
                                                        )
-                                                   )
+                                             ),
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       h4("Color Settings") %>%
+                                                           helper(content = "color_settings"),
+                                                       selectInput("color.palette", "Color Palette",
+                                                                   choices = color.palette.options, selected = color.palette.options[["JCO"]],
+                                                                   multiple = FALSE)
+                                             ),
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       h4("Legend Settings") %>%
+                                                           helper(content = "legend_settings"),
+                                                       awesomeCheckbox("showLegend",
+                                                                       label = "Show Legend",
+                                                                       value = TRUE),
+                                                       conditionalPanel(
+                                                           condition = "input.showLegend == true",
+                                                           textInput("legendTitle", "Legend Title", value = "strata"),
+                                                           selectInput("legendLoc", "Legend Location",
+                                                                       choices = plot.legend.loc.options),
+                                                           conditionalPanel(
+                                                               condition = "input.legendLoc == 'custom'",
+                                                               splitLayout(
+                                                                   sliderInput("legend.coord.x", "X Coordinate", min = 0, max = 1,
+                                                                               value = 0.25, step = 0.01),
+                                                                   sliderInput("legend.coord.y", "Y Coordinate", min = 0, max = 1,
+                                                                               value = 0.25, step = 0.01)
+                                                               )
+                                                           )
+                                                       )
+                                             ),
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       h4("Plot Features") %>%
+                                                           helper(content = "plot_features"),
+                                                       awesomeCheckbox("show.risk.table",
+                                                                       label = "Show risk table",
+                                                                       value = TRUE),
+                                                       awesomeCheckbox("show.pval",
+                                                                       label = "Show logrank p-value",
+                                                                       value = TRUE),
+                                                       awesomeCheckbox("show.censors",
+                                                                       label = "Show censors",
+                                                                       value = FALSE),
+                                                       awesomeCheckbox("show.conf.int",
+                                                                       label = "Show confidence intervals",
+                                                                       value = FALSE)
+                                             )
                                          ),
-                                         wellPanel(style = wellpanel.settings.style,
-                                                   h4("Plot Features") %>%
-                                                       helper(content = "plot_features"),
-                                                   awesomeCheckbox("show.risk.table",
-                                                                   label = "Show risk table",
-                                                                   value = TRUE),
-                                                   awesomeCheckbox("show.pval",
-                                                                   label = "Show logrank p-value",
-                                                                   value = TRUE),
-                                                   awesomeCheckbox("show.censors",
-                                                                   label = "Show censors",
-                                                                   value = FALSE),
-                                                   awesomeCheckbox("show.conf.int",
-                                                                   label = "Show confidence intervals",
-                                                                   value = FALSE)
+                                         conditionalPanel(
+                                             condition = "input.plotType == 'mut.waterfall.plot'",
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       h4("Plot Dimensions") %>%
+                                                           helper(content = "plot_dimensions"),
+                                                       splitLayout(
+                                                           numericInput("height.waterfall",
+                                                                        label = "Height",
+                                                                        value = 700
+                                                           ),
+                                                           numericInput("width.waterfall",
+                                                                        label = "Width",
+                                                                        value = 700
+                                                           )
+                                                       )
+                                             )
                                          )
                                 )
                     ),

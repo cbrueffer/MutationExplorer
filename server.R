@@ -293,9 +293,9 @@ shinyServer(function(input, output, session) {
             title.main = paste("Treatment Group: ", treatment.label)
             title.grob = text_grob(title.main, size = 23, face = "bold")
             plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
-        } else if (input$plotType == "mut.waterfall") {
-            updateNumericInput(session, "height", value = 900)
-            updateNumericInput(session, "width", value = 1200)
+        } else if (input$plotType == "mut.waterfall.plot") {
+            updateNumericInput(session, "height.waterfall", value = 900)
+            updateNumericInput(session, "width.waterfall", value = 1200)
             plot = plot.waterfall(input, sample.data, mut.tbl())
         } else {
             # should not happen
