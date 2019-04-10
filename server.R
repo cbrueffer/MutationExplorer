@@ -18,6 +18,7 @@ suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(reactome.db))
 source("R/resources.R")
 source("R/plot_survival_ggplot.R")
+source("R/plot_waterfall.R")
 
 
 # Return a list of samples adhering to the specified filters.
@@ -221,6 +222,8 @@ shinyServer(function(input, output, session) {
                           min = min(sample.tbl()[["current_mutation_count"]]),
                           max = max(sample.tbl()[["current_mutation_count"]]),
                           value = median(sample.tbl()[["current_mutation_count"]]))
+        updateNumericInput(session, "waterfall.cutoff",
+                           max = length(mutated.genes))
     })
 
     # Hide the loading message when the rest of the server function has executed
@@ -248,7 +251,7 @@ shinyServer(function(input, output, session) {
             fit = survfit(Surv(OS_years, OS_event) ~ mut.pathway.status, data = sample.data)
             title = paste("Pathway in", treatment.label, "Treated Patients")
             plot = surv.plot(input, fit, data=sample.data, title=title)
-        } else {  # mut.gene.plot
+        } else if (input$plotType == "mut.gene.plot") {
             plot.list = list()
 
             # brute-force determine the row/col counts
@@ -277,6 +280,12 @@ shinyServer(function(input, output, session) {
             title.main = paste("Treatment Group: ", treatment.label)
             title.grob = text_grob(title.main, size = 23, face = "bold")
             plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
+        } else if (input$plotType == "mut.waterfall") {
+            updateNumericInput(session, "height", value = 900)
+            updateNumericInput(session, "width", value = 1200)
+            plot = plot.waterfall(input, sample.data, mut.tbl())
+        } else {
+            # should not happen
         }
         return(plot)
     }

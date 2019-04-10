@@ -139,7 +139,8 @@ mutation.selection.options = c("All" = "mutations.all",
 
 plot.type.options = c("Mutated Genes" = "mut.gene.plot",
                       "Mutated Pathways" = "mut.pathway.plot",
-                      "Tumor Mutational Burden" = "mut.burden.plot")
+                      "Tumor Mutational Burden" = "mut.burden.plot",
+                      "Mutational Landscape" = "mut.waterfall")
 
 pathway.type.options = c("Reactome" = "pathway.reactome",
                          "Custom" = "pathway.custom")

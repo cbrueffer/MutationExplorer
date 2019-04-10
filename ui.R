@@ -98,6 +98,12 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                        condition = "input.plotType == 'mut.burden.plot'",
                                                        sliderInput("tmb.cutoff", "Burden Cutoff", min = 1, max = 10, value = 5, step = 1) %>%
                                                            helper(content = "tmb_cutoff")
+                                                   ),
+                                                   # burden plot specific settings
+                                                   conditionalPanel(
+                                                       condition = "input.plotType == 'mut.waterfall'",
+                                                       numericInput("waterfall.cutoff", "Number of most mutated genes", min = 1, max = 50, value = 20) %>%
+                                                           helper(content = "waterfall_cutoff")
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
