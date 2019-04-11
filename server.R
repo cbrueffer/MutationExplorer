@@ -182,6 +182,7 @@ shinyServer(function(input, output, session) {
         collect()
     mutations <- tbl(con, "mutations") %>%
         collect()
+    dbDisconnect(con)
 
     # Gene<->Protein map, only the first mapping for each gene is retained
     gene_protein_mapping <- read.csv(config$gene_protein_map_file, sep='\t', header = F, stringsAsFactors = F) %>%
@@ -201,7 +202,7 @@ shinyServer(function(input, output, session) {
         return(samples)
     })
 
-    # Add additional information  to the current sample set as specified in the input controls.
+    # Add additional information to the current sample set as specified in the input controls.
     sample.tbl <- reactive({
         filtered.samples <- filter(samples, SAMPLE %in% sample.list())
         filtered.samples <- add.gene.mut.status(input, filtered.samples, mut.tbl())
