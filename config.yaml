@@ -1,2 +1,3 @@
 db_file: "data/scanb.sqlite"
 app_title: "SCAN-B Mutation Explorer"
+gene_protein_map_file: "data/gene_uniprot_mapping.tsv"

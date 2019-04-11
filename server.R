@@ -19,6 +19,7 @@ suppressPackageStartupMessages(library(reactome.db))
 source("R/resources.R")
 source("R/plot_survival_ggplot.R")
 source("R/plot_waterfall.R")
+source("R/plot_protein.R")
 
 
 # Return a list of samples adhering to the specified filters.
@@ -182,6 +183,12 @@ shinyServer(function(input, output, session) {
     mutations <- tbl(con, "mutations") %>%
         collect()
 
+    # Gene<->Protein map, only the first mapping for each gene is retained
+    gene_protein_mapping <- read.csv(config$gene_protein_map_file, sep='\t', header = F, stringsAsFactors = F) %>%
+        select(Protein = 1, Gene = 2) %>%
+        group_by(Gene) %>%
+        filter(row_number() == 1)
+
     mutated.genes <- sort(unique(mutations$gene.symbol))
     n.mut = nrow(mutations)
     n.samples = nrow(samples)
@@ -209,6 +216,32 @@ shinyServer(function(input, output, session) {
         return(filtered.muts)
     })
 
+    plot.height = reactive({
+        if (input$plotType == "mut.survival.plot") {
+            height = input$height
+        } else if (input$plotType == "mut.waterfall.plot") {
+            height = input$height.waterfall
+        } else if (input$plotType == "mut.protein.plot") {
+            height = input$height.protein
+        } else {
+            height = 700
+        }
+        return(height)
+    })
+
+    plot.width = reactive({
+        if (input$plotType == "mut.survival.plot") {
+            width = input$width
+        } else if (input$plotType == "mut.waterfall.plot") {
+            width = input$width.waterfall
+        } else if (input$plotType == "mut.protein.plot") {
+            width = input$width.protein
+        } else {
+            width = 700
+        }
+        return(width)
+    })
+
     ######################################################
     #
     # Update UI elements
@@ -225,6 +258,9 @@ shinyServer(function(input, output, session) {
     })
     outputOptions(output, "header_panel", suspendWhenHidden=FALSE)  # make sure the header is shown before the loading screen is gone
     updateSelectInput(session, "gene.input",
+                      choices = mutated.genes
+    )
+    updateSelectInput(session, "protein.plot.gene",
                       choices = mutated.genes
     )
     updateSelectInput(session, "custom.pathway.input",
@@ -245,8 +281,8 @@ shinyServer(function(input, output, session) {
 
     # Survival plot using ggplot2
     output$survplot <- renderPlot(
-        height = function(x) input$height,
-        width = function(x) input$width,
+        height = function(x) plot.height(),
+        width = function(x) plot.width(),
         {
             plot.surv <<- plot.survival()
             return(plot.surv)
@@ -294,9 +330,9 @@ shinyServer(function(input, output, session) {
             title.grob = text_grob(title.main, size = 23, face = "bold")
             plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
         } else if (input$plotType == "mut.waterfall.plot") {
-            updateNumericInput(session, "height.waterfall", value = 900)
-            updateNumericInput(session, "width.waterfall", value = 1200)
             plot = plot.waterfall(input, sample.data, mut.tbl())
+        } else if (input$plotType == "mut.protein.plot") {
+            plot = plot.protein(input, mut.tbl(), gene_protein_mapping)
         } else {
             # should not happen
         }
@@ -334,7 +370,7 @@ shinyServer(function(input, output, session) {
         filename = function() { paste("mutation_explorer_survival_plot", "pdf", sep='.') },
         content = function(file) {
             # if no plot, length(plot.surv) == 0
-            pdf(file, useDingbats = FALSE, width = input$width / 72, height = input$height / 72)
+            pdf(file, useDingbats = FALSE, width = plot.width() / 72, height = plot.height() / 72)
             print(plot.surv, newpage = FALSE)
             dev.off()
         },

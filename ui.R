@@ -109,11 +109,16 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                        sliderInput("tmb.cutoff", "Burden Cutoff", min = 1, max = 10, value = 5, step = 1) %>%
                                                            helper(content = "tmb_cutoff")
                                                    ),
-                                                   # burden plot specific settings
+                                                   # waterfall plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.waterfall.plot'",
                                                        numericInput("waterfall.cutoff", "Number of most mutated genes", min = 1, max = 50, value = 20) %>%
                                                            helper(content = "waterfall_cutoff")
+                                                   ),
+                                                   # protein plot specific settings
+                                                   conditionalPanel(
+                                                       condition = "input.plotType == 'mut.protein.plot'",
+                                                       selectizeInput("protein.plot.gene", "Gene", choices = c(), multiple=FALSE)  # choices updated from the server side
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
@@ -217,11 +222,28 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                        splitLayout(
                                                            numericInput("height.waterfall",
                                                                         label = "Height",
-                                                                        value = 700
+                                                                        value = 900
                                                            ),
                                                            numericInput("width.waterfall",
                                                                         label = "Width",
-                                                                        value = 700
+                                                                        value = 1200
+                                                           )
+                                                       )
+                                             )
+                                         ),
+                                         conditionalPanel(
+                                             condition = "input.plotType == 'mut.protein.plot'",
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       h4("Plot Dimensions") %>%
+                                                           helper(content = "plot_dimensions"),
+                                                       splitLayout(
+                                                           numericInput("height.protein",
+                                                                        label = "Height",
+                                                                        value = 400
+                                                           ),
+                                                           numericInput("width.protein",
+                                                                        label = "Width",
+                                                                        value = 1000
                                                            )
                                                        )
                                              )

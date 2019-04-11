@@ -17,3 +17,7 @@ Select for which type of data to show Kaplan-Meier survival curves. The options 
 - Landscape
 
   Mutational landscape waterfall plot showing the top N mutated genes (default: 20), their mutation types, as well as clinical annotations.
+
+- Protein Plot
+
+  Plot showing protein-affecting mutations along the protein product of a selected gene.
