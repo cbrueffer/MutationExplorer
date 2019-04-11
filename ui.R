@@ -158,11 +158,11 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                        h4("Plot Dimensions") %>%
                                                            helper(content = "plot_dimensions"),
                                                        splitLayout(
-                                                           numericInput("height",
+                                                           numericInput("height.survival",
                                                                         label = "Height",
                                                                         value = 700
                                                            ),
-                                                           numericInput("width",
+                                                           numericInput("width.survival",
                                                                         label = "Width",
                                                                         value = 700
                                                            )

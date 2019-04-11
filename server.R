@@ -218,7 +218,7 @@ shinyServer(function(input, output, session) {
 
     plot.height = reactive({
         if (input$plotType == "mut.survival.plot") {
-            height = input$height
+            height = input$height.survival
         } else if (input$plotType == "mut.waterfall.plot") {
             height = input$height.waterfall
         } else if (input$plotType == "mut.protein.plot") {
@@ -231,7 +231,7 @@ shinyServer(function(input, output, session) {
 
     plot.width = reactive({
         if (input$plotType == "mut.survival.plot") {
-            width = input$width
+            width = input$width.survival
         } else if (input$plotType == "mut.waterfall.plot") {
             width = input$width.waterfall
         } else if (input$plotType == "mut.protein.plot") {
@@ -284,11 +284,11 @@ shinyServer(function(input, output, session) {
         height = function(x) plot.height(),
         width = function(x) plot.width(),
         {
-            plot.surv <<- plot.survival()
-            return(plot.surv)
+            current.plot <<- create.plot()
+            return(current.plot)
         })
 
-    plot.survival <- function() {
+    create.plot <- function() {
         sample.data <- sample.tbl()
         treatment.label = treatment.tbl$plot.label[which(treatment.tbl$var == input$treatment.input)]
 
@@ -311,8 +311,8 @@ shinyServer(function(input, output, session) {
             }
             # scale plot dimensions to new settings
             # XXX currently resets user-specified dimensions
-            updateNumericInput(session, "height", value = round(500 + ((n.rows + log(n.rows)) * 100)))
-            updateNumericInput(session, "width", value = round(500 + ((n.cols + log(n.cols)) * 100)))
+            updateNumericInput(session, "height.survival", value = round(500 + ((n.rows + log(n.rows)) * 100)))
+            updateNumericInput(session, "width.survival", value = round(500 + ((n.cols + log(n.cols)) * 100)))
 
             for (gene in input$gene.input) {
                 title.gene = paste(gene, "Mutation Status")
@@ -369,9 +369,9 @@ shinyServer(function(input, output, session) {
     output$downloadPlot <- downloadHandler(
         filename = function() { paste("mutation_explorer_survival_plot", "pdf", sep='.') },
         content = function(file) {
-            # if no plot, length(plot.surv) == 0
+            # if no plot, length(current.plot) == 0
             pdf(file, useDingbats = FALSE, width = plot.width() / 72, height = plot.height() / 72)
-            print(plot.surv, newpage = FALSE)
+            print(current.plot, newpage = FALSE)
             dev.off()
         },
         contentType = "application/pdf"
