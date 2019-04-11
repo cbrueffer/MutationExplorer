@@ -8,7 +8,6 @@ suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(httr))
 suppressPackageStartupMessages(library(jsonlite))
-suppressPackageStartupMessages(library(Biostrings))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
 suppressPackageStartupMessages(library(RColorBrewer))
@@ -75,8 +74,6 @@ plot.protein <- function(input, df, idMappingDf) {
                                                   #rev(brewer.pal(max(category_n, 3), misSensePallete))[category_num]))),
                                                   rev(brewer.pal(7, misSensePallete))[category_num]))),
                AA_Change_label = if_else(nMutPerPos >= cutOff_Anno, AA_Change_s, ''))
-    # for spliting color and fill into two variables
-    #catFill_Const = factor(replace(changeType, changeType == "Missense", "Truncating"), levels=c('Truncating', 'Synonymous')))
 
     # cut-off or different transcript comment
     if (cutOff_Mut > 0 | proteinLen < max(aminoChanges$proteinPosition)) {
@@ -84,9 +81,6 @@ plot.protein <- function(input, df, idMappingDf) {
     } else {
         cutOffComment <- ' '
     }
-
-    # XXXCB disable comment for the publication version.
-    cutOffComment <- ' '
 
     # final filtering
     aminoChanges <- aminoChanges %>%
@@ -96,11 +90,6 @@ plot.protein <- function(input, df, idMappingDf) {
     p <- ggplot(aminoChanges, aes(x = proteinPosition, y = y_start, xend = proteinPosition, yend = y_end,
                                   color = )) +
         geom_segment(size = 1, lineend = "butt", color = aminoChanges$catColor) +
-        # geom_shadowtext(aes(x = proteinPosition, y = y_end, label = AA_Change_label), colour = 'black', bg.colour = aminoChanges$catColor,
-        #                 check_overlap = T) +
-        #geom_label_repel(aes(x = proteinPosition, y = y_end, label = AA_Change_label), size = 6, fill = aminoChanges$catColor,
-        #                 segment.alpha = 0.5, alpha = 0.8,
-        #                 direction = "x", ylim = c(2.1, max(aminoChanges$nMutPerPos))) +
         geom_text_repel(aes(x = proteinPosition, y = y_end, label = AA_Change_label), size = 6,
                         segment.alpha = 0.5, alpha = 0.8, color = aminoChanges$catColor,
                         direction = "both", ylim = c(2.1, max(aminoChanges$nMutPerPos))) +
