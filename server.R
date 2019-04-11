@@ -15,6 +15,7 @@ suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(yaml))
 suppressPackageStartupMessages(library(DT))
+suppressPackageStartupMessages(library(DBI))
 suppressPackageStartupMessages(library(reactome.db))
 source("R/resources.R")
 source("R/plot_survival_ggplot.R")
@@ -65,10 +66,12 @@ filter.sample.tbl <- function(input, sample.tbl) {
 }
 
 # Determine mutation status of samples for selected genes
-add.gene.mut.status <- function(input, sample.tbl, mut.tbl) {
+add.gene.mut.status <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     for (gene in input$gene.input) {
-        mut.var = paste0("mut.status.", gene)
-        sample.tbl <- mutate(sample.tbl, !!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], "mut", "wt")))
+        mut.var = gene.column.map[[gene]]
+        if (!(mut.var %in% colnames(sample.tbl))) {
+            sample.tbl <- mutate(sample.tbl, !!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], "mut", "wt")))
+        }
     }
     return(sample.tbl)
 }
@@ -114,7 +117,7 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
     return(sample.tbl)
 }
 
-filter.mut.tbl <- function(input, sample.list, mut.tbl) {
+filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
     mut.tbl <- filter(mut.tbl, SAMPLE %in% sample.list)
 
     #
@@ -190,7 +193,14 @@ shinyServer(function(input, output, session) {
         group_by(Gene) %>%
         filter(row_number() == 1)
 
+    # Generate a mapping from gene to mutation status column names and add the custom columns
     mutated.genes <- sort(unique(mutations$gene.symbol))
+    mutated.gene.columns <- paste0("mut.status.", mutated.genes)
+    names(mutated.gene.columns) = mutated.genes
+    for (val in config$custom_genes) {
+        mutated.gene.columns[val$label] = val$column
+    }
+
     n.mut = nrow(mutations)
     n.samples = nrow(samples)
 
@@ -205,7 +215,7 @@ shinyServer(function(input, output, session) {
     # Add additional information to the current sample set as specified in the input controls.
     sample.tbl <- reactive({
         filtered.samples <- filter(samples, SAMPLE %in% sample.list())
-        filtered.samples <- add.gene.mut.status(input, filtered.samples, mut.tbl())
+        filtered.samples <- add.gene.mut.status(input, filtered.samples, mut.tbl(), mutated.gene.columns)
         filtered.samples <- set.mutation.counts(input, filtered.samples)
         filtered.samples <- add.mutation.burden(input, filtered.samples)
         filtered.samples <- add.pathway.mut.status(input, filtered.samples, mut.tbl())
@@ -213,7 +223,7 @@ shinyServer(function(input, output, session) {
     })
 
     mut.tbl <- reactive({
-        filtered.muts <- filter.mut.tbl(input, sample.list(), mutations)
+        filtered.muts <- filter.mut.tbl(input, sample.list(), mutations, mutated.gene.columns)
         return(filtered.muts)
     })
 
@@ -259,13 +269,13 @@ shinyServer(function(input, output, session) {
     })
     outputOptions(output, "header_panel", suspendWhenHidden=FALSE)  # make sure the header is shown before the loading screen is gone
     updateSelectInput(session, "gene.input",
-                      choices = mutated.genes
+                      choices = names(mutated.gene.columns)
     )
     updateSelectInput(session, "protein.plot.gene",
-                      choices = mutated.genes
+                      choices = names(mutated.gene.columns)
     )
     updateSelectInput(session, "custom.pathway.input",
-                      choices = mutated.genes
+                      choices = names(mutated.gene.columns)
     )
     observeEvent(input$mutationSelection, {
         updateSliderInput(session, "tmb.cutoff",
@@ -318,7 +328,7 @@ shinyServer(function(input, output, session) {
             for (gene in input$gene.input) {
                 title.gene = paste(gene, "Mutation Status")
 
-                mut.var = paste0("mut.status.", gene)
+                mut.var = mutated.gene.columns[[gene]]
 
                 # Call survfit with do.call to avoid a problem with ggsurvplot later on.
                 # See: https://github.com/kassambara/survminer/issues/125
