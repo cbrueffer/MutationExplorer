@@ -106,19 +106,8 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
     #
     #######################################################
 
-    mut_layer <- theme(
-        legend.title = element_text(size = rel(1.3)),
-        legend.text = element_text(size = rel(1.3))
-    )
-
-    clin_layer <- theme(
-        legend.title = element_text(size = rel(1.3)),
-        legend.text = element_text(size = rel(1.3)),
-        axis.text = element_text(size = rel(1.3))
-    )
-
     samp_recur_layer = theme(
-        axis.text.x = element_text(size = rel(1.4))
+        axis.text.x = element_text(size = rel(1.3))
     )
 
     p = waterfall(mutDf,
@@ -126,17 +115,15 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
                   variant_class_order = mut_impact_order,
                   mainRecurCutoff = 0.00001,
                   mainDropMut = TRUE,
-                  mainLayer = mut_layer,
                   maxGenes = input$waterfall.cutoff,
                   mainPalette = mut_impact_palette,
                   clinDat = clin.anno,
-                  clinLegCol = 3,
+                  clinLegCol = 2,
                   sampOrder = sample.order,
-                  main_geneLabSize = 14,
+                  main_geneLabSize = 12,
                   clinVarCol = clinicColor,
                   clinVarOrder = clinicOrder,
-                  clinLayer = clin_layer,
-                  section_heights = c(0.2, 1, 0.2),
+                  section_heights = c(0.2, 1, 0.35),
                   plotMutBurden = FALSE,
                   mainGrid = F,
                   sampRecurLayer = samp_recur_layer,
