@@ -64,13 +64,13 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
     )
 
     mut_impact_palette <- c("red",
-                             "orange",
-                             "darkgreen",
-                             "#bbebff",  # lightblue
-                             "#0092FF",  # blue
-                             "#4900FF",  # lila
-                             "#FF00DB",  # fuchsia
-                             "gray"
+                            "orange",
+                            "darkgreen",
+                            "#bbebff",  # lightblue
+                            "#0092FF",  # blue
+                            "#4900FF",  # lila
+                            "#FF00DB",  # fuchsia
+                            "gray"
     )
 
     # determine the top X mutated genes
