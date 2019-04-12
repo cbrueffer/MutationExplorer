@@ -26,7 +26,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
                       PgR = PgR_1perc,
                       ER = ER_1perc,
                       PAM50,
-                      Histological_Subtype) %>%
+                      HistType = Histological_Type) %>%
         melt(id.vars = c("sample"))
 
     # ordering and coloring
@@ -91,8 +91,8 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
     #
     # Sample arrangement
     #
-    # order samples by histological subtype first, then by frequently mutated genes
-    arrange_vars = c("Histological_Subtype", paste0("mut.status.", topX.mut))
+    # order samples by histological type first, then by frequently mutated genes
+    arrange_vars = c("Histological_Type", paste0("mut.status.", topX.mut))
 
     sample.order = sample.tbl %>%
         arrange_(.dots = arrange_vars) %>%
