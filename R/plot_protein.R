@@ -18,8 +18,8 @@ plot.protein <- function(input, df, idMappingDf) {
 
     # XXX make configurable later
     inGene = input$protein.plot.gene
-    cutOff_Mut = 0
-    cutOff_Anno = 2
+    cutOff_Mut = input$protein.plot.mutation.cutoff
+    cutOff_Anno = input$protein.plot.anno.cutoff
     isLegend = TRUE
     break.divider=4
 

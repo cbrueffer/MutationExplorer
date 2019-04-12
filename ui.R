@@ -241,12 +241,24 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                        splitLayout(
                                                            numericInput("height.protein",
                                                                         label = "Height",
-                                                                        value = 400
+                                                                        value = 300
                                                            ),
                                                            numericInput("width.protein",
                                                                         label = "Width",
                                                                         value = 1000
                                                            )
+                                                       )
+                                             ),
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       h4("Plot Settings") %>%
+                                                           helper(content = "protein_plot_settings"),
+                                                       numericInput("protein.plot.mutation.cutoff",
+                                                                    label = "Mutation Cutoff",
+                                                                    value = 0
+                                                       ),
+                                                       numericInput("protein.plot.anno.cutoff",
+                                                                    label = "Annotation Cutoff",
+                                                                    value = 10
                                                        )
                                              )
                                          )
