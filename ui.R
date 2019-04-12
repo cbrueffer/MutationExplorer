@@ -153,7 +153,9 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                 ),
                                 tabPanel("Plot Settings",
                                          conditionalPanel(
-                                             condition = "input.plotType != 'mut.waterfall.plot'",
+                                             condition = "input.plotType == 'mut.gene.plot' ||
+                                                          input.plotType == 'mut.pathway.plot' ||
+                                                          input.plotType == 'mut.burden.plot'",
                                              wellPanel(style = wellpanel.settings.style,
                                                        h4("Plot Dimensions") %>%
                                                            helper(content = "plot_dimensions"),
