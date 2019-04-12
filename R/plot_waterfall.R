@@ -9,7 +9,7 @@ suppressPackageStartupMessages(library(reshape2))
 suppressPackageStartupMessages(library(stringr))
 
 
-plot.waterfall <- function(input, sample.tbl, mut.tbl) {
+plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
 
     #######################################################
     #
@@ -35,8 +35,8 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
                      NEG = "white", POS = "black",
                      G1 = "#deebf7", G2 = "#9ecae1", G3 = "#3182bd",
                      `NA` = "gray")
-    clinicOrder <- c("LumA", "LumB", "HER2", "Basal", "Normal", "Unclassified",
-                     "Ductal", "Lobular", "Other",
+    clinicOrder <- c("Ductal", "Lobular", "Other",
+                     "LumA", "LumB", "HER2", "Basal", "Normal", "Unclassified",
                      "G1", "G2", "G3", "NEG", "POS", "NA")
 
 
@@ -47,32 +47,6 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
     # count the occurrence of each mutation in our set
     mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[,1:2], 'gene')
 
-    mutDf <- mutDf %>%
-        mutate(own_freq = mut_count$freq[match(gene, mut_count$gene)] / length(unique(sample))) %>%
-        mutate(gene = paste0(gene, ' (', sprintf("%.0f%%", own_freq * 100), ')')) %>%
-        mutate(variant_class = mut.tbl$ANN.effect.class)
-
-    # nomenclature for alteration impact
-    mut_impact_order <- c("Frameshift",
-                          "Nonsense",
-                          "In-frame indel",
-                          "Missense",
-                          "Splicing",
-                          "Synonymous",
-                          "UTR",
-                          "Other"
-    )
-
-    mut_impact_palette <- c("red",
-                            "orange",
-                            "darkgreen",
-                            "#bbebff",  # lightblue
-                            "#0092FF",  # blue
-                            "#4900FF",  # lila
-                            "#FF00DB",  # fuchsia
-                            "gray"
-    )
-
     # determine the top X mutated genes
     topX.mut <- mut_count %>%
         arrange(desc(freq)) %>%
@@ -80,25 +54,40 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
         head(input$waterfall.cutoff)
     topX.mut <- as.character(topX.mut$gene)
 
-    # Make sure the mutation status for the topX genes is present in the sample table for figure out sample ordering
+    # Make sure the mutation status for the topX genes is present in the sample table for figuring out sample ordering
     for (i in seq_along(topX.mut)) {
-        var <- paste0("mut.status.", topX.mut[i])
+        var = gene.column.map[[topX.mut[i]]]
         if (!(var %in% colnames(sample.tbl))) {
             sample.tbl[[var]] <- as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl[mut.tbl$gene.symbol == topX.mut[i], ]$SAMPLE, "mut", "wt"))
         }
     }
 
+    # Restrict the mutation table to the genes we'll actually display.
+    mutDf <- mutDf %>%
+        mutate(own_freq = mut_count$freq[match(gene, mut_count$gene)] / length(unique(sample))) %>%
+        mutate(variant_class = mut.tbl$ANN.effect.class)
+
+    #
+    # Effect/color settings
+    #
+    # Filter effects that don't occur in the displayed genes.
+    mutDf <- mutDf %>%
+        dplyr::filter(gene %in% topX.mut)
+    this.mut.effect.tbl = dplyr::filter(mut.effect.tbl, effect %in% mutDf$variant_class[mutDf$gene %in% topX.mut])
+
     #
     # Sample arrangement
     #
     # order samples by histological type first, then by frequently mutated genes
-    arrange_vars = c("Histological_Type", paste0("mut.status.", topX.mut))
+    arrange_vars = c("Histological_Type", lapply(topX.mut, function(gene) gene.column.map[[gene]]))
 
     sample.order = sample.tbl %>%
         arrange_(.dots = arrange_vars) %>%
         dplyr::select(SAMPLE)
     sample.order = as.character(sample.order$SAMPLE)
 
+    # Add cohort frequency to the gene symbol for display purposes
+    mutDf <- mutate(mutDf, gene = paste0(gene, ' (', sprintf("%.0f%%", own_freq * 100), ')'))
 
     #######################################################
     #
@@ -112,11 +101,12 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl) {
 
     p = waterfall(mutDf,
                   fileType="Custom",
-                  variant_class_order = mut_impact_order,
+                  variant_class_order = this.mut.effect.tbl$effect,
                   mainRecurCutoff = 0.00001,
-                  mainDropMut = TRUE,
-                  maxGenes = input$waterfall.cutoff,
-                  mainPalette = mut_impact_palette,
+                  mainDropMut = FALSE,  # turned off, we do it manually above since this option doesn't drop the corresponding color
+                  plotGenes = unique(mutDf$gene),
+                  plotSamples = sample.tbl$SAMPLE,
+                  mainPalette = this.mut.effect.tbl$color,
                   clinDat = clin.anno,
                   clinLegCol = 2,
                   sampOrder = sample.order,

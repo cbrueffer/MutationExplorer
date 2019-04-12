@@ -341,7 +341,7 @@ shinyServer(function(input, output, session) {
             title.grob = text_grob(title.main, size = 23, face = "bold")
             plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
         } else if (input$plotType == "mut.waterfall.plot") {
-            plot = plot.waterfall(input, sample.data, mut.tbl())
+            plot = plot.waterfall(input, sample.data, mut.tbl(), mutated.gene.columns)
         } else if (input$plotType == "mut.protein.plot") {
             plot = plot.protein(input, mut.tbl(), gene_protein_mapping)
         } else {
