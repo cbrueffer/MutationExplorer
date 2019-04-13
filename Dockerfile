@@ -19,8 +19,16 @@ EXPOSE 80/tcp
 #
 ###############################################
 
+# install and configure the nginx shiny proxy
+RUN apt-get update && \
+    apt-get install -y nginx \
+                       libssl-dev \
+                       libxml2-dev
+COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
+
 RUN R -e "install.packages(c( \
     'cowplot', \
+    'dbplyr', \
     'dplyr', \
     'DT', \
     'DBI', \
@@ -30,23 +38,20 @@ RUN R -e "install.packages(c( \
     'magrittr', \
     'reshape2', \
     'RColorBrewer', \
+    'RSQLite', \
     'shinycssloaders', \
     'shinyhelper', \
     'shinyjs', \
     'shinyWidgets', \
     'stringr', \
     'survminer', \
+    'yaml', \
     'BiocManager' \
     ))"
 RUN R -e "BiocManager::install(c( \
     'reactome.db', \
     'GenVisR' \
     ), version = '3.8', ask = FALSE, update = TRUE)"
-
-# install and configure the nginx shiny proxy
-RUN apt-get update && \
-    apt-get install -y nginx
-COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
 
 ###############################################
 #
