@@ -106,6 +106,10 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    # burden plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.burden.plot'",
+                                                       radioGroupButtons("tmb.type",
+                                                                         label = "Burden Type", choices = tmb.type.options, selected = tmb.type.options[1],
+                                                                         status = "primary", individual = TRUE) %>%
+                                                           helper(content = "tmb_type"),
                                                        sliderInput("tmb.cutoff", "Burden Cutoff", min = 1, max = 10, value = 5, step = 1) %>%
                                                            helper(content = "tmb_cutoff")
                                                    ),

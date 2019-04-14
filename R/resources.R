@@ -172,6 +172,9 @@ plot.type.options = c("Mutational Landscape" = "mut.waterfall.plot",
 pathway.type.options = c("Reactome" = "pathway.reactome",
                          "Custom" = "pathway.custom")
 
+tmb.type.options = c("Normalized TMB" = "tmb.normalized",
+                     "Absolute TMB" = "tmb.absolute")
+
 plot.legend.loc.options = c("Top" = "top",
                             "Bottom" = "bottom",
                             "Left" = "left",

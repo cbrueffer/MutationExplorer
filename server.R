@@ -76,21 +76,33 @@ add.gene.mut.status <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     return(sample.tbl)
 }
 
-# Set mutation count depending on mutation set selection.
+# Set mutation count and count per expressed MB depending on mutation set selection.
 set.mutation.counts <- function(input, sample.tbl) {
     if (input$mutationSelection == "mutations.cosmic") {
         sample.tbl$current_mutation_count = sample.tbl$COSMIC_Mutation_Count
         sample.tbl$current_mutation_nonsynon_count = sample.tbl$COSMIC_Mutation_Nonsynon_Count
+        sample.tbl$current_mutation_count_per_expressed_mb = sample.tbl$COSMIC_Mutation_Count_per_expressed_MB
+        sample.tbl$current_mutation_nonsynon_count_per_expressed_mb = sample.tbl$COSMIC_Mutation_Nonsynon_Count_per_expressed_MB
     } else {
         sample.tbl$current_mutation_count = sample.tbl$Mutation_Count
         sample.tbl$current_mutation_nonsynon_count = sample.tbl$Mutation_Nonsynon_Count
+        sample.tbl$current_mutation_count_per_expressed_mb = sample.tbl$Mutation_Count_per_expressed_MB
+        sample.tbl$current_mutation_nonsynon_count_per_expressed_mb = sample.tbl$Mutation_Nonsynon_Count_per_expressed_MB
     }
     return(sample.tbl)
 }
 
 # Add mutational burden given a cutoff.
 add.mutation.burden <- function(input, sample.tbl) {
-    sample.tbl <- mutate(sample.tbl, tumor_mutational_burden = as.factor(ifelse(current_mutation_count > input$tmb.cutoff, "High", "Low")))
+    if (input$tmb.type == "tmb.absolute") {
+        sample.tbl <- mutate(sample.tbl,
+                             tumor_mutational_burden = as.factor(ifelse(current_mutation_nonsynon_count > input$tmb.cutoff, "High", "Low")))
+    } else if (input$tmb.type == "tmb.normalized") {
+        sample.tbl <- mutate(sample.tbl,
+                             tumor_mutational_burden = as.factor(ifelse(current_mutation_nonsynon_count_per_expressed_mb > input$tmb.cutoff, "High", "Low")))
+    } else {
+        # shouldn't happen
+    }
     return(sample.tbl)
 }
 
@@ -277,11 +289,21 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "custom.pathway.input",
                       choices = names(mutated.gene.columns)
     )
-    observeEvent(input$mutationSelection, {
+    observeEvent(c(input$mutationSelection, input$tmb.type), {
         updateSliderInput(session, "tmb.cutoff",
-                          min = min(sample.tbl()[["current_mutation_count"]]),
-                          max = max(sample.tbl()[["current_mutation_count"]]),
-                          value = median(sample.tbl()[["current_mutation_count"]]))
+                          min = round(min(switch(input$tmb.type,
+                                                 tmb.absolute = sample.tbl()[["current_mutation_nonsynon_count"]],
+                                                 tmb.normalized = sample.tbl()[["current_mutation_nonsynon_count_per_expressed_mb"]])),
+                                      digits = 2),
+                          max = round(max(switch(input$tmb.type,
+                                                 tmb.absolute = sample.tbl()[["current_mutation_nonsynon_count"]],
+                                                 tmb.normalized = sample.tbl()[["current_mutation_nonsynon_count_per_expressed_mb"]])),
+                                      digits = 2),
+                          value = round(median(switch(input$tmb.type,
+                                                      tmb.absolute = sample.tbl()[["current_mutation_nonsynon_count"]],
+                                                      tmb.normalized = sample.tbl()[["current_mutation_nonsynon_count_per_expressed_mb"]])),
+                                        digits = 2),
+                          step = ifelse(input$tmb.type == "tmb.absolute", 1, 0.01))
         updateNumericInput(session, "waterfall.cutoff",
                            max = length(mutated.genes))
     })
