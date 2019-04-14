@@ -163,10 +163,10 @@ mut.effect.html.labels = get.mut.effect.html.labels(mut.effect.tbl)
 mutation.selection.options = c("All" = "mutations.all",
                                "COSMIC only" = "mutations.cosmic")
 
-plot.type.options = c("Mutated Genes" = "mut.gene.plot",
-                      "Mutated Pathways" = "mut.pathway.plot",
-                      "Tumor Mutational Burden" = "mut.burden.plot",
-                      "Mutational Landscape" = "mut.waterfall.plot",
+plot.type.options = c("Mutational Landscape" = "mut.waterfall.plot",
+                      "Survival by Mutated Genes" = "mut.gene.plot",
+                      "Survival by Mutated Pathways" = "mut.pathway.plot",
+                      "Survival by Mutational Burden" = "mut.burden.plot",
                       "Protein Plot" = "mut.protein.plot")
 
 pathway.type.options = c("Reactome" = "pathway.reactome",
