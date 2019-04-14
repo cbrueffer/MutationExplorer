@@ -75,7 +75,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                    h4("Plot Selection"),
 
                                                    selectInput("plotType", "Plot Type", plot.type.options) %>%
-                                                       helper(content = "plottype"),
+                                                       helper(content = "plot_type"),
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.gene.plot'",
                                                        selectizeInput("gene.input", "Genes", choices = c(), multiple=TRUE,  # choices updated from the server side
