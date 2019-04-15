@@ -109,8 +109,13 @@ add.mutation.burden <- function(input, sample.tbl) {
 # Determine pathway mutation status for each sample.
 add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
     if (input$pathwayType == "pathway.reactome") {
-        sample.tbl <- mutate(sample.tbl, mut.pathway.status = as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl$SAMPLE, "mut", "wt")))
-    } else {  # pathway.custom
+        for (pathway in input$pathway.input) {
+            mut.var = paste0("mut.pathway.status.", pathway)
+            if (!(mut.var %in% colnames(sample.tbl))) {
+                sample.tbl <- mutate(sample.tbl, !!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[grepl(pathway, mut.tbl$Pathways.Reactome)], "mut", "wt")))
+            }
+        }
+    } else if (input$pathwayType == "pathway.custom") {
         pathway.genes <- input$custom.pathway.input
 
         if (!is.null(pathway.genes)) {
@@ -125,6 +130,8 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
         } else {
             sample.tbl$mut.pathway.status = as.factor(logical(nrow(sample.tbl)))  # FALSE vector
         }
+    } else {
+        # should not happen
     }
     return(sample.tbl)
 }
@@ -149,7 +156,8 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
         mut.tbl <- filter(mut.tbl, gene.symbol %in% input$gene.input)
     } else if (input$plotType == "mut.pathway.plot") {
         if (input$pathwayType == "pathway.reactome") {
-            mut.tbl <- filter(mut.tbl, grepl(input$pathway.input, Pathways.Reactome))
+            # keep mutations present in any of the input pathways
+            mut.tbl <- filter(mut.tbl, apply(sapply(input$pathway.input, function(pathway) grepl(pathway, Pathways.Reactome)), 1, any))
         } else {  # pathway.custom
             pathway.genes <- input$custom.pathway.input
 
@@ -201,7 +209,7 @@ shinyServer(function(input, output, session) {
 
     # Gene<->Protein map, only the first mapping for each gene is retained
     gene_protein_mapping <- read.csv(config$gene_protein_map_file, sep='\t', header = F, stringsAsFactors = F) %>%
-        select(Protein = 1, Gene = 2) %>%
+        dplyr::select(Protein = 1, Gene = 2) %>%
         group_by(Gene) %>%
         filter(row_number() == 1)
 
@@ -329,7 +337,34 @@ shinyServer(function(input, output, session) {
             fit = survfit(Surv(OS_years, OS_event) ~ tumor_mutational_burden, data = sample.data)
             title = paste0("Mutation Burden (Cutoff ", input$tmb.cutoff, ") in ", treatment.label, " Treated Patients")
             plot = surv.plot(input, fit, data=sample.data, title=title)
-        } else if (input$plotType == "mut.pathway.plot") {
+        } else if (input$plotType == "mut.pathway.plot" & input$pathwayType == "pathway.reactome") {
+            plot.list = list()
+
+            # brute-force determine the row/col counts
+            n.cols = n.rows = 1
+            while (n.cols * n.rows < length(input$pathway.input)) {
+                if (n.cols == n.rows) n.cols = n.cols + 1
+                else n.rows = n.rows + 1
+            }
+            # scale plot dimensions to new settings
+            # XXX currently resets user-specified dimensions
+            updateNumericInput(session, "height.survival", value = round(500 + ((n.rows + log(n.rows)) * 100)))
+            updateNumericInput(session, "width.survival", value = round(500 + ((n.cols + log(n.cols)) * 100)))
+
+            for (pathway in input$pathway.input) {
+                mut.var = paste0("mut.pathway.status.", pathway)
+
+                # Call survfit with do.call to avoid a problem with ggsurvplot later on.
+                # See: https://github.com/kassambara/survminer/issues/125
+                fit <- do.call(survfit,
+                               list(formula = Surv(OS_years, OS_event) ~ get(mut.var), data = sample.data))
+
+                plot.list[[pathway]] = surv.plot(input, fit, data=sample.data, gene=pathway, title=pathway)
+            }
+            title.main = paste("Treatment Group: ", treatment.label)
+            title.grob = text_grob(title.main, size = 23, face = "bold")
+            plot = arrange_ggsurvplots(plot.list, nrow=n.rows, ncol=n.cols, byrow=TRUE, title=title.grob)
+        } else if (input$plotType == "mut.pathway.plot" & input$pathwayType == "pathway.custom") {
             fit = survfit(Surv(OS_years, OS_event) ~ mut.pathway.status, data = sample.data)
             title = paste("Treatment Group:", treatment.label)
             plot = surv.plot(input, fit, data=sample.data, title=title)

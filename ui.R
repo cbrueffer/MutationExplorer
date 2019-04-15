@@ -92,9 +92,11 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                            helper(content = "pathway_definition_source"),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.reactome'",
-                                                           selectInput("pathway.input", "Reactome",
-                                                                       choices = pathway.ui.options,
-                                                                       multiple=FALSE)
+                                                           selectizeInput("pathway.input", "Reactome",
+                                                                          choices = pathway.ui.options,
+                                                                          multiple = TRUE,
+                                                                          options = list(maxItems = 9,
+                                                                                         plugins = list('remove_button')))  # enable deselection of items
                                                        ),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.custom'",
