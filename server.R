@@ -177,8 +177,7 @@ get.dataset.stats <- function(sample.tbl, mut.tbl) {
         add_row(Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$current_mutation_count)) %>%
         add_row(Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$current_mutation_nonsynon_count)) %>%
         add_row(Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$current_mutation_nonsynon_count)) %>%
-        add_row(Value="Median Overall Survival (in Months)", Stat=median(sample.tbl$OS_months)) %>%
-        mutate(Stat = format(Stat, big.mark = ','))
+        add_row(Value="Median Overall Survival (in Months)", Stat=median(sample.tbl$OS_months))
     return(stats)
 }
 
