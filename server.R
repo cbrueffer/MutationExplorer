@@ -331,7 +331,7 @@ shinyServer(function(input, output, session) {
             plot = surv.plot(input, fit, data=sample.data, title=title)
         } else if (input$plotType == "mut.pathway.plot") {
             fit = survfit(Surv(OS_years, OS_event) ~ mut.pathway.status, data = sample.data)
-            title = paste("Pathway in", treatment.label, "Treated Patients")
+            title = paste("Treatment Group:", treatment.label)
             plot = surv.plot(input, fit, data=sample.data, title=title)
         } else if (input$plotType == "mut.gene.plot") {
             plot.list = list()
@@ -348,8 +348,6 @@ shinyServer(function(input, output, session) {
             updateNumericInput(session, "width.survival", value = round(500 + ((n.cols + log(n.cols)) * 100)))
 
             for (gene in input$gene.input) {
-                title.gene = paste(gene, "Mutation Status")
-
                 mut.var = mutated.gene.columns[[gene]]
 
                 # Call survfit with do.call to avoid a problem with ggsurvplot later on.
@@ -357,7 +355,7 @@ shinyServer(function(input, output, session) {
                 fit <- do.call(survfit,
                                list(formula = Surv(OS_years, OS_event) ~ get(mut.var), data = sample.data))
 
-                plot.list[[gene]] = surv.plot(input, fit, data=sample.data, gene=gene, title=title.gene)
+                plot.list[[gene]] = surv.plot(input, fit, data=sample.data, gene=gene, title=gene)
             }
             title.main = paste("Treatment Group: ", treatment.label)
             title.grob = text_grob(title.main, size = 23, face = "bold")

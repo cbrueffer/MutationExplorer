@@ -6,7 +6,7 @@ suppressPackageStartupMessages(library(dplyr))
 #
 # Treatment definitions
 #
-treatment.tbl <- as_tibble(rbind(c("any", "Any", "Any"),
+treatment.tbl <- as_tibble(rbind(c("any", "Any Treatment", "Any Treatment"),
                                  c("Adjuvant_Endo", "Endocrine + any", "Endo + any"),
                                  c("Adjuvant_Cyto", "Chemo + any", "Chemo + any"),
                                  c("Adjuvant_HER2", "HER2 + any", "HER2 + any"),
