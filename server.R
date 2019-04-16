@@ -99,11 +99,12 @@ filter.sample.tbl <- function(input, sample.tbl) {
 }
 
 # Determine mutation status of samples for selected genes
-add.gene.mut.status <- function(input, sample.tbl, mut.tbl, gene.column.map) {
+add.gene.mut.status <- function(input, sample.tbl, mut.tbl, gene.column.map, gene.status.map) {
     for (gene in input$gene.input) {
         mut.var = gene.column.map[[gene]]
+        gene.status = gene.status.map[[gene]]
         if (!(mut.var %in% colnames(sample.tbl))) {
-            sample.tbl <- mutate(sample.tbl, !!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], "mut", "wt")))
+            sample.tbl <- mutate(sample.tbl, !!mut.var := as.factor(ifelse(SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == gene], gene.status[["abnormal"]], gene.status[["normal"]])))
         }
     }
     return(sample.tbl)
@@ -256,12 +257,26 @@ shinyServer(function(input, output, session) {
         group_by(Gene) %>%
         filter(row_number() == 1)
 
-    # Generate a mapping from gene to mutation status column names and add the custom columns
+    # Generate a mapping from gene to mutation status column names and add the custom columns.
+    # Two types of "genes" are considered:
+    # 1. Normal genes as defined by UCSC, Ensembl, etc. These have status mutated (mut), or wildtype (wt).
+    # 2. Custom genes, with details and status defined in config.yaml. If no status is defined, "mut", and "wt"
+    #    are used by default.
+    # Currently only two statuses are supported, deemed "abnormal" and "normal".
     mutated.genes <- sort(unique(mutations$gene.symbol))
     mutated.gene.columns <- paste0("mut.status.", mutated.genes)
     names(mutated.gene.columns) = mutated.genes
+    mutated.gene.status <- rep(list(list(abnormal="mut", normal="wt")), length(mutated.genes))
+    names(mutated.gene.status) = mutated.genes
     for (val in config$custom_genes) {
         mutated.gene.columns[val$label] = val$column
+        if (is.null(val$status)) {
+            this.status = c("mut", "wt")
+        } else {
+            this.status = as.list(val$status)
+        }
+        names(this.status) = c("abnormal", "normal")
+        mutated.gene.status[[val$column]] = this.status
     }
 
     n.mut = nrow(mutations)
@@ -278,7 +293,7 @@ shinyServer(function(input, output, session) {
     # Add additional information to the current sample set as specified in the input controls.
     sample.tbl <- reactive({
         filtered.samples <- filter(samples, SAMPLE %in% sample.list())
-        filtered.samples <- add.gene.mut.status(input, filtered.samples, mut.tbl(), mutated.gene.columns)
+        filtered.samples <- add.gene.mut.status(input, filtered.samples, mut.tbl(), mutated.gene.columns, mutated.gene.status)
         filtered.samples <- set.mutation.counts(input, filtered.samples)
         filtered.samples <- add.mutation.burden(input, filtered.samples)
         filtered.samples <- add.pathway.mut.status(input, filtered.samples, mut.tbl())

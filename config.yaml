@@ -7,4 +7,16 @@ table_header: "## Downloaded from: http://oncogenomics.bmc.lu.se/MutationExplore
 custom_genes:
   esr1_resistance:
     column: "mut.status.ESR1.resistance"
-    label: "ESR1 Resistance Dahlgren et al (2019)"
+    label: "ESR1 Resistance (Dahlgren et al, 2019)"
+  pten_mutexp:
+    column: "pten.mutexp"
+    label: "PTEN Mutation and Gene Expression (Brueffer et al, 2019)"
+    status:
+      - "PTEN_LOW"
+      - "PTEN_NORMAL"
+  pten_exp:
+    column: "pten.gex"
+    label: "PTEN Gene Expression (Brueffer et al, 2019)"
+    status:
+      - "PTEN_LOW"
+      - "PTEN_NORMAL"
