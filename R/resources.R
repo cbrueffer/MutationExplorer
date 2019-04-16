@@ -60,7 +60,7 @@ colnames(biomarker.tbl) <- c("marker", "var", "level", "label", "color", "select
 #
 # Mutation effects
 #
-mut.effect.tbl <- as.tibble(rbind(c("Frameshift", "red"),
+mut.effect.tbl <- as_tibble(rbind(c("Frameshift", "red"),
                                   c("Nonsense", "orange"),
                                   c("In-frame indel", "darkgreen"),
                                   c("Missense", "#bbebff"),
