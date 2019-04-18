@@ -92,7 +92,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                            helper(content = "pathway_definition_source"),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.reactome'",
-                                                           selectizeInput("pathway.input", "Reactome",
+                                                           selectizeInput("pathway.input", "Reactome Pathways",
                                                                           choices = pathway.ui.options,
                                                                           multiple = TRUE,
                                                                           options = list(maxItems = 9,
@@ -100,7 +100,7 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                                        ),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.custom'",
-                                                           selectInput("custom.pathway.input", "Custom Definition",
+                                                           selectInput("custom.pathway.input", "Genes in Custom Pathway",
                                                                        choices = c(),  # updated from the server side
                                                                        multiple=TRUE)
                                                        )
