@@ -1,3 +1,8 @@
+#
+# File source: https://github.com/kassambara/survminer/blob/master/R/utilities.R
+# License: GPL-2 (see https://github.com/kassambara/survminer/blob/master/DESCRIPTION)
+#
+
 #' @import ggplot2
 #' @import ggpubr
 #' @importFrom survival Surv

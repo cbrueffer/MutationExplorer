@@ -1,3 +1,8 @@
+#
+# File source: https://github.com/kassambara/survminer/blob/master/R/arrange_ggsurvplots.R
+# License: GPL-2 (see https://github.com/kassambara/survminer/blob/master/DESCRIPTION)
+#
+
 #' @include ggsurvplot.R
   NULL
 #'Arranging Multiple ggsurvplots

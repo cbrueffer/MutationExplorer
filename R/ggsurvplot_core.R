@@ -1,3 +1,8 @@
+#
+# File source: https://github.com/kassambara/survminer/blob/master/R/ggsurvplot_core.R
+# License: GPL-2 (see https://github.com/kassambara/survminer/blob/master/DESCRIPTION)
+#
+
 #' @include utilities.R surv_summary.R ggsurvplot_df.R surv_pvalue.R ggsurvtable.R
 #
 # Core function to plot survival curves using ggplot2.
