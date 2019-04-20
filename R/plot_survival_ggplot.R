@@ -6,7 +6,7 @@ source("R/arrange_ggsurvplots.R")
 surv.plot <- function(input, fit, data, gene=NULL, legend.labs=NULL, title="") {
 
     if (is.null(legend.labs)) {
-        # fix labels in indidual gene plots
+        # fix labels in gene/pathway plots
         if (any(grepl("mut.var", names(fit$strata)))) {
             gene = ifelse(is.null(gene), "gene", gene)
             legend.labs = paste0(gene, gsub(".*(=.+)", "\\1", names(fit$strata)))
