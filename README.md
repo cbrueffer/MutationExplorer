@@ -16,8 +16,8 @@ MutationExplorer is currently most usable for breast cancer samples, since the r
 
 ## Authors
 
-- Christian Brueffer (@cbrueffer)
-- Sergii Gladchuk (@sergiigladchuk)
+- Christian Brueffer ([@cbrueffer](http://github.com/cbrueffer/))
+- Sergii Gladchuk ([@sergiigladchuk](http://github.com/sergiigladchuk/))
 
 This software was developed as part of a PhD research project in the
 [laboratory of Lao H. Saal, Translational Oncogenomics Unit, Department of Oncology and Pathology, Lund University, Sweden](https://www.med.lu.se/saalgroup).
