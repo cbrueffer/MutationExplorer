@@ -42,7 +42,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
 
     # mutation data, waterfall() needs the columns "sample", "gene", and "variant_class"
     mutDf <- mut.tbl %>%
-        dplyr::select(sample = SAMPLE, gene = gene.symbol)
+        dplyr::select(sample = SAMPLE, gene = gene.symbol, variant_class = ANN.effect.class)
 
     # count the occurrence of each mutation in our set
     mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[,1:2], 'gene')
@@ -65,14 +65,12 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     # Restrict the mutation table to the genes we'll actually display.
     mutDf <- mutDf %>%
         mutate(own_freq = mut_count$freq[match(gene, mut_count$gene)] / length(unique(sample))) %>%
-        mutate(variant_class = mut.tbl$ANN.effect.class)
+        dplyr::filter(gene %in% topX.mut)
 
     #
     # Effect/color settings
     #
     # Filter effects that don't occur in the displayed genes.
-    mutDf <- mutDf %>%
-        dplyr::filter(gene %in% topX.mut)
     this.mut.effect.tbl = dplyr::filter(mut.effect.tbl, effect %in% mutDf$variant_class[mutDf$gene %in% topX.mut])
 
     #
@@ -82,8 +80,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     arrange_vars = c("Histological_Type", lapply(topX.mut, function(gene) gene.column.map[[gene]]))
 
     sample.order = sample.tbl %>%
-        arrange_(.dots = arrange_vars) %>%
-        dplyr::select(SAMPLE)
+        arrange_(.dots = arrange_vars)
     sample.order = as.character(sample.order$SAMPLE)
 
     # Add cohort frequency to the gene symbol for display purposes
