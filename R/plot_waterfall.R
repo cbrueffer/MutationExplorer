@@ -42,12 +42,14 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
 
     # mutation data, waterfall() needs the columns "sample", "gene", and "variant_class"
     mutDf <- mut.tbl %>%
-        dplyr::select(sample = SAMPLE, gene = gene.symbol, variant_class = ANN.effect.class)
+        dplyr::select(sample = SAMPLE,
+                      gene = gene.symbol,
+                      variant_class = ANN.effect.class)
 
     # count the occurrence of each mutation in our set
-    mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[,1:2], 'gene')
+    mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[, 1:2], 'gene')
 
-    # determine the top X mutated genes
+    # determine the top X most mutated genes
     topX.mut <- mut_count %>%
         arrange(desc(freq)) %>%
         dplyr::select(gene) %>%
@@ -58,7 +60,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     for (i in seq_along(topX.mut)) {
         var = gene.column.map[[topX.mut[i]]]
         if (!(var %in% colnames(sample.tbl))) {
-            sample.tbl[[var]] <- as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl[mut.tbl$gene.symbol == topX.mut[i], ]$SAMPLE, "mut", "wt"))
+            sample.tbl[[var]] <- as.factor(ifelse(sample.tbl$SAMPLE %in% mut.tbl$SAMPLE[mut.tbl$gene.symbol == topX.mut[i]], "mut", "wt"))
         }
     }
 
@@ -97,7 +99,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     )
 
     p = waterfall(mutDf,
-                  fileType="Custom",
+                  fileType = "Custom",
                   variant_class_order = this.mut.effect.tbl$effect,
                   mainRecurCutoff = 0.00001,
                   mainDropMut = FALSE,  # turned off, we do it manually above since this option doesn't drop the corresponding color
@@ -112,7 +114,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
                   clinVarOrder = clinicOrder,
                   section_heights = c(0.2, 1, 0.35),
                   plotMutBurden = FALSE,
-                  mainGrid = F,
+                  mainGrid = FALSE,
                   sampRecurLayer = samp_recur_layer,
                   out = "plot")
 
