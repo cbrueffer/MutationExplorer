@@ -321,7 +321,7 @@ shinyServer(function(input, output, session) {
     showElement(id = "app-content")
 
     # Survival plot using ggplot2
-    output$survplot <- renderPlot(
+    output$plot <- renderPlot(
         height = function(x) plot.height(),
         width = function(x) plot.width(),
         {
@@ -433,7 +433,7 @@ shinyServer(function(input, output, session) {
     })
 
     output$downloadPlot <- downloadHandler(
-        filename = function() { paste("mutation_explorer_survival_plot", "pdf", sep='.') },
+        filename = function() { paste("mutation_explorer_plot", "pdf", sep='.') },
         content = function(file) {
             # if no plot, length(current.plot) == 0
             pdf(file, useDingbats = FALSE, width = plot.width() / 72, height = plot.height() / 72)

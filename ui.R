@@ -281,11 +281,11 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                     )
                 ),
 
-                # Survival plot
+                # Plots, data tables, and statistics
                 mainPanel(
                     tabsetPanel(type = "pills",
                                 tabPanel("Plots",
-                                         withSpinner(plotOutput("survplot"))
+                                         withSpinner(plotOutput("plot"))
                                 ),
                                 tabPanel("Sample Table",
                                          DT::dataTableOutput("sample.table")
