@@ -189,6 +189,16 @@ get.dataset.stats <- function(sample.tbl, mut.tbl) {
     return(stats)
 }
 
+# Determine suitable row and column counts for grid plotting.
+get.plot.grid.dimensions <- function(n.plots) {
+    n.cols = n.rows = 1
+    while (n.cols * n.rows < n.plots) {
+        if (n.cols == n.rows) n.cols = n.cols + 1
+        else n.rows = n.rows + 1
+    }
+    return(list(rows=n.rows, cols=n.cols))
+}
+
 
 ############################################################################
 #
@@ -320,7 +330,7 @@ shinyServer(function(input, output, session) {
     hideElement(id = "loading-content", anim = TRUE, animType = "fade")
     showElement(id = "app-content")
 
-    # Survival plot using ggplot2
+    # Plot using ggplot2
     output$plot <- renderPlot(
         height = function(x) plot.height(),
         width = function(x) plot.width(),
@@ -340,12 +350,11 @@ shinyServer(function(input, output, session) {
         } else if (input$plotType == "mut.pathway.plot" & input$pathwayType == "pathway.reactome") {
             plot.list = list()
 
-            # brute-force determine the row/col counts
-            n.cols = n.rows = 1
-            while (n.cols * n.rows < length(input$pathway.input)) {
-                if (n.cols == n.rows) n.cols = n.cols + 1
-                else n.rows = n.rows + 1
-            }
+            # Determine plot grid dimensions
+            grid.dims = get.plot.grid.dimensions(length(input$pathway.input))
+            n.cols = grid.dims[["cols"]]
+            n.rows = grid.dims[["rows"]]
+
             # scale plot dimensions to new settings
             # XXX currently resets user-specified dimensions
             updateNumericInput(session, "height.survival", value = round(500 + ((n.rows + log(n.rows)) * 100)))
@@ -371,12 +380,11 @@ shinyServer(function(input, output, session) {
         } else if (input$plotType == "mut.gene.plot") {
             plot.list = list()
 
-            # brute-force determine the row/col counts
-            n.cols = n.rows = 1
-            while (n.cols * n.rows < length(input$gene.input)) {
-                if (n.cols == n.rows) n.cols = n.cols + 1
-                else n.rows = n.rows + 1
-            }
+            # Determine plot grid dimensions
+            grid.dims = get.plot.grid.dimensions(length(input$gene.input))
+            n.cols = grid.dims[["cols"]]
+            n.rows = grid.dims[["rows"]]
+
             # scale plot dimensions to new settings
             # XXX currently resets user-specified dimensions
             updateNumericInput(session, "height.survival", value = round(500 + ((n.rows + log(n.rows)) * 100)))
