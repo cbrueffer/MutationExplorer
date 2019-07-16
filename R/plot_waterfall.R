@@ -116,7 +116,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
                   plotMutBurden = FALSE,
                   mainGrid = FALSE,
                   sampRecurLayer = samp_recur_layer,
-                  out = "plot")
+                  out = "grob")
 
     return(p)
 }

@@ -383,8 +383,14 @@ shinyServer(function(input, output, session) {
         height = function(x) plot.height(),
         width = function(x) plot.width(),
         {
+            # Save plot object in case we need it for PDF download later.
             current.plot <<- create.plot()
-            return(current.plot)
+
+            if (input$plotType == "mut.waterfall.plot") {
+                grid::grid.draw(current.plot)
+            } else {
+                print(current.plot)
+            }
         })
 
     create.plot <- function() {
@@ -493,7 +499,11 @@ shinyServer(function(input, output, session) {
         content = function(file) {
             # if no plot, length(current.plot) == 0
             pdf(file, useDingbats = FALSE, width = plot.width() / 72, height = plot.height() / 72)
-            print(current.plot, newpage = FALSE)
+            if (input$plotType == "mut.waterfall.plot") {
+                grid::grid.draw(current.plot)
+            } else {
+                print(current.plot)
+            }
             dev.off()
         },
         contentType = "application/pdf"
