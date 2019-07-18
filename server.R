@@ -23,6 +23,39 @@ source("R/plot_waterfall.R")
 source("R/plot_protein.R")
 
 
+# Generate header to be written to downloaded flat files.
+get.download.table.head <- function(input, header) {
+    table_header = paste0(sprintf("## Download timestamp: %s\n", date()), header)
+
+    # Write sample filter settings
+    sample_filters = get.sample.filter.descriptions(input)
+    table_header = paste0(table_header, "## Sample filters\n")
+    for (idx in seq_along(sample_filters)) {
+        table_header = paste0(table_header, "## ", unlist(sample_filters[idx]), "\n")
+    }
+
+    table_header = paste0(table_header, "##\n")
+
+    return(table_header)
+}
+
+
+# Returns sample filter settings in text form.
+get.sample.filter.descriptions <- function(input) {
+    filter_descriptions = list(
+        paste("Treatment:", input$treatment.input),
+        paste("Histological Subtype:", selection.to.label.list$HistType[[as.character(input$hist.type)]]),
+        paste("ER Status:", selection.to.label.list$ER[[as.character(input$er.status)]]),
+        paste("PgR Status:", selection.to.label.list$PgR[[as.character(input$pgr.status)]]),
+        paste("HER2 Status:", selection.to.label.list$HER2[[as.character(input$her2.status)]]),
+        paste("Ki67 Status:", selection.to.label.list$Ki67[[as.character(input$ki67.status)]]),
+        paste("Nottingham Histologial Grade (NHG):", selection.to.label.list$NHG[[as.character(input$nhg)]]),
+        paste("PAM50 Subtype:", selection.to.label.list$PAM50[[as.character(input$pam50)]])
+    )
+
+    return(filter_descriptions)
+}
+
 # Return a list of samples adhering to the specified filters.
 filter.sample.tbl <- function(input, sample.tbl) {
     filters = list()
@@ -455,7 +488,8 @@ shinyServer(function(input, output, session) {
         filename = function() { paste("samples", "zip", sep='.') },
         content = function(file) {
             tmpfile = gsub("(.+)\\..+", "\\1\\.tsv", file)
-            write.table(sample.tbl(), tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+            cat(get.download.table.head(input, config$table_header), file=tmpfile)
+            write.table(sample.tbl(), tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE, append = TRUE)
             zip(zipfile = file, files = tmpfile, flags = "-r9Xj")  # r9X is default; -j to trim input file names
         },
         contentType = "application/zip"
@@ -465,7 +499,8 @@ shinyServer(function(input, output, session) {
         filename = function() { paste("mutations", "zip", sep='.') },
         content = function(file) {
             tmpfile = gsub("(.+)\\..+", "\\1\\.tsv", file)
-            write.table(mut.tbl(), tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE)
+            cat(get.download.table.head(input, config$table_header), file=tmpfile)
+            write.table(mut.tbl(), tmpfile, sep = "\t", quote = FALSE, na = "", row.names = FALSE, append = TRUE)
             zip(zipfile = file, files = tmpfile, flags = "-r9Xj")  # r9X is default; -j to trim input file names
         },
         contentType = "application/zip"
