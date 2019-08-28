@@ -9,7 +9,11 @@ surv.plot <- function(input, fit, data, gene=NULL, legend.labs=NULL, title="") {
         # fix labels in gene/pathway plots
         if (any(grepl("mut.var", names(fit$strata)))) {
             gene = ifelse(is.null(gene), "gene", gene)
-            legend.labs = paste0(gene, gsub(".*(=.+)", "\\1", names(fit$strata)))
+            if (nchar(gene) > 10) {
+                legend.labs = paste0(gsub(".*?=(.+)", "\\1", names(fit$strata)))
+            } else {
+                legend.labs = paste0(gene, gsub(".*?(=.+)", "\\1", names(fit$strata)))
+            }
         } else if (any(grepl("tumor_mutational_burden", names(fit$strata)))) {
             legend.labs = paste0("TMB", gsub(".*(=.+)", "\\1", names(fit$strata)))
         } else {
