@@ -23,6 +23,8 @@ plot.protein <- function(input, df, idMappingDf) {
     isLegend = TRUE
     break.divider=4
 
+    if (inGene == "") return()
+
     protein <- idMappingDf$Protein[idMappingDf$Gene == inGene]
     pfamUrl <- paste0('http://pfam.xfam.org/protein/', protein, '/graphic')
 
