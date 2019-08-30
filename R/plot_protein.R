@@ -14,19 +14,19 @@ suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(cowplot))
 
 
-plot.protein <- function(input, df, idMappingDf) {
+plot.protein <- function(input, mutation_df, gene_protein_id_map) {
 
     # XXX make configurable later
-    inGene = input$protein.plot.gene
+    input_gene = input$protein.plot.gene
     cutOff_Mut = input$protein.plot.mutation.cutoff
     cutOff_Anno = input$protein.plot.anno.cutoff
-    isLegend = TRUE
-    break.divider = 4
+    show_legend = TRUE
+    break_divider = 4
 
-    if (inGene == "") return()
+    if (input_gene == "") return()
 
     # Retrieve the protein domain architecture.
-    protein <- idMappingDf$Protein[idMappingDf$Gene == inGene]
+    protein <- gene_protein_id_map$Protein[gene_protein_id_map$Gene == input_gene]
     pfamUrl <- paste0("http://pfam.xfam.org/protein/", protein, "/graphic")
     pfamGraphicsResponse <- GET(pfamUrl)
 
@@ -38,7 +38,7 @@ plot.protein <- function(input, df, idMappingDf) {
     # const colors vector
     constColors <- c("Nonsense" = color.nonsense, "Synonymous" = color.synonymous, "Other" = color.other)  # 5E5F5E
     # Color palette for missense mutations
-    misSensePallete <- "YlOrRd"  # was YlOrRd, RdYlBu
+    missense_palette <- "YlOrRd"  # was YlOrRd, RdYlBu
 
     pfamGraphics_json <- fromJSON(content(pfamGraphicsResponse, "text"))
     # extract text, color and positions for regions
@@ -48,7 +48,7 @@ plot.protein <- function(input, df, idMappingDf) {
     proteinLen <- pfamGraphics_json$length
 
     # get aminoChanges for the gene
-    aminoChanges <- df %>%
+    aminoChanges <- mutation_df %>%
         filter(!is.na(ANN.prot.change)) %>%
         mutate(ANN.effect.class.lolli = ifelse(ANN.effect.class %in% c("Missense", "Nonsense", "Synonymous"), ANN.effect.class, "Other")) %>%
         mutate(AA_Change_s = gsub("p\\.(.+)", "\\1", ANN.prot.change)) %>%
@@ -57,7 +57,7 @@ plot.protein <- function(input, df, idMappingDf) {
                AA_Change_s,
                changeType = ANN.effect.class.lolli,
                proteinPosition = ANN.prot.change.aa) %>%
-        filter(gene == inGene, TYPE == "SNV") %>%
+        filter(gene == input_gene, TYPE == "SNV") %>%
         group_by(proteinPosition) %>%
         mutate(nMutPerPos = n()) %>%
         group_by(AA_Change_s, proteinPosition) %>%
@@ -73,7 +73,7 @@ plot.protein <- function(input, df, idMappingDf) {
         mutate(catColor = if_else(changeType == "Synonymous", constColors["Synonymous"],
                                   if_else(changeType == "Other", constColors["Other"],
                                           if_else(changeType == "Nonsense", constColors["Nonsense"],
-                                                  rev(brewer.pal(7, misSensePallete))[category_num]))),
+                                                  rev(brewer.pal(7, missense_palette))[category_num]))),
                AA_Change_label = if_else(nMutPerPos >= cutOff_Anno, AA_Change_s, ""))
 
     # cut-off or different transcript comment
@@ -106,7 +106,7 @@ plot.protein <- function(input, df, idMappingDf) {
         scale_x_continuous(expand = expand_scale(mult = c(0.01, 0.05)),
                            limits = c(0, proteinLen)) +
         scale_y_continuous(expand = expand_scale(mult = c(0, 0)),
-                           name = substitute(paste(italic(inGene), " Mutations")),
+                           name = substitute(paste(italic(input_gene), " Mutations")),
                            breaks = c(0, maxMutations),
                            labels = c(0, maxMutations)) +
         theme(axis.title.x = element_blank(),
@@ -140,7 +140,7 @@ plot.protein <- function(input, df, idMappingDf) {
                         Missense = 1:3)
 
     # calculate x axis breaks and labels
-    prot.breaks = c(seq(0, proteinLen, floor(proteinLen / 100) * 100 / break.divider), proteinLen)
+    prot.breaks = c(seq(0, proteinLen, floor(proteinLen / 100) * 100 / break_divider), proteinLen)
     if (prot.breaks[length(prot.breaks)] - prot.breaks[length(prot.breaks) - 1] < 25) {
         prot.breaks.labels = prot.breaks[-c(length(prot.breaks) - 1)]
         prot.breaks.labels = append(prot.breaks.labels, "", after = length(prot.breaks) - 2)
@@ -170,11 +170,11 @@ plot.protein <- function(input, df, idMappingDf) {
         annotate("rect",
                  xmin = 0, xmax = proteinLen,
                  ymin = 0.45, ymax = 0.75, fill = "grey", alpha = 0.8)
-    if (isLegend) {
+    if (show_legend) {
         pb <- pb +
             geom_tile(aes(1:3, Missense, color = Missense, fill = factor(const, levels = c("Nonsense", "Synonymous", "Other")))) +
             scale_fill_manual(values = constColors) +
-            scale_colour_gradient(low = brewer.pal(7, misSensePallete)[5], high = brewer.pal(7, misSensePallete)[1]) +
+            scale_colour_gradient(low = brewer.pal(7, missense_palette)[5], high = brewer.pal(7, missense_palette)[1]) +
             guides(fill = guide_legend(title = element_blank(),
                                        label.theme = element_text(size = 16),
                                        order = 2),
@@ -209,7 +209,7 @@ plot.protein <- function(input, df, idMappingDf) {
                      size = 6)
     }
 
-    if (isLegend) {
+    if (show_legend) {
         fp <- plot_grid(gt, pb, nrow = 2, align = "v", rel_heights = c(2, 1))
     } else {
         fp <- plot_grid(gt, pb, nrow = 2, align = "v", rel_heights = c(4, 1))
