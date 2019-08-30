@@ -111,10 +111,13 @@ plot.protein <- function(input, df, idMappingDf) {
                            labels = c(0, maxMutations)) +
         theme(axis.title.x = element_blank(),
               axis.line.x = element_blank(),
+              axis.line.y = element_line(),
               axis.ticks.x = element_blank(),
               axis.text.x = element_blank(),
               axis.text.y = element_text(size = rel(1.4)),
-              plot.margin=unit(c(7, 1, 0.01, 1), "mm")) +
+              panel.grid = element_blank(),
+              panel.background = element_blank(),
+              plot.margin=unit(c(7, 1, 0.5, 1), "mm")) +
         annotate("text",
                  Inf,
                  Inf,
@@ -151,10 +154,13 @@ plot.protein <- function(input, df, idMappingDf) {
     pb <- ggplot(fakeD, aes(x = c(0, proteinLen), y = c(0, 1))) +
         theme(axis.title.x = element_blank(),
               axis.title.y = element_blank(),
+              axis.line.x = element_line(),
               axis.line.y = element_blank(),
               axis.ticks.y = element_blank(),
               axis.text.y = element_blank(),
               axis.text.x = element_text(size = rel(1.4)),
+              panel.grid = element_blank(),
+              panel.background = element_blank(),
               plot.margin = unit(c(0, 1, 0, 1), "mm")) +
         scale_x_continuous(expand = expand_scale(mult = c(0.01, 0.05)),
                            breaks = prot.breaks,
