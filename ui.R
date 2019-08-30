@@ -277,7 +277,8 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                downloadButton("downloadPlot", label = "Plot PDF"),
                                downloadButton("downloadSamples", label = "Sample TSV"),
                                downloadButton("downloadMutations", label = "Mutation TSV")
-                           )
+                           ),
+                           HTML("<br>")  # for vertical space below the buttons
                     )
                 ),
 
