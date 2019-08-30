@@ -92,7 +92,7 @@ plot.protein <- function(input, mutation_df, gene_protein_id_map) {
     #
     #  Build the top part of the plot, containing mutation bars and labels.
     #
-    p <- ggplot(aminoChanges, aes(x = proteinPosition, y = y_start, xend = proteinPosition, yend = y_end)) +
+    tp <- ggplot(aminoChanges, aes(x = proteinPosition, y = y_start, xend = proteinPosition, yend = y_end)) +
         geom_segment(size = 1,
                      lineend = "butt",
                      color = aminoChanges$catColor) +
@@ -127,13 +127,10 @@ plot.protein <- function(input, mutation_df, gene_protein_id_map) {
                  color = "red")
     # for single character alignment
     if (maxMutations < 10) {
-        p <- p + theme(axis.title.y = element_text(margin = margin(t = 1, r = 9, b = 1, l = 3), size = rel(1.4)))
+        tp <- tp + theme(axis.title.y = element_text(margin = margin(t = 1, r = 9, b = 1, l = 3), size = rel(1.4)))
     } else {
-        p <- p + theme(axis.title.y = element_text(margin = margin(t = 1, r = 3, b = 1, l = 3), size = rel(1.4)))
+        tp <- tp + theme(axis.title.y = element_text(margin = margin(t = 1, r = 3, b = 1, l = 3), size = rel(1.4)))
     }
-    # Disable clip-area.
-    gt <- ggplot_gtable(ggplot_build(p))
-    gt$layout$clip[gt$layout$name == "panel"] <- "off"
 
     # add fake data for legend creation
     fakeD <- data.frame(const = c("Nonsense", "Synonymous", "Other"),
@@ -210,9 +207,9 @@ plot.protein <- function(input, mutation_df, gene_protein_id_map) {
     }
 
     if (show_legend) {
-        fp <- plot_grid(gt, pb, nrow = 2, align = "v", rel_heights = c(2, 1))
+        fp <- plot_grid(tp, pb, nrow = 2, align = "v", rel_heights = c(2, 1))
     } else {
-        fp <- plot_grid(gt, pb, nrow = 2, align = "v", rel_heights = c(4, 1))
+        fp <- plot_grid(tp, pb, nrow = 2, align = "v", rel_heights = c(4, 1))
     }
     return(fp)
 }
