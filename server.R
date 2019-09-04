@@ -42,11 +42,13 @@ get.download.table.head <- function(input, header) {
 
 # Returns sample filter settings in text form.
 get.sample.filter.descriptions <- function(input) {
+    hr.cutoff.string = paste0("(", ifelse(input$hr.cutoff == "hr.1perc", "1", "10"), "% cutoff)")
+
     filter_descriptions = list(
         paste("Treatment:", input$treatment.input),
         paste("Histological Subtype:", selection.to.label.list$HistType[[as.character(input$hist.type)]]),
-        paste("ER Status:", selection.to.label.list$ER[[as.character(input$er.status)]]),
-        paste("PgR Status:", selection.to.label.list$PgR[[as.character(input$pgr.status)]]),
+        paste("ER Status:", selection.to.label.list$ER[[as.character(input$er.status)]], hr.cutoff.string),
+        paste("PgR Status:", selection.to.label.list$PgR[[as.character(input$pgr.status)]], hr.cutoff.string),
         paste("HER2 Status:", selection.to.label.list$HER2[[as.character(input$her2.status)]]),
         paste("Ki67 Status:", selection.to.label.list$Ki67[[as.character(input$ki67.status)]]),
         paste("Nottingham Histologial Grade (NHG):", selection.to.label.list$NHG[[as.character(input$nhg)]]),
