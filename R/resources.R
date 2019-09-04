@@ -176,6 +176,9 @@ pathway.type.options = c("Reactome" = "pathway.reactome",
 tmb.type.options = c("Normalized TMB" = "tmb.normalized",
                      "Absolute TMB" = "tmb.absolute")
 
+hr.cutoff.options = c("1%" = "hr.1perc",
+                      "10%" = "hr.10perc")
+
 plot.legend.loc.options = c("Top" = "top",
                             "Bottom" = "bottom",
                             "Left" = "left",

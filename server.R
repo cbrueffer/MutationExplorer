@@ -69,10 +69,18 @@ filter.sample.tbl <- function(input, sample.tbl) {
         filters[["HistType"]] = "Histological_Type == selection.to.label.list$HistType[[as.character(input$hist.type)]]"
     }
     if (input$er.status != ui.options$ER[["Any"]]) {
-        filters[["ER"]] = "ER_1perc == selection.to.label.list$ER[[as.character(input$er.status)]]"
+        if (input$hr.cutoff == "hr.1perc") {
+            filters[["ER"]] = "ER_1perc == selection.to.label.list$ER[[as.character(input$er.status)]]"
+        } else {
+            filters[["ER"]] = "ER_10perc == selection.to.label.list$ER[[as.character(input$er.status)]]"
+        }
     }
     if (input$pgr.status != ui.options$PgR[["Any"]]) {
-        filters[["PgR"]] = "PgR_1perc == selection.to.label.list$PgR[[as.character(input$pgr.status)]]"
+        if (input$hr.cutoff == "hr.1perc") {
+            filters[["PgR"]] = "PgR_1perc == selection.to.label.list$PgR[[as.character(input$pgr.status)]]"
+        } else {
+            filters[["PgR"]] = "PgR_10perc == selection.to.label.list$PgR[[as.character(input$pgr.status)]]"
+        }
     }
     if (input$her2.status != ui.options$HER2[["Any"]]) {
         filters[["HER2"]] = "HER2 == selection.to.label.list$HER2[[as.character(input$her2.status)]]"
