@@ -77,7 +77,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
 
     # Restrict the mutation table to the genes we'll actually display.
     mutDf <- mutDf %>%
-        mutate(own_freq = mut_count$freq[match(gene, mut_count$gene)] / length(unique(sample))) %>%
+        mutate(own_freq = mut_count$freq[match(gene, mut_count$gene)] / nrow(sample.tbl)) %>%
         dplyr::filter(gene %in% topX.mut)
 
     #
