@@ -198,6 +198,8 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
     #
     if (input$plotType == "mut.gene.plot") {
         mut.tbl <- filter(mut.tbl, gene.symbol %in% input$gene.input)
+    } else if (input$plotType == "mut.protein.plot") {
+        mut.tbl <- filter(mut.tbl, gene.symbol %in% input$protein.plot.gene, TYPE == "SNV")
     } else if (input$plotType == "mut.pathway.plot") {
         if (input$pathwayType == "pathway.reactome") {
             # keep mutations present in any of the input pathways

@@ -57,7 +57,6 @@ plot.protein <- function(input, mutation_df, gene_protein_id_map) {
                AA_Change_s,
                changeType = ANN.effect.class.lolli,
                proteinPosition = ANN.prot.change.aa) %>%
-        filter(gene == input_gene, TYPE == "SNV") %>%
         group_by(proteinPosition) %>%
         mutate(nMutPerPos = n()) %>%
         group_by(AA_Change_s, proteinPosition) %>%
