@@ -63,7 +63,6 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     # determine the top X most mutated genes
     topX.mut <- mut_count %>%
         arrange(desc(freq)) %>%
-        dplyr::select(gene) %>%
         head(input$waterfall.cutoff)
     topX.mut <- as.character(topX.mut$gene)
 
@@ -76,9 +75,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     }
 
     # Restrict the mutation table to the genes we'll actually display.
-    mutDf <- mutDf %>%
-        mutate(own_freq = mut_count$freq[match(gene, mut_count$gene)] / nrow(sample.tbl)) %>%
-        dplyr::filter(gene %in% topX.mut)
+    mutDf <- dplyr::mutate(mutDf, own_freq = mut_count$freq[match(gene, mut_count$gene)] / nrow(sample.tbl))
 
     #
     # Effect/color settings

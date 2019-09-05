@@ -214,6 +214,18 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
         }
     } else if (input$plotType == "mut.burden.plot") {
         mut.tbl <- filter(mut.tbl, ANN.effect.class != "Synonymous")
+    } else if (input$plotType == "mut.waterfall.plot") {
+        # count the occurrence of each mutation in our set
+        mut_count <- plyr::count(plyr::count(mut.tbl, c('gene.symbol', 'SAMPLE'))[, 1:2], 'gene.symbol')
+
+        # determine the top X most mutated genes
+        topX.mut <- mut_count %>%
+            arrange(desc(freq)) %>%
+            head(input$waterfall.cutoff)
+        topX.mut <- as.character(topX.mut$gene.symbol)
+
+        # Restrict the mutation table to the genes we'll actually display.
+        mut.tbl = dplyr::filter(mut.tbl, gene.symbol %in% topX.mut)
     }
 
     return(mut.tbl)
