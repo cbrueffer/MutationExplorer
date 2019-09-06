@@ -29,11 +29,17 @@ get.download.table.head <- function(input, header) {
 
     # Write sample filter settings
     sample_filters = get.sample.filter.descriptions(input)
-    table_header = paste0(table_header, "## Sample filters\n")
+    table_header = paste0(table_header, "## Sample filters:\n")
     for (idx in seq_along(sample_filters)) {
         table_header = paste0(table_header, "## ", unlist(sample_filters[idx]), "\n")
     }
+    table_header = paste0(table_header, "##\n")
 
+    mutation_filters = get.mutation.filter.descriptions(input)
+    table_header = paste0(table_header, "## Mutation filters:\n")
+    for (idx in seq_along(mutation_filters)) {
+        table_header = paste0(table_header, "## ", unlist(mutation_filters[idx]), "\n")
+    }
     table_header = paste0(table_header, "##\n")
 
     return(table_header)
@@ -55,6 +61,15 @@ get.sample.filter.descriptions <- function(input) {
         paste("PAM50 Subtype:", selection.to.label.list$PAM50[[as.character(input$pam50)]])
     )
 
+    return(filter_descriptions)
+}
+
+# Returns mutation filter settings in text form.
+get.mutation.filter.descriptions <- function(input) {
+    filter_descriptions = list(
+        paste("Dataset:", names(mutation.selection.options)[mutation.selection.options == input$mutationSelection]),
+        paste("Types:", paste(input$mutationEffect, collapse = ", "))
+    )
     return(filter_descriptions)
 }
 
