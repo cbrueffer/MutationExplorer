@@ -13,6 +13,7 @@ suppressPackageStartupMessages(library(survival))
 suppressPackageStartupMessages(library(survminer))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(sessioninfo))
 suppressPackageStartupMessages(library(yaml))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(DBI))
@@ -581,6 +582,13 @@ shinyServer(function(input, output, session) {
 
     output$appCiteAbout <- renderUI ({
         includeMarkdown("about.md")
+    })
+
+    output$sessionInfo <- renderPrint({
+        sessioninfo::package_info() %>%
+            filter(attached == TRUE) %>%
+            dplyr::select(package, loadedversion, source) %>%
+            print(row.names = FALSE)
     })
 
 })

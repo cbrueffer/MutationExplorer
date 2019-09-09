@@ -40,6 +40,7 @@ RUN R -e "install.packages(c( \
     'reshape2', \
     'RColorBrewer', \
     'RSQLite', \
+    'sessioninfo', \
     'shinycssloaders', \
     'shinyhelper', \
     'shinyjs', \

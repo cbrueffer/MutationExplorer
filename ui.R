@@ -302,7 +302,9 @@ shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
                                          htmlOutput("datasetStats")
                                 ),
                                 tabPanel("Citation and About",
-                                         htmlOutput("appCiteAbout")
+                                         htmlOutput("appCiteAbout"),
+                                         h2("Session Information"),
+                                         verbatimTextOutput("sessionInfo")
                                 )
                     )
                 )
