@@ -74,7 +74,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
         }
     }
 
-    # Restrict the mutation table to the genes we'll actually display.
+    # Calculate mutation frequency in the selected samples.
     mutDf <- dplyr::mutate(mutDf, own_freq = mut_count$freq[match(gene, mut_count$gene)] / nrow(sample.tbl))
 
     #
@@ -94,7 +94,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     sample.order = as.character(sample.order$SAMPLE)
 
     # Add cohort frequency to the gene symbol for display purposes
-    mutDf <- mutate(mutDf, gene = paste0(gene, ' (', sprintf("%.0f%%", own_freq * 100), ')'))
+    mutDf <- mutate(mutDf, gene = sprintf("%s (%.0f%%)", gene, own_freq * 100))
 
     #######################################################
     #
