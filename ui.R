@@ -64,6 +64,9 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
     extendShinyjs(text = tabControlJS, functions = c("enableTab", "disableTab")),
     inlineCSS(c(tabControlCSS, appLoadCSS)),
 
+    # Enable Google Analytics
+    tags$head(includeScript("google-analytics.js")),
+
     # Loading message
     div(id = "loading-content",
         h2("Loading...")
