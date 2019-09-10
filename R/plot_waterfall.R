@@ -90,7 +90,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     arrange_vars = c("Histological_Type", lapply(topX.mut, function(gene) gene.column.map[[gene]]))
 
     sample.order = sample.tbl %>%
-        arrange_(.dots = arrange_vars)
+        arrange(!!!syms(arrange_vars))
     sample.order = as.character(sample.order$SAMPLE)
 
     # Add cohort frequency to the gene symbol for display purposes
