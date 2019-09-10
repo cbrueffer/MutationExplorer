@@ -30,6 +30,7 @@ RUN R -e "install.packages(c( \
     'cowplot', \
     'dbplyr', \
     'dplyr', \
+    'devtools', \
     'DT', \
     'DBI', \
     'ggrepel', \
@@ -48,6 +49,7 @@ RUN R -e "install.packages(c( \
     'yaml', \
     'BiocManager' \
     ))"
+RUN R -e "library(devtools); install_github('cbrueffer/survminer', ref='arrange_flexibility')"
 RUN R -e "BiocManager::install(c( \
     'reactome.db', \
     'GenVisR' \
