@@ -11,7 +11,6 @@ suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(survival))
 suppressPackageStartupMessages(library(survminer))
-suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(sessioninfo))
 suppressPackageStartupMessages(library(yaml))
@@ -237,9 +236,8 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
         mut_count <- plyr::count(plyr::count(mut.tbl, c('gene.symbol', 'SAMPLE'))[, 1:2], 'gene.symbol')
 
         # determine the top X most mutated genes
-        topX.mut <- mut_count %>%
-            arrange(desc(freq)) %>%
-            head(input$waterfall.cutoff)
+        topX.mut <- arrange(mut_count, desc(freq))
+        topX.mut <- head(topX.mut, input$waterfall.cutoff)
         topX.mut <- as.character(topX.mut$gene.symbol)
 
         # Restrict the mutation table to the genes we'll actually display.
@@ -251,15 +249,15 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
 
 # Returns a table with various sample/mutation descriptive statistics.
 get.dataset.stats <- function(sample.tbl, mut.tbl) {
-    stats = data.frame(Value=character(), Stat=numeric()) %>%
-        add_row(Value="Total Samples", Stat=nrow(sample.tbl)) %>%
-        add_row(Value="Total Mutations", Stat=nrow(mut.tbl)) %>%
-        add_row(Value="Total COSMIC Mutations", Stat=nrow(filter(mut.tbl, COSMIC_ID != "."))) %>%
-        add_row(Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$current_mutation_count)) %>%
-        add_row(Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$current_mutation_count)) %>%
-        add_row(Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$current_mutation_nonsynon_count)) %>%
-        add_row(Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$current_mutation_nonsynon_count)) %>%
-        add_row(Value="Median Overall Survival (in Months)", Stat=median(sample.tbl$OS_months))
+    stats = data.frame(Value=character(), Stat=numeric())
+    stats = add_row(stats, Value="Total Samples", Stat=nrow(sample.tbl))
+    stats = add_row(stats, Value="Total Mutations", Stat=nrow(mut.tbl))
+    stats = add_row(stats, Value="Total COSMIC Mutations", Stat=nrow(filter(mut.tbl, COSMIC_ID != ".")))
+    stats = add_row(stats, Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$current_mutation_count))
+    stats = add_row(stats, Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$current_mutation_count))
+    stats = add_row(stats, Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$current_mutation_nonsynon_count))
+    stats = add_row(stats, Value="Median Coding Mutations per Sample", Stat=median(sample.tbl$current_mutation_nonsynon_count))
+    stats = add_row(stats, Value="Median Overall Survival (in Months)", Stat=median(sample.tbl$OS_months))
     return(stats)
 }
 
@@ -285,17 +283,15 @@ shinyServer(function(input, output, session) {
     config = read_yaml("config.yaml")
 
     con <- DBI::dbConnect(RSQLite::SQLite(), config$db_file)
-    samples <- tbl(con, "samples") %>%
-        collect()
-    mutations <- tbl(con, "mutations") %>%
-        collect()
+    samples <- collect(tbl(con, "samples"))
+    mutations <- collect(tbl(con, "mutations"))
     dbDisconnect(con)
 
     # Gene<->Protein map, only the first mapping for each gene is retained
-    gene_protein_mapping <- read.csv(config$gene_protein_map_file, sep='\t', header = F, stringsAsFactors = F) %>%
-        dplyr::select(Protein = 1, Gene = 2) %>%
-        group_by(Gene) %>%
-        filter(row_number() == 1)
+    gene_protein_mapping <- read.csv(config$gene_protein_map_file, sep='\t', header = F, stringsAsFactors = F)
+    gene_protein_mapping <- dplyr::select(gene_protein_mapping, Protein = 1, Gene = 2)
+    gene_protein_mapping <- group_by(gene_protein_mapping, Gene)
+    gene_protein_mapping <- filter(gene_protein_mapping, row_number() == 1)
 
     # Generate a mapping from gene to mutation status column names and add the custom columns.
     # Two types of "genes" are considered:
@@ -585,10 +581,10 @@ shinyServer(function(input, output, session) {
     })
 
     output$sessionInfo <- renderPrint({
-        sessioninfo::package_info() %>%
-            filter(attached == TRUE) %>%
-            dplyr::select(package, loadedversion, source) %>%
-            print(row.names = FALSE)
+        sinfo = sessioninfo::package_info()
+        sinfo = filter(sinfo, attached == TRUE)
+        sinfo = dplyr::select(sinfo, package, loadedversion, source)
+        print(sinfo, row.names = FALSE)
     })
 
 })

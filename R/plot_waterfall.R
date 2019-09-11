@@ -18,20 +18,20 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     #######################################################
 
     # create the clinical annotation table, in long format
-    clin.anno <- sample.tbl %>%
-        dplyr::mutate(PgR = case_when(input$hr.cutoff == "hr.1perc" ~ PgR_1perc,
-                                      TRUE ~ PgR_10perc),
-                      ER = case_when(input$hr.cutoff == "hr.1perc" ~ ER_1perc,
-                                     TRUE ~ ER_10perc)) %>%
-        dplyr::select(sample = SAMPLE,
-                      NHG,
-                      Ki67,
-                      HER2,
-                      PgR,
-                      ER,
-                      PAM50,
-                      HistType = Histological_Type) %>%
-        melt(id.vars = c("sample"))
+    clin.anno <- dplyr::mutate(sample.tbl,
+                               PgR = case_when(input$hr.cutoff == "hr.1perc" ~ PgR_1perc,
+                                               TRUE ~ PgR_10perc),
+                               ER = case_when(input$hr.cutoff == "hr.1perc" ~ ER_1perc,
+                                              TRUE ~ ER_10perc))
+    clin.anno <- dplyr::select(clin.anno, sample = SAMPLE,
+                               NHG,
+                               Ki67,
+                               HER2,
+                               PgR,
+                               ER,
+                               PAM50,
+                               HistType = Histological_Type)
+    clin.anno <- melt(clin.anno, id.vars = c("sample"))
 
     # ordering and coloring
     clinicColor <- c(LumA = "blue4", LumB = "deepskyblue", HER2 = "hotpink2", Basal = "firebrick2", Normal = "green4", Unclassified = "gray",
@@ -45,18 +45,17 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
 
 
     # mutation data, waterfall() needs the columns "sample", "gene", and "variant_class"
-    mutDf <- mut.tbl %>%
-        dplyr::select(sample = SAMPLE,
-                      gene = gene.symbol,
-                      variant_class = ANN.effect.class)
+    mutDf <- dplyr::select(mut.tbl,
+                           sample = SAMPLE,
+                           gene = gene.symbol,
+                           variant_class = ANN.effect.class)
 
     # count the occurrence of each mutation in our set
     mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[, 1:2], 'gene')
 
     # determine the top X most mutated genes
-    topX.mut <- mut_count %>%
-        arrange(desc(freq)) %>%
-        head(input$waterfall.cutoff)
+    topX.mut <- arrange(mut_count, desc(freq))
+    topX.mut <- head(topX.mut, input$waterfall.cutoff)
     topX.mut <- as.character(topX.mut$gene)
 
     # Make sure the mutation status for the topX genes is present in the sample table for figuring out sample ordering
@@ -81,9 +80,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     #
     # order samples by histological type first, then by frequently mutated genes
     arrange_vars = c("Histological_Type", lapply(topX.mut, function(gene) gene.column.map[[gene]]))
-
-    sample.order = sample.tbl %>%
-        arrange(!!!syms(arrange_vars))
+    sample.order = arrange(sample.tbl, !!!syms(arrange_vars))
     sample.order = as.character(sample.order$SAMPLE)
 
     # Add cohort frequency to the gene symbol for display purposes

@@ -1,6 +1,5 @@
 suppressPackageStartupMessages(library(reactome.db))
 suppressPackageStartupMessages(library(tibble))
-suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(dplyr))
 
 
@@ -98,14 +97,14 @@ get.ui.options = function(biomarker.tbl) {
     result.list = list()
     for (this.marker in unique(biomarker.tbl$marker)) {
         marker.list = list()
-        biomarker.subset = biomarker.tbl %>%
-            filter(marker == this.marker)
+        biomarker.subset = filter(biomarker.tbl, marker == this.marker)
 
         marker.list[["Any"]] <- 42  # every UI element has an "any" option
         for (this.level in biomarker.subset$level) {
-            selection.value = biomarker.subset %>% filter(level == this.level) %>% dplyr::select(selection.value) %>% as.integer()
-            label = biomarker.subset %>% filter(level == this.level) %>% dplyr::select(label) %>% as.character()
-            marker.list[[label]] = selection.value
+            this.biomarker = filter(biomarker.subset, level == this.level)
+            this.selection.value = as.integer(dplyr::select(this.biomarker, selection.value))
+            this.label = as.character(dplyr::select(this.biomarker, label))
+            marker.list[[this.label]] = this.selection.value
         }
         result.list[[this.marker]] = marker.list
     }
@@ -119,13 +118,13 @@ get.selection.to.biomarker.levels = function(biomarker.tbl) {
     result.list = list()
     for (this.marker in unique(biomarker.tbl$marker)) {
         marker.list = list()
-        biomarker.subset = biomarker.tbl %>%
-            filter(marker == this.marker)
+        biomarker.subset = filter(biomarker.tbl, marker == this.marker)
 
         marker.list[["42"]] <- "Any"  # every UI element has an "any" option
         for (this.level in biomarker.subset$level) {
-            selection.value = biomarker.subset %>% filter(level == this.level) %>% dplyr::select(selection.value) %>% as.character()
-            marker.list[[selection.value]] = this.level
+            this.biomarker = filter(biomarker.subset, level == this.level)
+            this.selection.value = as.character(dplyr::select(this.biomarker, selection.value))
+            marker.list[[this.selection.value]] = this.level
         }
         result.list[[this.marker]] = marker.list
     }
@@ -136,7 +135,7 @@ selection.to.label.list <- get.selection.to.biomarker.levels(biomarker.tbl)
 
 # Generates PAM50 HTML labels
 get.pam50.html.labels <- function(biomarker.tbl) {
-    biomarker.tbl.pam50 <- biomarker.tbl %>% filter(marker == "PAM50")
+    biomarker.tbl.pam50 <- filter(biomarker.tbl, marker == "PAM50")
     result.list = list()
     result.list[["Any"]] = "<div style='background: white; color: black; font-size: 110%; padding-left: 5px;'>Any</div>"
     for (i in 1:nrow(biomarker.tbl.pam50)) {

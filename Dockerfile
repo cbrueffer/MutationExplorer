@@ -36,7 +36,6 @@ RUN R -e "install.packages(c( \
     'ggrepel', \
     'httr', \
     'jsonlite', \
-    'magrittr', \
     'reshape2', \
     'RColorBrewer', \
     'RSQLite', \
