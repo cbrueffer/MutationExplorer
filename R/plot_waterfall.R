@@ -17,19 +17,12 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     #
     #######################################################
 
-    # XXX find a way to do this inside the pipe below
-    if (input$hr.cutoff == "hr.1perc") {
-        ER_select = sample.tbl$ER_1perc
-        PgR_select = sample.tbl$PgR_1perc
-    } else {
-        ER_select = sample.tbl$ER_10perc
-        PgR_select = sample.tbl$PgR_10perc
-    }
-
     # create the clinical annotation table, in long format
     clin.anno <- sample.tbl %>%
-        dplyr::mutate(PgR = PgR_select,
-                      ER = ER_select) %>%
+        dplyr::mutate(PgR = case_when(input$hr.cutoff == "hr.1perc" ~ PgR_1perc,
+                                      TRUE ~ PgR_10perc),
+                      ER = case_when(input$hr.cutoff == "hr.1perc" ~ ER_1perc,
+                                     TRUE ~ ER_10perc)) %>%
         dplyr::select(sample = SAMPLE,
                       NHG,
                       Ki67,
