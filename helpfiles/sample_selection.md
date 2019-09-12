@@ -35,4 +35,5 @@ Select a subgroup of patient samples treated with a specific combination three t
 | NHG                  | Nottingham histological grade                                                                    |
 | PAM50                | Intrinsic breast cancer subtype based on the PAM50 gene list                                     |
 
-The cutoffs ER and PgR can be either 1% (international standard) or 10% (Swedish standard).
+<br />
+The cutoffs for ER and PgR can be either 1% (international standard) or 10% (Swedish standard).
