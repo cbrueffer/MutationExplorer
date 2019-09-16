@@ -48,12 +48,12 @@ RUN R -e "install.packages(c( \
     'survminer', \
     'yaml', \
     'BiocManager' \
-    ))"
+    ), clean = TRUE)"
 RUN R -e "library(devtools); install_github('cbrueffer/survminer', ref='arrange_flexibility')"
 RUN R -e "BiocManager::install(c( \
     'reactome.db', \
     'GenVisR' \
-    ), version = '3.8', ask = FALSE, update = TRUE)"
+    ), clean = TRUE, version = '3.8', ask = FALSE, update = TRUE)"
 
 ###############################################
 #
@@ -68,7 +68,6 @@ COPY config.yaml ${APP_LOCATION}/
 COPY htpasswd-sme.txt ${APP_LOCATION}/
 COPY about.md ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
-COPY data ${APP_LOCATION}/data
 COPY helpfiles ${APP_LOCATION}/helpfiles
 
 CMD /etc/init.d/nginx start && /usr/bin/shiny-server.sh
