@@ -23,7 +23,10 @@ EXPOSE 80/tcp
 RUN apt-get update && \
     apt-get install -y nginx \
                        libssl-dev \
+                       libbz2-dev \
+                       liblzma-dev \
                        libxml2-dev
+
 COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
 
 RUN R -e "install.packages(c( \
