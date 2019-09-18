@@ -7,6 +7,10 @@ The study is described in [Saal *et al*, Genome Medicine (2015)](https://doi.org
 
 This software was developed as part of a PhD research project in the [laboratory of Lao H. Saal, Translational Oncogenomics Unit, Department of Oncology and Pathology, Lund University, Sweden](https://www.med.lu.se/saalgroup).
 
+## Data Availability
+
+If you would like access to data beyond what is accessible through this application, please contact [Lao H Saal](https://portal.research.lu.se/portal/en/persons/lao-saal(28d485a2-dc70-44d3-b799-1c2a3e50a422).html).
+
 ## Citation
 
 If you use any data or plots from this website in your publications, please cite the following paper:
