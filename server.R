@@ -409,6 +409,14 @@ shinyServer(function(input, output, session) {
         updateNumericInput(session, "waterfall.cutoff",
                            max = length(mutated.genes))
     })
+    # No specific mutations underlying TMB plots, disable mutation download.
+    observeEvent(input$plotType, {
+        if (input$plotType == "mut.burden.plot") {
+            disable("downloadMutations")
+        } else {
+            enable("downloadMutations")
+        }
+    })
 
     # Hide the loading message when the rest of the server function has executed
     hideElement(id = "loading-content", anim = TRUE, animType = "fade")
