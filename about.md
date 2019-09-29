@@ -13,11 +13,15 @@ If you would like access to data beyond what is accessible through this applicat
 
 ## Citation
 
-If you use any data or plots from this website in your publications, please cite the following paper:
+If you use any data or plots from this website in your publications, or if you adopt this software for your own dataset, please cite the following paper:
 
 [Brueffer *et al*. The Mutational Landscape of the Primary Breast Cancer Transcriptome. bioRxiv (2019)](https://)
 
 ## Code
 
-The source code for this software can be found on GitHub: https://github.com/cbrueffer/MutationExplorer
+The source code for this software is available under the 2-clause BSD license and can be found on GitHub: https://github.com/cbrueffer/MutationExplorer
 
+## Contact
+
+- Christian Brueffer (christian.brueffer@med.lu.se)
+- Lao H Saal (lao.saal@med.lu.se))
