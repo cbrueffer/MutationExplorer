@@ -34,7 +34,7 @@ appLoadCSS <- "
 wellpanel.settings.style = "background: white; margin-top: 15px; margin-bottom: 0px; padding-top: 3px; padding-bottom: 3px;"
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(title = "SCAN-B Mutation Explorer",
+shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
     useShinyjs(),
     inlineCSS(appLoadCSS),
 
