@@ -54,24 +54,6 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                     tabsetPanel(type = "pills",
                                 tabPanel("Plot and Data Selection",
                                          wellPanel(style = wellpanel.settings.style,
-                                                   helper(h4("Mutation Selection"),
-                                                          content = "mutation_selection"),
-
-                                                   radioGroupButtons("mutationSelection",
-                                                                     label = "", choices = mutation.selection.options, selected = "mutations.all",
-                                                                     status = "primary", individual = TRUE),
-                                                   pickerInput(inputId = "mutationEffect",
-                                                               label = "Mutation Effect",
-                                                               choices = mut.effect.tbl$effect,
-                                                               choicesOpt = list(content = mut.effect.html.labels),
-                                                               selected = mut.effect.tbl$effect,
-                                                               options = list(
-                                                                   `actions-box` = TRUE
-                                                               ),
-                                                               multiple = TRUE
-                                                   )
-                                         ),
-                                         wellPanel(style = wellpanel.settings.style,
                                                    h4("Plot Selection"),
 
                                                    helper(selectInput("plotType", "Plot Type", plot.type.options),
@@ -125,6 +107,24 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.protein.plot'",
                                                        selectizeInput("protein.plot.gene", "Gene", choices = c(), multiple=FALSE)  # choices updated from the server side
+                                                   )
+                                         ),
+                                         wellPanel(style = wellpanel.settings.style,
+                                                   helper(h4("Mutation Selection"),
+                                                          content = "mutation_selection"),
+
+                                                   radioGroupButtons("mutationSelection",
+                                                                     label = "", choices = mutation.selection.options, selected = "mutations.all",
+                                                                     status = "primary", individual = TRUE),
+                                                   pickerInput(inputId = "mutationEffect",
+                                                               label = "Mutation Effect",
+                                                               choices = mut.effect.tbl$effect,
+                                                               choicesOpt = list(content = mut.effect.html.labels),
+                                                               selected = mut.effect.tbl$effect,
+                                                               options = list(
+                                                                 `actions-box` = TRUE
+                                                               ),
+                                                               multiple = TRUE
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,
