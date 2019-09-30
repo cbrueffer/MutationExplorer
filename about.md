@@ -24,4 +24,4 @@ The source code for this software is available under the 2-clause BSD license an
 ## Contact
 
 - Christian Brueffer (christian.brueffer@med.lu.se)
-- Lao H Saal (lao.saal@med.lu.se))
+- Lao H Saal (lao.saal@med.lu.se)
