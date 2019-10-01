@@ -58,6 +58,9 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     topX.mut <- head(topX.mut, input$waterfall.cutoff)
     topX.mut <- as.character(topX.mut$gene)
 
+    # only keep mutations we'll actually show
+    mutDf <- dplyr::filter(mutDf, gene %in% topX.mut)
+
     # Make sure the mutation status for the topX genes is present in the sample table for figuring out sample ordering
     for (i in seq_along(topX.mut)) {
         var = gene.column.map[[topX.mut[i]]]
