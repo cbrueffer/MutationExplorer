@@ -31,12 +31,38 @@ appLoadCSS <- "
 }
 "
 
+tabControlJS <- "
+shinyjs.disableTab = function(name) {
+  var tab = $('.nav li a[data-value=' + name + ']');
+  tab.bind('click.tab', function(e) {
+    e.preventDefault();
+    return false;
+  });
+  tab.addClass('disabled');
+}
+
+shinyjs.enableTab = function(name) {
+  var tab = $('.nav li a[data-value=' + name + ']');
+  tab.unbind('click.tab');
+  tab.removeClass('disabled');
+}
+"
+
+tabControlCSS <- "
+  .nav li a.disabled {
+  background-color: unset !important;
+  color: grey !important;
+  cursor: not-allowed !important;
+}"
+
+
 wellpanel.settings.style = "background: white; margin-top: 15px; margin-bottom: 0px; padding-top: 3px; padding-bottom: 3px;"
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
     useShinyjs(),
-    inlineCSS(appLoadCSS),
+    extendShinyjs(text = tabControlJS, functions = c("enableTab", "disableTab")),
+    inlineCSS(c(tabControlCSS, appLoadCSS)),
 
     # Loading message
     div(id = "loading-content",
@@ -299,19 +325,19 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                 # Plots, data tables, and statistics
                 mainPanel(
                     tabsetPanel(type = "pills",
-                                tabPanel("Plots",
+                                tabPanel("Plots", value = "plotTab",
                                          withSpinner(plotOutput("plot"))
                                 ),
-                                tabPanel("Sample Table",
+                                tabPanel("Sample Table", value = "sampleTab",
                                          DT::dataTableOutput("sample.table")
                                 ),
-                                tabPanel("Mutation Table",
+                                tabPanel("Mutation Table", value = "mutationTab",
                                          DT::dataTableOutput("mut.table")
                                 ),
-                                tabPanel("Dataset Statistics",
+                                tabPanel("Dataset Statistics", value = "statsTab",
                                          htmlOutput("datasetStats")
                                 ),
-                                tabPanel("Citation and About",
+                                tabPanel("Citation and About", value = "aboutTab",
                                          htmlOutput("appCiteAbout"),
                                          h2("Session Information"),
                                          verbatimTextOutput("sessionInfo")

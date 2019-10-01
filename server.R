@@ -230,7 +230,7 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
             }
         }
     } else if (input$plotType == "mut.burden.plot") {
-        mut.tbl <- filter(mut.tbl, ANN.effect.class != "Synonymous")
+        mut.tbl <- filter(mut.tbl, FALSE)  # no specific genes behind TMB -> empty table
     } else if (input$plotType == "mut.waterfall.plot") {
         # count the occurrence of each mutation in our set
         mut_count <- plyr::count(plyr::count(mut.tbl, c('gene.symbol', 'SAMPLE'))[, 1:2], 'gene.symbol')
@@ -409,12 +409,14 @@ shinyServer(function(input, output, session) {
         updateNumericInput(session, "waterfall.cutoff",
                            max = length(mutated.genes))
     })
-    # No specific mutations underlying TMB plots, disable mutation download.
+    # No specific mutations underlying TMB plots, disable mutation download/tab.
     observeEvent(input$plotType, {
         if (input$plotType == "mut.burden.plot") {
             disable("downloadMutations")
+            js$disableTab("mutationTab")
         } else {
             enable("downloadMutations")
+            js$enableTab("mutationTab")
         }
     })
 
