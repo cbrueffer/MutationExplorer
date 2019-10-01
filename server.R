@@ -342,7 +342,7 @@ shinyServer(function(input, output, session) {
     })
 
     plot.height = reactive({
-        if (input$plotType == "mut.survival.plot") {
+        if (input$plotType %in% c("mut.gene.plot", "mut.pathway.plot", "mut.burden.plot")) {
             height = input$height.survival
         } else if (input$plotType == "mut.waterfall.plot") {
             height = input$height.waterfall
@@ -355,7 +355,7 @@ shinyServer(function(input, output, session) {
     })
 
     plot.width = reactive({
-        if (input$plotType == "mut.survival.plot") {
+        if (input$plotType  %in% c("mut.gene.plot", "mut.pathway.plot", "mut.burden.plot")) {
             width = input$width.survival
         } else if (input$plotType == "mut.waterfall.plot") {
             width = input$width.waterfall
