@@ -84,7 +84,8 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     sample.order = as.character(sample.order$SAMPLE)
 
     # Add cohort frequency to the gene symbol for display purposes
-    mutDf <- mutate(mutDf, gene = sprintf("%s (%.0f%%)", gene, own_freq * 100))
+    fmt <- paste0("%s (%.", input$waterfall.round.digits, "f%%)")
+    mutDf <- mutate(mutDf, gene = sprintf(fmt, gene, round(own_freq * 100, input$waterfall.round.digits)))
 
     #######################################################
     #

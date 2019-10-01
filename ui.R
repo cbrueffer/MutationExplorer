@@ -241,6 +241,16 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                                         value = 1200
                                                            )
                                                        )
+                                             ),
+                                             wellPanel(style = wellpanel.settings.style,
+                                                       helper(h4("General Settings"),
+                                                              content = "plot_settings_waterfall"),
+                                                       numericInput("waterfall.round.digits",
+                                                                    label = "Frequency Digits (0-3)",
+                                                                    value = 0,
+                                                                    min = 0,
+                                                                    max = 3
+                                                       )
                                              )
                                          ),
                                          conditionalPanel(
