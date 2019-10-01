@@ -236,7 +236,7 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
         mut_count <- plyr::count(plyr::count(mut.tbl, c('gene.symbol', 'SAMPLE'))[, 1:2], 'gene.symbol')
 
         # determine the top X most mutated genes
-        topX.mut <- arrange(mut_count, desc(freq))
+        topX.mut <- arrange(mut_count, desc(freq), desc(gene.symbol))
         topX.mut <- head(topX.mut, input$waterfall.cutoff)
         topX.mut <- as.character(topX.mut$gene.symbol)
 

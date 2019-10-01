@@ -54,12 +54,12 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[, 1:2], 'gene')
 
     # determine the top X most mutated genes
-    topX.mut <- arrange(mut_count, desc(freq))
+    topX.mut <- arrange(mut_count, desc(freq), desc(gene))
     topX.mut <- head(topX.mut, input$waterfall.cutoff)
     topX.mut <- as.character(topX.mut$gene)
 
-    # only keep mutations we'll actually show
-    mutDf <- dplyr::filter(mutDf, gene %in% topX.mut)
+    # arrange mutations by frequency, so we can pass the right order to waterfall() later
+    mutDf <- dplyr::arrange(mutDf, match(gene, topX.mut))
 
     # Make sure the mutation status for the topX genes is present in the sample table for figuring out sample ordering
     for (i in seq_along(topX.mut)) {
@@ -106,6 +106,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
                   mainRecurCutoff = 0.00001,
                   mainDropMut = FALSE,  # turned off, we do it manually above since this option doesn't drop the corresponding color
                   plotGenes = unique(mutDf$gene),
+                  geneOrder = unique(mutDf$gene),
                   plotSamples = sample.tbl$SAMPLE,
                   mainPalette = this.mut.effect.tbl$color,
                   clinDat = clin.anno,
