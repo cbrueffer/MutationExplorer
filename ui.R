@@ -111,9 +111,11 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                        ),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.custom'",
-                                                           selectInput("custom.pathway.input", "Genes in Custom Pathway",
-                                                                       choices = c(),  # updated from the server side
-                                                                       multiple=TRUE)
+                                                           selectizeInput("custom.pathway.input", "Genes in Custom Pathway (1-20)",
+                                                                          choices = c(),  # updated from the server side
+                                                                          multiple = TRUE,
+                                                                          options = list(maxItems = 20,
+                                                                                         plugins = list('remove_button')))  # enable deselection of items
                                                        )
                                                    ),
                                                    # burden plot specific settings
