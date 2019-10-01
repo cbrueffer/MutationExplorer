@@ -265,7 +265,7 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                        splitLayout(
                                                            numericInput("height.waterfall",
                                                                         label = "Height",
-                                                                        value = 900
+                                                                        value = 700
                                                            ),
                                                            numericInput("width.waterfall",
                                                                         label = "Width",

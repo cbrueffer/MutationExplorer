@@ -115,7 +115,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
                   main_geneLabSize = 12,
                   clinVarCol = clinicColor,
                   clinVarOrder = clinicOrder,
-                  section_heights = c(0.2, 1, 0.35),
+                  section_heights = c(0, 1, 0.25),
                   plotMutBurden = FALSE,
                   mainGrid = FALSE,
                   sampRecurLayer = samp_recur_layer,
