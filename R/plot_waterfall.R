@@ -17,6 +17,11 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     #
     #######################################################
 
+    # Remove samples with no mutation in the topX genes if specified.
+    if (isFALSE(input$includeWildtypeSamples)) {
+        sample.tbl = dplyr::filter(sample.tbl, SAMPLE %in% mut.tbl$SAMPLE)
+    }
+
     # create the clinical annotation table, in long format
     clin.anno <- dplyr::mutate(sample.tbl,
                                PgR = case_when(input$hr.cutoff == "hr.1perc" ~ PgR_1perc,

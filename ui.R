@@ -281,7 +281,10 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                                     value = 0,
                                                                     min = 0,
                                                                     max = 3
-                                                       )
+                                                       ),
+                                                       awesomeCheckbox("includeWildtypeSamples",
+                                                                       label = "Include Wildtype Samples",
+                                                                       value = TRUE)
                                              )
                                          ),
                                          conditionalPanel(
