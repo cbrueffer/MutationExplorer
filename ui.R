@@ -330,7 +330,7 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                 # Plots, data tables, and statistics
                 mainPanel(
                     tabsetPanel(type = "pills",
-                                tabPanel("Plots", value = "plotTab",
+                                tabPanel("Plots", value = "plotTab", style = "padding-top:30px",
                                          withSpinner(plotOutput("plot"))
                                 ),
                                 tabPanel("Sample Table", value = "sampleTab",
