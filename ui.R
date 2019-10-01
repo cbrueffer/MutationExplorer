@@ -100,7 +100,7 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                    # waterfall plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.waterfall.plot'",
-                                                       helper(numericInput("waterfall.cutoff", "Number of most mutated genes", min = 1, max = 50, value = 20),
+                                                       helper(numericInput("waterfall.cutoff", "Number of most mutated genes (1-30)", min = 1, max = 30, value = 20),
                                                               content = "waterfall_cutoff")
                                                    ),
                                                    # protein plot specific settings
