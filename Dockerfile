@@ -68,6 +68,7 @@ ENV APP_LOCATION /srv/shiny-server/MutationExplorer
 
 COPY *.R ${APP_LOCATION}/
 COPY config.yaml ${APP_LOCATION}/
+COPY google-analytics.js ${APP_LOCATION}/
 COPY htpasswd-sme.txt ${APP_LOCATION}/
 COPY about.md ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
