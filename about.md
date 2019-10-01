@@ -9,7 +9,7 @@ This software was developed as part of a PhD research project in the [laboratory
 
 ## Data Availability
 
-If you would like access to data beyond what is accessible through this application, please contact [Lao H Saal](https://portal.research.lu.se/portal/en/persons/lao-saal(28d485a2-dc70-44d3-b799-1c2a3e50a422).html).
+If you would like access to data beyond what is accessible through this application, please contact [Lao H Saal](https://portal.research.lu.se/portal/en/persons/lao-saal%2828d485a2-dc70-44d3-b799-1c2a3e50a422%29.html).
 
 ## Citation
 
