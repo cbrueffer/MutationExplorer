@@ -28,6 +28,7 @@ source("R/plot_protein.R")
 # Global State
 #
 ############################################################################
+
 config = read_yaml("config.yaml")
 
 con <- DBI::dbConnect(RSQLite::SQLite(), config$db_file)
