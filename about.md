@@ -13,9 +13,7 @@ If you would like access to data beyond what is accessible through this applicat
 
 ## Citation
 
-If you use any data or plots from this website in your publications, or if you adopt this software for your own dataset, please cite the following paper:
-
-[Brueffer *et al*. The Mutational Landscape of the Primary Breast Cancer Transcriptome. bioRxiv (2019)](https://)
+A preprint describing the dataset and this tool will be available shortly. If you use any data or plots from this website in your publications, or if you adopt this software for your own dataset, for now please cite this website.
 
 ## Code
 

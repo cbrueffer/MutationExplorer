@@ -27,8 +27,6 @@ RUN apt-get update && \
                        liblzma-dev \
                        libxml2-dev
 
-COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
-
 RUN R -e "install.packages(c( \
     'cowplot', \
     'dbplyr', \
@@ -64,12 +62,13 @@ RUN R -e "BiocManager::install(c( \
 #
 ###############################################
 
+COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
+
 ENV APP_LOCATION /srv/shiny-server/MutationExplorer
 
 COPY *.R ${APP_LOCATION}/
 COPY config.yaml ${APP_LOCATION}/
 COPY google-analytics.js ${APP_LOCATION}/
-COPY htpasswd-sme.txt ${APP_LOCATION}/
 COPY about.md ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
 COPY helpfiles ${APP_LOCATION}/helpfiles
