@@ -47,32 +47,32 @@ plot.protein <- function(input, mutation_df, gene_protein_id_map) {
     proteinLen <- pfamGraphics_json$length
 
     # get aminoChanges for the gene
-    aminoChanges <- filter(mutation_df, !is.na(ANN.prot.change))
-    aminoChanges <- mutate(aminoChanges,
+    aminoChanges <- dplyr::filter(mutation_df, !is.na(ANN.prot.change))
+    aminoChanges <- dplyr::mutate(aminoChanges,
                            ANN.effect.class.lolli = ifelse(ANN.effect.class %in% c("Missense", "Nonsense", "Synonymous"), ANN.effect.class, "Other"),
                            AA_Change_s = gsub("p\\.(.+)", "\\1", ANN.prot.change))
-    aminoChanges <- select(aminoChanges,
+    aminoChanges <- dplyr::select(aminoChanges,
                            gene = gene.symbol,
                            TYPE,
                            AA_Change_s,
                            changeType = ANN.effect.class.lolli,
                            proteinPosition = ANN.prot.change.aa)
-    aminoChanges <- group_by(aminoChanges, proteinPosition)
-    aminoChanges <- mutate(aminoChanges, nMutPerPos = n())
-    aminoChanges <- group_by(aminoChanges, AA_Change_s, proteinPosition)
-    aminoChanges <- mutate(aminoChanges, nMutPerPosCat = n())
-    aminoChanges <- ungroup(aminoChanges)
-    aminoChanges <- distinct(aminoChanges)
-    aminoChanges <- group_by(aminoChanges, proteinPosition)
-    aminoChanges <- arrange(aminoChanges, proteinPosition, desc(nMutPerPosCat))
-    aminoChanges <- mutate(aminoChanges,
+    aminoChanges <- dplyr::group_by(aminoChanges, proteinPosition)
+    aminoChanges <- dplyr::mutate(aminoChanges, nMutPerPos = n())
+    aminoChanges <- dplyr::group_by(aminoChanges, AA_Change_s, proteinPosition)
+    aminoChanges <- dplyr::mutate(aminoChanges, nMutPerPosCat = n())
+    aminoChanges <- dplyr::ungroup(aminoChanges)
+    aminoChanges <- dplyr::distinct(aminoChanges)
+    aminoChanges <- dplyr::group_by(aminoChanges, proteinPosition)
+    aminoChanges <- dplyr::arrange(aminoChanges, proteinPosition, desc(nMutPerPosCat))
+    aminoChanges <- dplyr::mutate(aminoChanges,
                            y_end = cumsum(nMutPerPosCat),
                            y_start = y_end - nMutPerPosCat,
                            category_num = row_number(),
                            category_n = n())
-    aminoChanges <- ungroup(aminoChanges)
+    aminoChanges <- dplyr::ungroup(aminoChanges)
     # assign colors based on change type, and final labels only for highly mutated positions
-    aminoChanges <- mutate(aminoChanges,
+    aminoChanges <- dplyr::mutate(aminoChanges,
                            catColor = if_else(changeType == "Synonymous", constColors["Synonymous"],
                                               if_else(changeType == "Other", constColors["Other"],
                                                       if_else(changeType == "Nonsense", constColors["Nonsense"],
@@ -88,7 +88,7 @@ plot.protein <- function(input, mutation_df, gene_protein_id_map) {
     }
 
     # final filtering
-    aminoChanges <- filter(aminoChanges, nMutPerPos >= cutOff_Mut, proteinPosition <= proteinLen)
+    aminoChanges <- dplyr::filter(aminoChanges, nMutPerPos >= cutOff_Mut, proteinPosition <= proteinLen)
     maxMutations <- max(aminoChanges$nMutPerPos)
 
     #

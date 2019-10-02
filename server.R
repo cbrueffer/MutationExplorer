@@ -39,8 +39,8 @@ DBI::dbDisconnect(con)
 # Gene<->Protein map, only the first mapping for each gene is retained
 gene_protein_mapping <- read.csv(config$gene_protein_map_file, sep='\t', header = F, stringsAsFactors = F)
 gene_protein_mapping <- dplyr::select(gene_protein_mapping, Protein = 1, Gene = 2)
-gene_protein_mapping <- group_by(gene_protein_mapping, Gene)
-gene_protein_mapping <- filter(gene_protein_mapping, row_number() == 1)
+gene_protein_mapping <- dplyr::group_by(gene_protein_mapping, Gene)
+gene_protein_mapping <- dplyr::filter(gene_protein_mapping, row_number() == 1)
 
 # Generate a mapping from gene to mutation status column names and add the custom columns.
 # Two types of "genes" are considered:
@@ -166,7 +166,7 @@ filter.sample.tbl <- function(input, sample.tbl) {
     # apply filters
     if (length(filters) > 0) {
         filter_str = paste(filters, collapse = " & ")
-        sample.tbl <- filter_(sample.tbl, filter_str)
+        sample.tbl <- dplyr::filter_(sample.tbl, filter_str)
     }
 
     samples <- as.character(sample.tbl$SAMPLE)
@@ -247,47 +247,47 @@ add.pathway.mut.status <- function(input, sample.tbl, mut.tbl) {
 }
 
 filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
-    mut.tbl <- filter(mut.tbl, SAMPLE %in% sample.list)
+    mut.tbl <- dplyr::filter(mut.tbl, SAMPLE %in% sample.list)
 
     #
     # Filter mutations based on input selections.
     #
     if (input$mutationSelection == "mutations.cosmic") {
-        mut.tbl <- filter(mut.tbl, COSMIC_ID != ".")
+        mut.tbl <- dplyr::filter(mut.tbl, COSMIC_ID != ".")
     }
     if (!is.null(input$mutationEffect)) {
-        mut.tbl <- filter(mut.tbl, ANN.effect.class %in% input$mutationEffect)
+        mut.tbl <- dplyr::filter(mut.tbl, ANN.effect.class %in% input$mutationEffect)
     }
 
     #
     # Filter mutations based on plot type.
     #
     if (input$plotType == "mut.gene.plot") {
-        mut.tbl <- filter(mut.tbl, gene.symbol %in% input$gene.input)
+        mut.tbl <- dplyr::filter(mut.tbl, gene.symbol %in% input$gene.input)
     } else if (input$plotType == "mut.protein.plot") {
-        mut.tbl <- filter(mut.tbl, gene.symbol %in% input$protein.plot.gene, TYPE == "SNV")
+        mut.tbl <- dplyr::filter(mut.tbl, gene.symbol %in% input$protein.plot.gene, TYPE == "SNV")
     } else if (input$plotType == "mut.pathway.plot") {
         if (input$pathwayType == "pathway.reactome") {
             # keep mutations present in any of the input pathways
-            mut.tbl <- filter(mut.tbl, apply(sapply(input$pathway.input, function(pathway) grepl(pathway, Pathways.Reactome)), 1, any))
+            mut.tbl <- dplyr::filter(mut.tbl, apply(sapply(input$pathway.input, function(pathway) grepl(pathway, Pathways.Reactome)), 1, any))
         } else {  # pathway.custom
             pathway.genes <- input$custom.pathway.input
 
             if (!is.null(pathway.genes)) {
                 # keep all genes in the selected custom pathway
-                mut.tbl = filter(mut.tbl, gene.symbol %in% pathway.genes)
+                mut.tbl = dplyr::filter(mut.tbl, gene.symbol %in% pathway.genes)
             } else {
-                mut.tbl = filter(mut.tbl, FALSE)  # no genes defined -> empty table
+                mut.tbl = dplyr::filter(mut.tbl, FALSE)  # no genes defined -> empty table
             }
         }
     } else if (input$plotType == "mut.burden.plot") {
-        mut.tbl <- filter(mut.tbl, FALSE)  # no specific genes behind TMB -> empty table
+        mut.tbl <- dplyr::filter(mut.tbl, FALSE)  # no specific genes behind TMB -> empty table
     } else if (input$plotType == "mut.waterfall.plot") {
         # count the occurrence of each mutation in our set
         mut_count <- plyr::count(plyr::count(mut.tbl, c('gene.symbol', 'SAMPLE'))[, 1:2], 'gene.symbol')
 
         # determine the top X most mutated genes
-        topX.mut <- arrange(mut_count, desc(freq), desc(gene.symbol))
+        topX.mut <- dplyr::arrange(mut_count, desc(freq), desc(gene.symbol))
         topX.mut <- head(topX.mut, input$waterfall.cutoff)
         topX.mut <- as.character(topX.mut$gene.symbol)
 
@@ -303,7 +303,7 @@ get.dataset.stats <- function(sample.tbl, mut.tbl) {
     stats = data.frame(Value=character(), Stat=numeric())
     stats = add_row(stats, Value="Total Samples", Stat=nrow(sample.tbl))
     stats = add_row(stats, Value="Total Mutations", Stat=nrow(mut.tbl))
-    stats = add_row(stats, Value="Total COSMIC Mutations", Stat=nrow(filter(mut.tbl, COSMIC_ID != ".")))
+    stats = add_row(stats, Value="Total COSMIC Mutations", Stat=nrow(dplyr::filter(mut.tbl, COSMIC_ID != ".")))
     stats = add_row(stats, Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$current_mutation_count))
     stats = add_row(stats, Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$current_mutation_count))
     stats = add_row(stats, Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$current_mutation_nonsynon_count))
@@ -341,7 +341,7 @@ shinyServer(function(input, output, session) {
 
     # Add additional information to the current sample set as specified in the input controls.
     sample.tbl <- reactive({
-        filtered.samples <- filter(samples, SAMPLE %in% sample.list())
+        filtered.samples <- dplyr::filter(samples, SAMPLE %in% sample.list())
         filtered.samples <- add.gene.mut.status(input, filtered.samples, mut.tbl(), mutated.gene.columns, mutated.gene.status)
         filtered.samples <- set.mutation.counts(input, filtered.samples)
         filtered.samples <- add.mutation.burden(input, filtered.samples)
@@ -605,7 +605,7 @@ shinyServer(function(input, output, session) {
 
     output$sessionInfo <- renderPrint({
         sinfo = sessioninfo::package_info()
-        sinfo = filter(sinfo, attached == TRUE)
+        sinfo = dplyr::filter(sinfo, attached == TRUE)
         sinfo = dplyr::select(sinfo, package, loadedversion, source)
         print(sinfo, row.names = FALSE)
     })
