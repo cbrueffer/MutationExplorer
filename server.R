@@ -34,7 +34,7 @@ config = read_yaml("config.yaml")
 con <- DBI::dbConnect(RSQLite::SQLite(), config$db_file)
 samples <- collect(tbl(con, "samples"))
 mutations <- collect(tbl(con, "mutations"))
-dbDisconnect(con)
+DBI::dbDisconnect(con)
 
 # Gene<->Protein map, only the first mapping for each gene is retained
 gene_protein_mapping <- read.csv(config$gene_protein_map_file, sep='\t', header = F, stringsAsFactors = F)
