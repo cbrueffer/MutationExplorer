@@ -268,8 +268,14 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
         mut.tbl <- dplyr::filter(mut.tbl, gene.symbol %in% input$protein.plot.gene, TYPE == "SNV")
     } else if (input$plotType == "mut.pathway.plot") {
         if (input$pathwayType == "pathway.reactome") {
-            # keep mutations present in any of the input pathways
-            mut.tbl <- dplyr::filter(mut.tbl, apply(sapply(input$pathway.input, function(pathway) grepl(pathway, Pathways.Reactome)), 1, any))
+            pathway.genes <- input$pathway.input
+
+            if (!is.null(pathway.genes)) {
+                # keep mutations present in any of the input pathways
+                mut.tbl <- dplyr::filter(mut.tbl, apply(sapply(input$pathway.input, function(pathway) grepl(pathway, Pathways.Reactome)), 1, any))
+            } else {
+                mut.tbl = dplyr::filter(mut.tbl, FALSE)  # no genes defined -> empty table
+            }
         } else {  # pathway.custom
             pathway.genes <- input$custom.pathway.input
 
