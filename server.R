@@ -397,7 +397,7 @@ shinyServer(function(input, output, session) {
                h3(paste(prettyNum(n.mut, big.mark=","),
                         "mutations in",
                         prettyNum(n.samples, big.mark=","),
-                        "Primary Breast Cancer Samples")))
+                        "Primary Breast Cancer Transcriptomes")))
         )
     })
     outputOptions(output, "header_panel", suspendWhenHidden=FALSE)  # make sure the header is shown before the loading screen is gone
