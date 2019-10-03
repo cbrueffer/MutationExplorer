@@ -4,6 +4,10 @@ MutationExplorer is a lightweight web application for exploring somatic mutation
 
 MutationExplorer is currently most usable for breast cancer samples, since the relevant biomarkers for patient selection (e.g. clinical status of ER and PgR) are hardcoded.
 
+<p align="center">
+<img src="https://github.com/cbrueffer/MutationExplorer/blob/master/doc/images/mutationexplorer-main.png" width="600" height="330" />
+</p>
+
 
 ## Features
 
