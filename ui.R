@@ -1,20 +1,10 @@
 #
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
+# This is the user-interface definition of the web application.
 #
 
-suppressPackageStartupMessages(library(shiny))
-suppressPackageStartupMessages(library(shinyhelper))
-suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(shinyWidgets))
 suppressPackageStartupMessages(library(shinycssloaders))
 options(spinner.type=5)
-suppressPackageStartupMessages(library(DT))
-source("R/resources.R")
 
 
 appLoadCSS <- "
@@ -75,9 +65,12 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
     hidden(
         div(id = "app-content",
 
-            # Application title, rendered by the server
-            uiOutput("header_panel"),
-
+            titlePanel(h1(config$app_title,
+                          h3(paste(prettyNum(n.mut, big.mark=","),
+                                   "mutations in",
+                                   prettyNum(n.samples, big.mark=","),
+                                   "Primary Breast Cancer Transcriptomes")))
+            ),
             sidebarLayout(
                 sidebarPanel(
                     tabsetPanel(type = "pills",
@@ -89,7 +82,7 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                           content = "plot_type"),
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.gene.plot'",
-                                                       helper(selectizeInput("gene.input", "Genes", choices = c(), multiple=TRUE,  # choices updated from the server side
+                                                       helper(selectizeInput("gene.input", "Genes", choices = names(mutated.gene.columns), multiple=TRUE,
                                                                              options = list(maxItems = 9,
                                                                                             plugins = list('remove_button'))),  # enable deselection of items
                                                               content = "gene_selection")
@@ -112,7 +105,7 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.custom'",
                                                            selectizeInput("custom.pathway.input", "Genes in Custom Pathway (1-20)",
-                                                                          choices = c(),  # updated from the server side
+                                                                          choices = names(mutated.gene.columns),
                                                                           multiple = TRUE,
                                                                           options = list(maxItems = 20,
                                                                                          plugins = list('remove_button')))  # enable deselection of items
@@ -137,7 +130,7 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                    # protein plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.protein.plot'",
-                                                       selectizeInput("protein.plot.gene", "Gene", choices = c(), multiple=FALSE)  # choices updated from the server side
+                                                       selectizeInput("protein.plot.gene", "Gene", choices = names(mutated.gene.columns), multiple=FALSE)
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,

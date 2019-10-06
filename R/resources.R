@@ -1,8 +1,3 @@
-suppressPackageStartupMessages(library(reactome.db))
-suppressPackageStartupMessages(library(tibble))
-suppressPackageStartupMessages(library(dplyr))
-
-
 #
 # Treatment definitions
 #
