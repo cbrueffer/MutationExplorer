@@ -148,7 +148,10 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                    # protein plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.protein.plot'",
-                                                       selectizeInput("protein.plot.gene", "Gene", choices = names(mutated.gene.columns), multiple=FALSE)
+                                                       selectizeInput("protein.plot.gene", "Gene",
+                                                                      choices = names(mutated.gene.columns),
+                                                                      selected = names(mutated.gene.columns)[2],  # updated on the server side
+                                                                      multiple=FALSE)
                                                    )
                                          ),
                                          wellPanel(style = wellpanel.settings.style,

@@ -357,11 +357,31 @@ shinyServer(function(input, output, session) {
                                         digits = 2),
                           step = ifelse(input$tmb.type == "tmb.absolute", 1, 0.01))
     })
+    # Update limits/labels for protein plots depending on the selected gene.
+    observeEvent(input$protein.plot.gene, {
+        mut_count = dplyr::count(mut.tbl(), ANN.prot.change.aa)
+        max_mut_count = max(mut_count$n[!is.na(mut_count$ANN.prot.change.aa)])
+
+        updateNumericInput(session, "protein.plot.mutation.cutoff",
+                           label = sprintf("Mutation Cutoff (%d-%d)", 0, max_mut_count),
+                           max = max_mut_count
+        )
+        updateNumericInput(session, "protein.plot.anno.cutoff",
+                           label = sprintf("Annotation Cutoff (%d-%d)", 0, max_mut_count),
+                           max = max_mut_count,
+                           value = floor(max_mut_count / 2)
+        )
+    })
+
     # No specific mutations underlying TMB plots, disable mutation download/tab.
     observeEvent(input$plotType, {
         if (input$plotType == "mut.burden.plot") {
             disable("downloadMutations")
             js$disableTab("mutationTab")
+        } else if (input$plotType == "mut.protein.plot") {
+            # Trigger update, so the plot settings auto-update.
+            # XXXCB is it possible to trigger an update without changing values?
+            updateSelectizeInput(session, "protein.plot.gene", selected = names(mutated.gene.columns)[1])
         } else {
             enable("downloadMutations")
             js$enableTab("mutationTab")
