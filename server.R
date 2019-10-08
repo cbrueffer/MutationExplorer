@@ -223,16 +223,20 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
     } else if (input$plotType == "mut.burden.plot") {
         mut.tbl <- dplyr::filter(mut.tbl, FALSE)  # no specific genes behind TMB -> empty table
     } else if (input$plotType == "mut.waterfall.plot") {
-        # count the occurrence of each mutation in our set
-        mut_count <- plyr::count(plyr::count(mut.tbl, c('gene.symbol', 'SAMPLE'))[, 1:2], 'gene.symbol')
+        if (input$waterfall.cutoff <= plot.waterfall.cutoff.max) {
+            # count the occurrence of each mutation in our set
+            mut_count <- plyr::count(plyr::count(mut.tbl, c('gene.symbol', 'SAMPLE'))[, 1:2], 'gene.symbol')
 
-        # determine the top X most mutated genes
-        topX.mut <- dplyr::arrange(mut_count, desc(freq), desc(gene.symbol))
-        topX.mut <- head(topX.mut, input$waterfall.cutoff)
-        topX.mut <- as.character(topX.mut$gene.symbol)
+            # determine the top X most mutated genes
+            topX.mut <- dplyr::arrange(mut_count, desc(freq), desc(gene.symbol))
+            topX.mut <- head(topX.mut, input$waterfall.cutoff)
+            topX.mut <- as.character(topX.mut$gene.symbol)
 
-        # Restrict the mutation table to the genes we'll actually display.
-        mut.tbl = dplyr::filter(mut.tbl, gene.symbol %in% topX.mut)
+            # Restrict the mutation table to the genes we'll actually display.
+            mut.tbl = dplyr::filter(mut.tbl, gene.symbol %in% topX.mut)
+        } else {
+            mut.tbl = dplyr::filter(mut.tbl, FALSE)  # too many genes selected -> empty table
+        }
     }
 
     return(mut.tbl)
@@ -376,9 +380,9 @@ shinyServer(function(input, output, session) {
             if (input$plotType == "mut.waterfall.plot") {
                 shiny::validate(
                     shiny::need(is.integer(input$waterfall.cutoff) &
-                                    input$waterfall.cutoff >= waterfall.cutoff.min &
-                                    input$waterfall.cutoff <= waterfall.cutoff.max,
-                                sprintf("Please specify the number of genes as an integer between %d and %d", waterfall.cutoff.min, waterfall.cutoff.max))
+                                    input$waterfall.cutoff >= plot.waterfall.cutoff.min &
+                                    input$waterfall.cutoff <= plot.waterfall.cutoff.max,
+                                sprintf("Please specify the number of genes as an integer between %d and %d", plot.waterfall.cutoff.min, plot.waterfall.cutoff.max))
                 )
             } else if (input$plotType == "mut.pathway.plot" & input$pathwayType == "pathway.custom") {
                 shiny::validate(

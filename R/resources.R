@@ -1,7 +1,42 @@
-# Misc constants
-waterfall.cutoff.min = 1
-waterfall.cutoff.max = 30
-waterfall.cutoff.default = 20
+#
+# Constants
+#
+
+# Waterfall plots
+plot.waterfall.cutoff.min = 1
+plot.waterfall.cutoff.max = 30
+plot.waterfall.cutoff.default = 20
+plot.waterfall.round.digits.min = 0
+plot.waterfall.round.digits.max = 3
+plot.waterfall.round.digits.default = 0
+plot.waterfall.height.min = 100
+plot.waterfall.height.max = 5000
+plot.waterfall.height.default = 700
+plot.waterfall.width.min = 100
+plot.waterfall.width.max = 5000
+plot.waterfall.width.default = 1200
+
+# Survival plots (gene/pathway/TMB)
+plot.survival.height.min = 100
+plot.survival.height.max = 5000
+plot.survival.height.default = 700
+plot.survival.width.min = 100
+plot.survival.width.max = 5000
+plot.survival.width.default = 700
+
+# Protein plots
+plot.protein.cutoff.mutation.min = 0
+plot.protein.cutoff.mutation.default = 0
+plot.protein.cutoff.annotation.min = 0
+plot.protein.cutoff.annotation.default = 10
+plot.protein.height.min = 100
+plot.protein.height.max = 1000
+plot.protein.height.default = 300
+plot.protein.width.min = 100
+plot.protein.width.max = 5000
+plot.protein.width.default = 1000
+
+# Misc
 pathway.custom.genes.max = 20
 survival.gene.plots.max = 9
 survival.pathway.plots.max = 9

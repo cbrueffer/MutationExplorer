@@ -56,12 +56,15 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
 
     # Enable Google Analytics
     tags$head(includeScript("google-analytics.js")),
+    # Style validation errors, and fields with invalid values.
     tags$head(tags$style(HTML("
       .shiny-output-error-validation {
         color: red;
         font-size: 150%;
       }
-    "))
+      input:invalid {
+        background-color: #FFCCCC;
+      }"))
     ),
 
     # Loading message
@@ -136,8 +139,10 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.waterfall.plot'",
                                                        helper(numericInput("waterfall.cutoff",
-                                                                           sprintf("Number of most mutated genes (%d-%d)", waterfall.cutoff.min, waterfall.cutoff.max),
-                                                                           min = waterfall.cutoff.min, max = waterfall.cutoff.max, value = waterfall.cutoff.default),
+                                                                           sprintf("Number of most mutated genes (%d-%d)", plot.waterfall.cutoff.min, plot.waterfall.cutoff.max),
+                                                                           min = plot.waterfall.cutoff.min,
+                                                                           max = plot.waterfall.cutoff.max,
+                                                                           value = plot.waterfall.cutoff.default),
                                                               content = "waterfall_cutoff")
                                                    ),
                                                    # protein plot specific settings
@@ -208,12 +213,16 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                               content = "plot_dimensions"),
                                                        splitLayout(
                                                            numericInput("height.survival",
-                                                                        label = "Height",
-                                                                        value = 700
+                                                                        label = sprintf("Height (%d-%d)", plot.survival.height.min, plot.survival.height.max),
+                                                                        min = plot.survival.height.min,
+                                                                        max = plot.survival.height.max,
+                                                                        value = plot.survival.height.default
                                                            ),
                                                            numericInput("width.survival",
-                                                                        label = "Width",
-                                                                        value = 700
+                                                                        label = sprintf("Width (%d-%d)", plot.survival.width.min, plot.survival.width.max),
+                                                                        min = plot.survival.width.min,
+                                                                        max = plot.survival.width.max,
+                                                                        value = plot.survival.width.default
                                                            )
                                                        )
                                              ),
@@ -270,12 +279,16 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                               content = "plot_dimensions"),
                                                        splitLayout(
                                                            numericInput("height.waterfall",
-                                                                        label = "Height",
-                                                                        value = 700
+                                                                        label = sprintf("Height (%d-%d)", plot.waterfall.height.min, plot.waterfall.height.max),
+                                                                        min = plot.waterfall.height.min,
+                                                                        max = plot.waterfall.height.max,
+                                                                        value = plot.waterfall.height.default
                                                            ),
                                                            numericInput("width.waterfall",
-                                                                        label = "Width",
-                                                                        value = 1200
+                                                                        label = sprintf("Width (%d-%d)", plot.waterfall.width.min, plot.waterfall.width.max),
+                                                                        min = plot.waterfall.width.min,
+                                                                        max = plot.waterfall.width.max,
+                                                                        value = plot.waterfall.width.default
                                                            )
                                                        )
                                              ),
@@ -283,10 +296,10 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                        helper(h4("General Settings"),
                                                               content = "plot_settings_waterfall"),
                                                        numericInput("waterfall.round.digits",
-                                                                    label = "Frequency Digits (0-3)",
-                                                                    value = 0,
-                                                                    min = 0,
-                                                                    max = 3
+                                                                    label = sprintf("Frequency Digits (%d-%d)", plot.waterfall.round.digits.min, plot.waterfall.round.digits.max),
+                                                                    min = plot.waterfall.round.digits.min,
+                                                                    max = plot.waterfall.round.digits.max,
+                                                                    value = plot.waterfall.round.digits.default
                                                        ),
                                                        awesomeCheckbox("includeWildtypeSamples",
                                                                        label = "Include Wildtype Samples",
@@ -300,12 +313,16 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                               content = "plot_dimensions"),
                                                        splitLayout(
                                                            numericInput("height.protein",
-                                                                        label = "Height",
-                                                                        value = 300
+                                                                        label = sprintf("Height (%d-%d)", plot.protein.height.min, plot.protein.height.max),
+                                                                        min = plot.protein.height.min,
+                                                                        max = plot.protein.height.max,
+                                                                        value = plot.protein.height.default
                                                            ),
                                                            numericInput("width.protein",
-                                                                        label = "Width",
-                                                                        value = 1000
+                                                                        label = sprintf("Width (%d-%d)", plot.protein.width.min, plot.protein.width.max),
+                                                                        min = plot.protein.width.min,
+                                                                        max = plot.protein.width.max,
+                                                                        value = plot.protein.width.default
                                                            )
                                                        )
                                              ),
@@ -314,11 +331,13 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                               content = "protein_plot_settings"),
                                                        numericInput("protein.plot.mutation.cutoff",
                                                                     label = "Mutation Cutoff",
-                                                                    value = 0
+                                                                    min = plot.protein.cutoff.mutation.min,
+                                                                    value = plot.protein.cutoff.mutation.default
                                                        ),
                                                        numericInput("protein.plot.anno.cutoff",
                                                                     label = "Annotation Cutoff",
-                                                                    value = 10
+                                                                    min = plot.protein.cutoff.mutation.min,
+                                                                    value = plot.protein.cutoff.annotation.default
                                                        )
                                              )
                                          )
