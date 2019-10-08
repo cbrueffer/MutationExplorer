@@ -58,9 +58,9 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     # count the occurrence of each mutation in our set
     mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[, 1:2], 'gene')
 
-    # determine the top X most mutated genes
+    # Determine the top X most mutated genes. We rely only the topX mutations
+    # being present here.
     topX.mut <- arrange(mut_count, desc(freq), desc(gene))
-    topX.mut <- head(topX.mut, input$waterfall.cutoff)
     topX.mut <- as.character(topX.mut$gene)
 
     # arrange mutations by frequency, so we can pass the right order to waterfall() later

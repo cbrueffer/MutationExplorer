@@ -1,3 +1,11 @@
+# Misc constants
+waterfall.cutoff.min = 1
+waterfall.cutoff.max = 30
+waterfall.cutoff.default = 20
+pathway.custom.genes.max = 20
+survival.gene.plots.max = 9
+survival.pathway.plots.max = 9
+
 #
 # Treatment definitions
 #

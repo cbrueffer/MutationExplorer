@@ -56,6 +56,13 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
 
     # Enable Google Analytics
     tags$head(includeScript("google-analytics.js")),
+    tags$head(tags$style(HTML("
+      .shiny-output-error-validation {
+        color: red;
+        font-size: 150%;
+      }
+    "))
+    ),
 
     # Loading message
     div(id = "loading-content",
@@ -82,8 +89,10 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                           content = "plot_type"),
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.gene.plot'",
-                                                       helper(selectizeInput("gene.input", "Genes", choices = names(mutated.gene.columns), multiple=TRUE,
-                                                                             options = list(maxItems = 9,
+                                                       helper(selectizeInput("gene.input",
+                                                                             sprintf("Genes (1-%d)", survival.gene.plots.max),
+                                                                             choices = names(mutated.gene.columns), multiple = TRUE,
+                                                                             options = list(maxItems = survival.gene.plots.max,
                                                                                             plugins = list('remove_button'))),  # enable deselection of items
                                                               content = "gene_selection")
                                                    ),
@@ -96,18 +105,20 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                               content = "pathway_definition_source"),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.reactome'",
-                                                           selectizeInput("pathway.input", "Reactome Pathways",
+                                                           selectizeInput("pathway.input",
+                                                                          sprintf("Reactome Pathways (1-%d)", survival.pathway.plots.max),
                                                                           choices = pathway.ui.options,
                                                                           multiple = TRUE,
-                                                                          options = list(maxItems = 9,
+                                                                          options = list(maxItems = survival.gene.plots.max,
                                                                                          plugins = list('remove_button')))  # enable deselection of items
                                                        ),
                                                        conditionalPanel(
                                                            condition = "input.pathwayType == 'pathway.custom'",
-                                                           selectizeInput("custom.pathway.input", "Genes in Custom Pathway (1-20)",
+                                                           selectizeInput("custom.pathway.input",
+                                                                          sprintf("Genes in Custom Pathway (1-%d)", pathway.custom.genes.max),
                                                                           choices = names(mutated.gene.columns),
                                                                           multiple = TRUE,
-                                                                          options = list(maxItems = 20,
+                                                                          options = list(maxItems = pathway.custom.genes.max,
                                                                                          plugins = list('remove_button')))  # enable deselection of items
                                                        )
                                                    ),
@@ -124,7 +135,9 @@ shinyUI(fluidPage(title = "SCAN-B MutationExplorer",
                                                    # waterfall plot specific settings
                                                    conditionalPanel(
                                                        condition = "input.plotType == 'mut.waterfall.plot'",
-                                                       helper(numericInput("waterfall.cutoff", "Number of most mutated genes (1-30)", min = 1, max = 30, value = 20),
+                                                       helper(numericInput("waterfall.cutoff",
+                                                                           sprintf("Number of most mutated genes (%d-%d)", waterfall.cutoff.min, waterfall.cutoff.max),
+                                                                           min = waterfall.cutoff.min, max = waterfall.cutoff.max, value = waterfall.cutoff.default),
                                                               content = "waterfall_cutoff")
                                                    ),
                                                    # protein plot specific settings

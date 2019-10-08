@@ -276,6 +276,9 @@ shinyServer(function(input, output, session) {
 
     sample.list <- reactive({
         samples <- filter.sample.tbl(input, samples)
+        shiny::validate(
+            shiny::need(length(samples) > 0, "No samples matching the chosen filters.")
+        )
         return(samples)
     })
 
@@ -291,6 +294,9 @@ shinyServer(function(input, output, session) {
 
     mut.tbl <- reactive({
         filtered.muts <- filter.mut.tbl(input, sample.list(), mutations, mutated.gene.columns)
+        shiny::validate(
+            shiny::need(nrow(filtered.muts) > 0, "No mutated samples matching the chosen sample/mutation filters.")
+        )
         return(filtered.muts)
     })
 
@@ -304,6 +310,9 @@ shinyServer(function(input, output, session) {
         } else {
             height = 700
         }
+        shiny::validate(
+            shiny::need(is.integer(height) & height > 0, "Please provide the plot height as a positive integer.")
+        )
         return(height)
     })
 
@@ -317,6 +326,9 @@ shinyServer(function(input, output, session) {
         } else {
             width = 700
         }
+        shiny::validate(
+            shiny::need(is.integer(width) & width > 0, "Please provide the plot width as a positive integer.")
+        )
         return(width)
     })
 
@@ -361,6 +373,19 @@ shinyServer(function(input, output, session) {
         height = function(x) plot.height(),
         width = function(x) plot.width(),
         {
+            if (input$plotType == "mut.waterfall.plot") {
+                shiny::validate(
+                    shiny::need(is.integer(input$waterfall.cutoff) &
+                                    input$waterfall.cutoff >= waterfall.cutoff.min &
+                                    input$waterfall.cutoff <= waterfall.cutoff.max,
+                                sprintf("Please specify the number of genes as an integer between %d and %d", waterfall.cutoff.min, waterfall.cutoff.max))
+                )
+            } else if (input$plotType == "mut.pathway.plot" & input$pathwayType == "pathway.custom") {
+                shiny::validate(
+                    shiny::need(length(input$custom.pathway.input) <= pathway.custom.genes.max, sprintf("Please select a maximum of %d genes.", pathway.custom.genes.max))
+                )
+            }
+
             # Save plot object in case we need it for PDF download later.
             current.plot <<- create.plot()
 
