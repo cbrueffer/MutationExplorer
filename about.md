@@ -9,7 +9,7 @@ This software was developed as part of a PhD research project in the [laboratory
 
 ## Data Availability
 
-If you would like access to mutational data beyond what is accessible through this application, please contact [Lao H Saal](https://portal.research.lu.se/portal/en/persons/lao-saal%2828d485a2-dc70-44d3-b799-1c2a3e50a422%29.html). Gene/isoform expression data for the cases included here is publicly available from the [NCBI Gene Expression Omnibus](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058) and described in [Brueffer and Vallon-Christersson *et al*, JCO Precision Oncology (2018)](http://ascopubs.org/doi/10.1200/PO.17.00135).
+If you would like access to mutational data beyond what is accessible through this application, please contact [Lao H Saal](https://portal.research.lu.se/portal/en/persons/lao-saal%2828d485a2-dc70-44d3-b799-1c2a3e50a422%29.html). Gene/isoform expression data for the samples included here is publicly available from the [NCBI Gene Expression Omnibus](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058) and described in [Brueffer and Vallon-Christersson *et al*, JCO Precision Oncology (2018)](http://ascopubs.org/doi/10.1200/PO.17.00135).
 
 ## Citation
 
