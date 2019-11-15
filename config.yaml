@@ -12,11 +12,11 @@ custom_genes:
     column: "pten.mutexp"
     label: "PTEN Mutation and Gene Expression (Brueffer et al, 2019)"
     status:
-      - "PTEN_LOW"
-      - "PTEN_NORMAL"
+      - "low"
+      - "normal"
   pten_exp:
-    column: "pten.gex"
+    column: "pten.exp"
     label: "PTEN Gene Expression (Brueffer et al, 2019)"
     status:
-      - "PTEN_LOW"
-      - "PTEN_NORMAL"
+      - "low"
+      - "normal"
