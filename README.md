@@ -29,9 +29,9 @@ This software was developed as part of a PhD research project in the
 
 ## Availability
 
-A MutationExplorer instance with the data from 3,217 primary breast tumor transcriptomes from the [Sweden Cancerome Analysis Network--Breast (SCAN-B)](https://portal.research.lu.se/portal/en/projects/sweden-cancerome-analysis-network--breast-scanb-a-largescale-multicenter-infrastructure-towards-implementation-of-breast-cancer-genomic-analyses-in-the-clinical-routine%2898b7c09f-85d5-4f98-bcae-a43bffb6f869%29/publications.html) can be accessed at http://oncogenomics.bmc.lu.se/MutationExplorer.
+A MutationExplorer instance with the data from 3,217 primary breast tumor transcriptomes from the [Sweden Cancerome Analysis Network--Breast (SCAN-B)](https://portal.research.lu.se/portal/en/projects/sweden-cancerome-analysis-network--breast-scanb-a-largescale-multicenter-infrastructure-towards-implementation-of-breast-cancer-genomic-analyses-in-the-clinical-routine%2898b7c09f-85d5-4f98-bcae-a43bffb6f869%29/publications.html) can be accessed at https://oncogenomics.bmc.lu.se/MutationExplorer.
 
 
 ## Citation
 
-A preprint describing this tool and the dataset mentioned above will be available shortly. For now, please cite the SCAN-B MutationExplorer website: http://oncogenomics.bmc.lu.se/MutationExplorer
+A preprint describing this tool and the dataset mentioned above will be available shortly. For now, please cite the SCAN-B MutationExplorer website: https://oncogenomics.bmc.lu.se/MutationExplorer
