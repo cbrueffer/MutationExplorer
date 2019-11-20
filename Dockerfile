@@ -8,9 +8,7 @@ LABEL maintainer="Christian Brueffer <christian.brueffer@med.lu.se>"
 #
 ###############################################
 
-EXPOSE 80/tcp
-# shiny-server not exposed; accessible through the nginx proxy
-#EXPOSE 3838/tcp
+EXPOSE 3838/tcp
 
 
 ###############################################
@@ -22,7 +20,7 @@ EXPOSE 80/tcp
 # install and configure the nginx shiny proxy
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y nginx \
+    apt-get install -y \
                        libssl-dev \
                        libbz2-dev \
                        liblzma-dev \
@@ -63,8 +61,6 @@ RUN R -e "BiocManager::install(c( \
 #
 ###############################################
 
-COPY nginx-shiny-proxy.conf /etc/nginx/nginx.conf
-
 ENV APP_LOCATION /srv/shiny-server/MutationExplorer
 
 COPY *.R ${APP_LOCATION}/
@@ -74,4 +70,4 @@ COPY about.md ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
 COPY helpfiles ${APP_LOCATION}/helpfiles
 
-CMD /etc/init.d/nginx start && /usr/bin/shiny-server.sh
+CMD /usr/bin/shiny-server.sh
