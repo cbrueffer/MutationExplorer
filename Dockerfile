@@ -1,4 +1,4 @@
-FROM rocker/shiny:latest
+FROM rocker/shiny:3.5.3
 LABEL maintainer="Christian Brueffer <christian.brueffer@med.lu.se>"
 
 
@@ -21,6 +21,7 @@ EXPOSE 80/tcp
 
 # install and configure the nginx shiny proxy
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y nginx \
                        libssl-dev \
                        libbz2-dev \
