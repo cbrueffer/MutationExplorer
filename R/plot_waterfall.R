@@ -36,7 +36,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
                                ER,
                                PAM50,
                                HistType = Histological_Type)
-    clin.anno <- melt(clin.anno, id.vars = c("sample"))
+    clin.anno <- reshape2::melt(clin.anno, id.vars = c("sample"))
 
     # ordering and coloring
     clinicColor <- c(LumA = "blue4", LumB = "deepskyblue", HER2 = "hotpink2", Basal = "firebrick2", Normal = "green4", Unclassified = "gray",
