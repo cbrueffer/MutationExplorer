@@ -34,4 +34,4 @@ A MutationExplorer instance with the data from 3,217 primary breast tumor transc
 
 ## Citation
 
-A preprint describing this tool and the dataset mentioned above will be available shortly. For now, please cite the SCAN-B MutationExplorer website: https://oncogenomics.bmc.lu.se/MutationExplorer
+Brueffer *et al* (2020). The Mutational Landscape of the SCAN-B Real-World Primary Breast Cancer Transcriptome. bioRxiv. DOI: [https://doi.org/10.1101/2020.01.30.926733](10.1101/2020.01.30.926733)
