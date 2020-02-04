@@ -18,9 +18,9 @@ If you would like access to mutational data beyond what is accessible through th
 
 ## Citation
 
-If you use any data or plots from this website in your publications, or if you adopt this software for your own dataset, for now please cite the following preprint:
+If you use any data or plots from this website in your publications, or if you adopt this software for your own dataset, please cite the following preprint:
 
-Brueffer *et al* (2020). The Mutational Landscape of the SCAN-B Real-World Primary Breast Cancer Transcriptome. bioRxiv. DOI: [https://doi.org/10.1101/2020.01.30.926733](10.1101/2020.01.30.926733)
+Brueffer *et al* (2020). The Mutational Landscape of the SCAN-B Real-World Primary Breast Cancer Transcriptome. bioRxiv. DOI: [10.1101/2020.01.30.926733](https://doi.org/10.1101/2020.01.30.926733)
 
 ## Code
 
