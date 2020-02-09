@@ -220,8 +220,6 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
                 mut.tbl = dplyr::filter(mut.tbl, FALSE)  # no genes defined -> empty table
             }
         }
-    } else if (input$plotType == "mut.burden.plot") {
-        mut.tbl <- dplyr::filter(mut.tbl, FALSE)  # no specific genes behind TMB -> empty table
     } else if (input$plotType == "mut.waterfall.plot") {
         if (input$waterfall.cutoff <= plot.waterfall.cutoff.max) {
             # count the occurrence of each mutation in our set
@@ -237,6 +235,9 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
         } else {
             mut.tbl = dplyr::filter(mut.tbl, FALSE)  # too many genes selected -> empty table
         }
+    } else {
+        # input$plotType == "mut.burden.plot"
+        # no filtering necessary
     }
 
     return(mut.tbl)
