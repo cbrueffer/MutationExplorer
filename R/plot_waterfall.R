@@ -53,7 +53,7 @@ plot.waterfall <- function(input, sample.tbl, mut.tbl, gene.column.map) {
     mutDf <- dplyr::select(mut.tbl,
                            sample = SAMPLE,
                            gene = gene.symbol,
-                           variant_class = ANN.effect.class)
+                           variant_class = SnpEff.Effect.Class)
 
     # count the occurrence of each mutation in our set
     mut_count <- plyr::count(plyr::count(mutDf, c('gene', 'sample'))[, 1:2], 'gene')

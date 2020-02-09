@@ -187,10 +187,10 @@ filter.mut.tbl <- function(input, sample.list, mut.tbl, gene.column.map) {
     # Filter mutations based on input selections.
     #
     if (input$mutationSelection == "mutations.cosmic") {
-        mut.tbl <- dplyr::filter(mut.tbl, COSMIC_ID != ".")
+        mut.tbl <- dplyr::filter(mut.tbl, COSMICv87.ID != ".")
     }
     if (!is.null(input$mutationEffect)) {
-        mut.tbl <- dplyr::filter(mut.tbl, ANN.effect.class %in% input$mutationEffect)
+        mut.tbl <- dplyr::filter(mut.tbl, SnpEff.Effect.Class %in% input$mutationEffect)
     }
 
     #
@@ -247,7 +247,7 @@ get.dataset.stats <- function(sample.tbl, mut.tbl) {
     stats = data.frame(Value=character(), Stat=numeric())
     stats = add_row(stats, Value="Total Samples", Stat=nrow(sample.tbl))
     stats = add_row(stats, Value="Total Mutations", Stat=nrow(mut.tbl))
-    stats = add_row(stats, Value="Total COSMIC Mutations", Stat=nrow(dplyr::filter(mut.tbl, COSMIC_ID != ".")))
+    stats = add_row(stats, Value="Total COSMIC Mutations", Stat=nrow(dplyr::filter(mut.tbl, COSMICv87.ID != ".")))
     stats = add_row(stats, Value="Mean Overall Mutations per Sample", Stat=mean(sample.tbl$current_mutation_count))
     stats = add_row(stats, Value="Median Overall Mutations per Sample", Stat=median(sample.tbl$current_mutation_count))
     stats = add_row(stats, Value="Mean Coding Mutations per Sample", Stat=mean(sample.tbl$current_mutation_nonsynon_count))
@@ -359,8 +359,8 @@ shinyServer(function(input, output, session) {
     })
     # Update limits/labels for protein plots depending on the selected gene.
     observeEvent(input$protein.plot.gene, {
-        mut_count = dplyr::count(mut.tbl(), ANN.prot.change.aa)
-        max_mut_count = max(mut_count$n[!is.na(mut_count$ANN.prot.change.aa)])
+        mut_count = dplyr::count(mut.tbl(), SnpEff.Prot.Change.AA)
+        max_mut_count = max(mut_count$n[!is.na(mut_count$SnpEff.Prot.Change.AA)])
 
         updateNumericInput(session, "protein.plot.mutation.cutoff",
                            label = sprintf("Mutation Cutoff (%d-%d)", 0, max_mut_count),

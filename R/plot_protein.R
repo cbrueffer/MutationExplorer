@@ -47,16 +47,16 @@ plot.protein <- function(input, mutation_df, gene_protein_id_map) {
     proteinLen <- pfamGraphics_json$length
 
     # get aminoChanges for the gene
-    aminoChanges <- dplyr::filter(mutation_df, !is.na(ANN.prot.change))
+    aminoChanges <- dplyr::filter(mutation_df, !is.na(SnpEff.Prot.Change))
     aminoChanges <- dplyr::mutate(aminoChanges,
-                           ANN.effect.class.lolli = ifelse(ANN.effect.class %in% c("Missense", "Nonsense", "Synonymous"), ANN.effect.class, "Other"),
-                           AA_Change_s = gsub("p\\.(.+)", "\\1", ANN.prot.change))
+                           ANN.effect.class.lolli = ifelse(SnpEff.Effect.Class %in% c("Missense", "Nonsense", "Synonymous"), SnpEff.Effect.Class, "Other"),
+                           AA_Change_s = gsub("p\\.(.+)", "\\1", SnpEff.Prot.Change))
     aminoChanges <- dplyr::select(aminoChanges,
                            gene = gene.symbol,
                            TYPE,
                            AA_Change_s,
                            changeType = ANN.effect.class.lolli,
-                           proteinPosition = ANN.prot.change.aa)
+                           proteinPosition = SnpEff.Prot.Change.AA)
     aminoChanges <- dplyr::group_by(aminoChanges, proteinPosition)
     aminoChanges <- dplyr::mutate(aminoChanges, nMutPerPos = n())
     aminoChanges <- dplyr::group_by(aminoChanges, AA_Change_s, proteinPosition)
