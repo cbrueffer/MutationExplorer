@@ -2,7 +2,7 @@ db_file: "data/scanb.sqlite"
 app_title: "SCAN-B MutationExplorer"
 gene_protein_map_file: "data/gene_uniprot_mapping.tsv"
 
-table_header: "## Downloaded from: http://oncogenomics.bmc.lu.se/MutationExplorer\n## If you use this data in your research, please cite the following publication:\n## Brueffer et al (2020). The Mutational Landscape of the SCAN-B Real-World Primary Breast Cancer Transcriptome. bioRxiv.\n##\n"
+table_header: "## Downloaded from: http://oncogenomics.bmc.lu.se/MutationExplorer\n## If you use this data in your research, please cite the following publication:\n## Brueffer et al (2020). The mutational landscape of the SCAN-B real-world primary breast cancer transcriptome. EMBO Molecular Medicine, e12118.\n##\n"
 
 custom_genes:
   esr1_resistance:

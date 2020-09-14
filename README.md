@@ -34,4 +34,4 @@ A MutationExplorer instance with the data from 3,217 primary breast tumor transc
 
 ## Citation
 
-Brueffer *et al* (2020). The Mutational Landscape of the SCAN-B Real-World Primary Breast Cancer Transcriptome. bioRxiv. DOI: [10.1101/2020.01.30.926733](https://doi.org/10.1101/2020.01.30.926733)
+Brueffer *et al* (2020). The mutational landscape of the SCAN-B real-world primary breast cancer transcriptome. EMBO Molecular Medicine, e12118. DOI: [10.15252/emmm.202012118](https://doi.org/10.15252/emmm.202012118)
