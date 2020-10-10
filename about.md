@@ -20,7 +20,7 @@ If you would like access to mutational data beyond what is accessible through th
 
 If you use any data or plots from this website in your publications, or if you adopt this software for your own dataset, please cite the following publication:
 
-Brueffer *et al* (2020). The mutational landscape of the SCAN-B real-world primary breast cancer transcriptome. EMBO Molecular Medicine, e12118. DOI: [10.15252/emmm.202012118](https://doi.org/10.15252/emmm.202012118)
+Brueffer *et al* (2020). The mutational landscape of the SCAN-B real-world primary breast cancer transcriptome. EMBO Molecular Medicine, 12(10):e12118. DOI: [10.15252/emmm.202012118](https://doi.org/10.15252/emmm.202012118)
 
 ## Code
 
