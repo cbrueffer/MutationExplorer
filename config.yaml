@@ -7,7 +7,7 @@ table_header: "## Downloaded from: http://oncogenomics.bmc.lu.se/MutationExplore
 custom_genes:
   esr1_resistance:
     column: "mut.status.ESR1.resistance"
-    label: "ESR1 Resistance (Dahlgren et al, 2020)"
+    label: "ESR1 Resistance (Dahlgren et al, 2021)"
   pten_mutexp:
     column: "pten.mutexp"
     label: "PTEN Mutation and Gene Expression (Brueffer et al, 2020)"
