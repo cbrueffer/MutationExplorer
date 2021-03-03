@@ -4,22 +4,22 @@ Filter the overall sample list that survival analysis is conducted for. Filterin
 
 ### Treatment Group
 
-Select a subgroup of patient samples treated with a specific combination three treatment regimens: endocrine therapy (Endo, e.g. tamoxifen), chemo therapy (Chemo), and anti HER2 therapy (HER2, e.g. trastuzumab). Available treatment combinations:
+Select a subgroup of patient samples treated with a specific combination three treatment regimens: endocrine therapy (Endo, e.g. tamoxifen), cytotoxic therapy (Cyto), and anti HER2 therapy (HER2, e.g. trastuzumab). Available treatment combinations:
 
 - Any
 - Endocrine + any
-- Chemo + any
+- Cyto + any
 - HER2 + any
 - Endocrine only
-- Chemo only
+- Cyto only
 - HER2 only
-- Endo + Chemo + any
+- Endo + Cyto + any
 - Endo + HER2 + any
 - Cyto + HER2 + any
-- Endo + Chemo only
+- Endo + Cyto only
 - Endo + HER2 only
 - Cyto + HER2 only
-- Endo + Chemo + HER2
+- Endo + Cyto + HER2
 - No Systemic Treatment
 
 
