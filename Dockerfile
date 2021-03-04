@@ -69,5 +69,6 @@ COPY google-analytics.js ${APP_LOCATION}/
 COPY about.md ${APP_LOCATION}/
 COPY R ${APP_LOCATION}/R
 COPY helpfiles ${APP_LOCATION}/helpfiles
+COPY index.html /srv/shiny-server/index.html
 
 CMD /usr/bin/shiny-server.sh
